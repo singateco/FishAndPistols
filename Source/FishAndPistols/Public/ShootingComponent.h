@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "PlayerCharacter.h"
 #include "Components/ActorComponent.h"
 #include "ShootingComponent.generated.h"
 
@@ -24,9 +25,19 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	//virtual void SetupPlayerInput(class UInputComponent* PlayerInputComponent) override;
 
+
+	//----------------------------Variable--------------------------------
 	UPROPERTY(EditAnywhere)
+	bool bChoosePistol;
+
+
+	//----------------------------Function--------------------------------
+	
 	void ActionFire();
+	void PistolFire();
+
 
 
 };

@@ -32,3 +32,21 @@ void UShootingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 	// ...
 }
 
+//void UShootingComponent::SetupPlayerInput(UInputComponent* PlayerInputComponent)
+//{
+//	Super::SetupPlayerInput(PlayerInputComponent);
+//}
+
+void UShootingComponent::ActionFire()
+{
+	if(bChoosePistol)
+	{
+		PistolFire();
+	}
+}
+
+void UShootingComponent::PistolFire()
+{
+
+}
+
