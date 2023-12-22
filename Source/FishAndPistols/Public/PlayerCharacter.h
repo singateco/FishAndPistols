@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "PlayerCharacter.generated.h"
 
+
 UCLASS()
 class FISHANDPISTOLS_API APlayerCharacter : public ACharacter
 {
@@ -52,5 +53,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|Components")
 	USkeletalMeshComponent* RightHandMesh;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|FishingComponent")
+	class UFishingComponent* FishingComponent;
+	
 
 };
