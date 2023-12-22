@@ -32,10 +32,17 @@ void UShootingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 	// ...
 }
 
-//void UShootingComponent::SetupPlayerInput(UInputComponent* PlayerInputComponent)
-//{
-//	Super::SetupPlayerInput(PlayerInputComponent);
-//}
+
+void UShootingComponent::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+{
+
+}
+
+
+void UShootingComponent::RightTriggerInput_Bool(const FInputActionValue& value)
+{
+
+}
 
 void UShootingComponent::ActionFire()
 {
@@ -43,9 +50,18 @@ void UShootingComponent::ActionFire()
 	{
 		PistolFire();
 	}
+	else if(bChooseSpadeAce)
+	{
+		SpadeAceFire();
+	}
 }
 
 void UShootingComponent::PistolFire()
+{
+
+}
+
+void UShootingComponent::SpadeAceFire()
 {
 
 }
