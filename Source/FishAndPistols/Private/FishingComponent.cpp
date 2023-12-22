@@ -2,6 +2,12 @@
 
 
 #include "FishingComponent.h"
+#include "MotionControllerComponent.h"
+#include "PlayerCharacter.h"
+#include "EnhancedInputSubsystems.h"
+#include "EnhancedInputComponent.h"
+#include "InputMappingContext.h"
+#include "Components/ArrowComponent.h"
 
 // Sets default values for this component's properties
 UFishingComponent::UFishingComponent()
@@ -11,6 +17,11 @@ UFishingComponent::UFishingComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
+	bWantsInitializeComponent = true;
+	for (uint32 i = 0; i < DotMotionBuffer.Capacity(); i++)
+	{
+		DotMotionBuffer[i] = -9999;
+	}
 }
 
 
@@ -20,7 +31,23 @@ void UFishingComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	
+
+
+	OwningPlayer = GetOwner<APlayerCharacter>();
+
+	check(InputMapping)
+
+	ULocalPlayer* LocalPlayer = OwningPlayer->GetController<APlayerController>()->GetLocalPlayer();
+	UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(LocalPlayer);
+
+	check(Subsystem)
+
+	if (Subsystem)
+	{
+		Subsystem->AddMappingContext(InputMapping, 0);
+	}
+
+	GetWorld()->GetTimerManager().SetTimer(MotionTimer, this, &UFishingComponent::CheckMotionValue, 0.05f, true);
 }
 
 
@@ -30,5 +57,78 @@ void UFishingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
+
+	FVector PlayerForward = OwningPlayer->GetArrowComponent()->GetForwardVector();
+	FVector RightHandLocation = OwningPlayer->RightHandMesh->GetComponentLocation();
+
+	DrawDebugPoint(GetWorld(), RightHandLocation, 45, FColor::Red, false, .4f);
+
+	//UE_LOG(LogTemp, Warning, TEXT("%f"), PlayerForward.Dot(RightHandLocation));
+
+
+}
+
+void UFishingComponent::SetupPlayerInputComponent(UInputComponent* InputComponent)
+{
+	if (UEnhancedInputComponent* EnhancedInput = Cast<UEnhancedInputComponent>(InputComponent))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Input Set."))
+
+		check(RightIndexTriggerInputAction)
+
+		EnhancedInput->BindAction(RightIndexTriggerInputAction, ETriggerEvent::Started, this, &UFishingComponent::RightIndexTrigger);
+		EnhancedInput->BindAction(RightIndexTriggerInputAction, ETriggerEvent::Completed, this, &UFishingComponent::RightIndexTrigger);
+	}
+}
+
+void UFishingComponent::CheckMotionValue()
+{
+	FVector PlayerForward = OwningPlayer->GetArrowComponent()->GetForwardVector();
+	FVector RightHandLocation = OwningPlayer->RightHandMesh->GetComponentLocation();
+
+	DotMotionBuffer[BufferIndex] = PlayerForward.Dot(RightHandLocation);
+	BufferIndex = DotMotionBuffer.GetNextIndex(BufferIndex);
+
+	double min = DotMotionBuffer[0];
+	double max = DotMotionBuffer[0];
+
+	for (uint32 i = 0; i < DotMotionBuffer.Capacity(); i++)
+	{
+		if (DotMotionBuffer[i] == -9999)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Motion Buff isn't ready yet."))
+			return;
+		}
+
+		if (DotMotionBuffer[i] < min)
+		{
+			min = DotMotionBuffer[i];
+		}
+
+		if (DotMotionBuffer[i] > max)
+		{
+			max = DotMotionBuffer[i];
+		}
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("Min Max Difference = %.2f"), abs(min - max));
+}
+
+void UFishingComponent::RightIndexTrigger(const FInputActionValue& Value)
+{
+	if (Value.Get<bool>())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Triggered"))
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Trigger Completed"))
+	}
+}
+
+void UFishingComponent::InitializeComponent()
+{
+	Super::InitializeComponent();
+
 }
 

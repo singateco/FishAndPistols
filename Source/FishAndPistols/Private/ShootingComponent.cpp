@@ -32,6 +32,7 @@ void UShootingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 	// ...
 }
 
+<<<<<<< HEAD
 
 void UShootingComponent::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -43,6 +44,19 @@ void UShootingComponent::RightTriggerInput_Bool(const FInputActionValue& value)
 {
 
 }
+=======
+<<<<<<< HEAD
+//void UShootingComponent::SetupPlayerInput(UInputComponent* PlayerInputComponent)
+//{
+//	Super::SetupPlayerInput(PlayerInputComponent);
+//}
+=======
+void UShootingComponent::SetupPlayerInput(UInputComponent* PlayerInputComponent)
+{
+	//Super::SetupPlayerInput(PlayerInputComponent);
+}
+>>>>>>> ff4dc70e2e5e4c6757d1922287ee442b88798a60
+>>>>>>> 9e9f391635acece0845878b740609d14ac44eaba
 
 void UShootingComponent::ActionFire()
 {
