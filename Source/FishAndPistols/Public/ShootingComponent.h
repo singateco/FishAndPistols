@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "PlayerCharacter.h"
+
 #include "Components/ActorComponent.h"
 #include "InputAction.h"
 
@@ -29,8 +29,11 @@ public:
 
 	void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent);
 
-
 	//----------------------------Variable--------------------------------
+
+	//UPROPERTY()
+	//class APlayerCharacter* Me;
+
 	UPROPERTY(EditAnywhere)
 	bool bChoosePistol = true; //디버그용 수정필요#######
 

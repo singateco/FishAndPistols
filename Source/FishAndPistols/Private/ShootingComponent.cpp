@@ -4,6 +4,7 @@
 #include "ShootingComponent.h"
 
 #include "EnhancedInputComponent.h"
+#include "PlayerCharacter.h"
 
 // Sets default values for this component's properties
 UShootingComponent::UShootingComponent()
@@ -21,7 +22,7 @@ void UShootingComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
+	//Me = Cast<APlayerCharacter>(GetOwner());
 	
 }
 
