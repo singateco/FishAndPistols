@@ -111,7 +111,7 @@ void UFishingComponent::CheckMotionValue()
 		}
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("Min Max Difference = %.2f"), abs(min - max));
+	UE_LOG(LogTemp, Warning, TEXT("Min Max Difference = %.2f"), min - max);
 }
 
 void UFishingComponent::RightIndexTrigger(const FInputActionValue& Value)
