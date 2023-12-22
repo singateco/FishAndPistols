@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "PlayerCharacter.h"
 #include "Components/ActorComponent.h"
+#include "../../../../Program Files/Epic Games/UE_5.3/Engine/Plugins/EnhancedInput/Source/EnhancedInput/Public/EnhancedInputLibrary.h"
+
 #include "ShootingComponent.generated.h"
 
 
@@ -25,18 +27,27 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	//virtual void SetupPlayerInput(class UInputComponent* PlayerInputComponent) override;
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 
 	//----------------------------Variable--------------------------------
 	UPROPERTY(EditAnywhere)
 	bool bChoosePistol;
 
+	UPROPERTY(EditAnywhere)
+	bool bChooseSpadeAce;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MySettings|Inputs")
+	class UInputAction* IA_RightTriggerBool;
+
+
 
 	//----------------------------Function--------------------------------
-	
+
+	void RightTriggerInput_Bool(const FInputActionValue& value);
 	void ActionFire();
 	void PistolFire();
+	void SpadeAceFire();
 
 
 
