@@ -1,4 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "FishingComponent.h"
@@ -52,7 +52,16 @@ void UFishingComponent::BeginPlay()
 
 
 	// Start checking for motion value for detecting fishing motion
-	GetWorld()->GetTimerManager().SetTimer(MotionTimer, this, &UFishingComponent::CheckMotionValue, 0.05f, true);
+	GetWorld()->GetTimerManager().SetTimer(MotionTimer, this, &UFishingComponent::CheckMotionValue, 0.1f, true);
+
+	// Wait 1 second before able to detect motion
+	GetWorld()->GetTimerManager().SetTimer(MotionDetectedTimer, FTimerDelegate::CreateLambda(
+		[&]()->void
+		{
+			bIsAbleToDetectMotion = true;
+			MotionDetectedTimer.Invalidate();
+		}
+	), 1.0f, false);
 }
 
 
@@ -63,7 +72,7 @@ void UFishingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 
 	// ...
 
-	FVector RightHandLocation = OwningPlayer->RightHandMesh->GetComponentLocation();
+	const FVector RightHandLocation = OwningPlayer->RightHandMesh->GetSocketLocation(FName("middle_01_rSocket"));
 	DrawDebugPoint(GetWorld(), RightHandLocation, 45, FColor::Red, false, .4f);
 }
 
@@ -82,8 +91,8 @@ void UFishingComponent::SetupPlayerInputComponent(UInputComponent* InputComponen
 
 void UFishingComponent::CheckMotionValue()
 {
-	FVector PlayerForward = OwningPlayer->GetArrowComponent()->GetForwardVector();
-	FVector RightHandLocation = OwningPlayer->RightHandMesh->GetComponentLocation();
+	const FVector PlayerForward = OwningPlayer->GetArrowComponent()->GetForwardVector();
+	const FVector RightHandLocation = OwningPlayer->RightHandMesh->GetSocketLocation(FName("middle_01_rSocket"));
 
 	DotMotionBuffer[BufferIndex] = PlayerForward.Dot(RightHandLocation);
 	BufferIndex = DotMotionBuffer.GetNextIndex(BufferIndex);
@@ -110,12 +119,52 @@ void UFishingComponent::CheckMotionValue()
 		}
 	}
 
-	if (min - max < -52.5)
+	if (min - max < MotionThreshold)
 	{
-		FDateTime Now = FDateTime::Now();
-		UE_LOG(LogTemp, Warning, TEXT("Detected, %d, %d"), Now.GetSecond(), Now.GetMillisecond());
+		MotionDetected();
 	}
 	//UE_LOG(LogTemp, Warning, TEXT("Min Max Difference = %.2f"), min - max);
+}
+
+void UFishingComponent::MotionDetected()
+{
+	//const FDateTime Now = FDateTime::Now();
+	//UE_LOG(LogTemp, Warning, TEXT("Detected, %d, %d"), Now.GetSecond(), Now.GetMillisecond());
+
+
+	if (!bIsAbleToDetectMotion)
+	{
+		return;
+	}
+
+	bIsAbleToDetectMotion = false;
+
+	UE_LOG(LogTemp, Warning, TEXT("Detected and accepted"));
+
+	switch (Status)
+	{
+	case EFishingStatus::Idle:
+		FishingStarted();
+		break;
+	case EFishingStatus::Fishing:
+		CaughtFish();
+		break;
+	case EFishingStatus::Caught:
+		break;
+	default: ;
+	}
+
+	// Reset Motion timer cooldown.
+	if (!MotionDetectedTimer.IsValid())
+	{
+		GetWorld()->GetTimerManager().SetTimer(MotionDetectedTimer, FTimerDelegate::CreateLambda(
+			[&]()->void
+			{
+				bIsAbleToDetectMotion = true;
+				MotionDetectedTimer.Invalidate();
+			}
+		), MotionTimerCooldownSeconds, false);
+	}
 }
 
 void UFishingComponent::RightIndexTrigger(const FInputActionValue& Value)
@@ -123,11 +172,27 @@ void UFishingComponent::RightIndexTrigger(const FInputActionValue& Value)
 	if (Value.Get<bool>())
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Triggered"))
+		//OnFishCaught.Broadcast();
 	}
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Trigger Completed"))
 	}
+}
+
+void UFishingComponent::FishingStarted()
+{
+	Status = EFishingStatus::Fishing;
+	UE_LOG(LogTemp, Warning, TEXT("Fishing Started"))
+}
+
+void UFishingComponent::CaughtFish()
+{
+	Status = EFishingStatus::Caught;
+	OnFishCaught.Broadcast();
+	UE_LOG(LogTemp, Warning, TEXT("Fish Caught"))
+
+	Status = EFishingStatus::Idle;
 }
 
 void UFishingComponent::InitializeComponent()

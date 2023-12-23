@@ -8,8 +8,15 @@
 #include "Containers/CircularBuffer.h"
 #include "FishingComponent.generated.h"
 
+UENUM(BlueprintType)
+enum class EFishingStatus: uint8
+{
+	Idle,
+	Fishing,
+	Caught
+};
 
-class APlayerCharacter;
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FFishCaught);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class FISHANDPISTOLS_API UFishingComponent : public UActorComponent
@@ -34,6 +41,9 @@ public:
 	UFUNCTION()
 	void CheckMotionValue();
 
+	UFUNCTION()
+	void MotionDetected();
+
 	UPROPERTY()
 	class APlayerCharacter* OwningPlayer;
 
@@ -43,15 +53,37 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UInputAction* RightIndexTriggerInputAction;
 
-	TCircularBuffer<double> DotMotionBuffer {16};
+	TCircularBuffer<double> DotMotionBuffer {8};
 
 	uint32 BufferIndex {0};
+
+	UPROPERTY(EditAnywhere)
+	float MotionThreshold { -45.f };
+
 
 	UPROPERTY()
 	FTimerHandle MotionTimer;
 
+	UPROPERTY(BlueprintAssignable)
+	FFishCaught OnFishCaught;
+
+	UPROPERTY(VisibleAnywhere)
+	EFishingStatus Status {EFishingStatus::Idle};
+
+	UPROPERTY(VisibleAnywhere)
+	bool bIsAbleToDetectMotion {false};
+
+	UPROPERTY(EditAnywhere, meta = (ClampMin = 0.0f, UIMin = 0.0f))
+	float MotionTimerCooldownSeconds {3.f};
+
+	UPROPERTY()
+	FTimerHandle MotionDetectedTimer;
+
 private:
 	void RightIndexTrigger(const FInputActionValue& Value);
+
+	void FishingStarted();
+	void CaughtFish();
 
 public:
 	virtual void InitializeComponent() override;

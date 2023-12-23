@@ -1,4 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "PlayerCharacter.h"
@@ -6,6 +6,7 @@
 #include "FishingComponent.h"
 #include "MotionControllerComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Components/SplineMeshComponent.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
 
 // Sets default values
@@ -18,7 +19,8 @@ APlayerCharacter::APlayerCharacter()
  	RightHand(CreateDefaultSubobject<UMotionControllerComponent>(TEXT("Right Hand Motion Controller"))),
  	RightHandMesh(CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Right Hand Mesh"))),
  	FishingComponent(CreateDefaultSubobject<UFishingComponent>(TEXT("Fishing Component"))),
- 	FishingRodMeshComponent(CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Fishing Rod Mesh Comp")))
+ 	FishingRodMeshComponent(CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Fishing Rod Mesh Comp"))),
+	FishingLineComponent(CreateDefaultSubobject<USplineMeshComponent>(TEXT("Fishing Line Component")))
  {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -33,6 +35,10 @@ APlayerCharacter::APlayerCharacter()
 	RightHand->SetupAttachment(RootComponent);
 	RightHandMesh->SetupAttachment(RightHand);
 	FishingRodMeshComponent->SetupAttachment(RightHandMesh, FName("palm_rSocket"));
+	FishingLineComponent->SetupAttachment(FishingRodMeshComponent, FName("LineStart"));
+	FishingLineComponent->SetMobility(EComponentMobility::Movable);
+	FishingLineComponent->SetStartPosition(FVector::ZeroVector);
+	
 
 	// (X=6.070411,Y=0.112364,Z=4.035356)
 	// (Pitch=2.401839,Yaw=629.462922,Roll=-478.018271)
@@ -60,6 +66,11 @@ void APlayerCharacter::BeginPlay()
 void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (FishingRodMeshComponent->IsVisible())
+	{
+		FishingLineComponent->SetEndPosition(FishingRodMeshComponent->GetSocketTransform(FName("LineEnd"), RTS_Component).GetLocation());
+	}
 }
 
 // Called to bind functionality to input
@@ -67,5 +78,5 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	//FishingComponent->SetupPlayerInputComponent(PlayerInputComponent);
+	FishingComponent->SetupPlayerInputComponent(PlayerInputComponent);
 }
