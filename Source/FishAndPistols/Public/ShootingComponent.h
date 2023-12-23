@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -35,7 +35,7 @@ public:
 	//class APlayerCharacter* Me;
 
 	UPROPERTY(EditAnywhere)
-	bool bChoosePistol = true; //µð¹ö±×¿ë ¼öÁ¤ÇÊ¿ä#######
+	bool bChoosePistol = true; //ë””ë²„ê·¸ìš© ìˆ˜ì •í•„ìš”#######
 
 	UPROPERTY(EditAnywhere)
 	bool bChooseSpadeAce;

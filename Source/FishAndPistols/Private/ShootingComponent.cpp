@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "ShootingComponent.h"
@@ -68,7 +68,7 @@ void UShootingComponent::ActionSemiAutoFire()
 		SpadeAceFire();
 	}
 }
-//°Ù¿À³Ê·Î ÇÃ·¹ÀÌ¾î ÀúÀåÇÏ°í, ÃÑ ÄÄÆ÷³ÍÆ®ÀÇ ¸ÓÁñ À§Ä¡Á¤º¸ ¿©±â¼­ ¶óÀÎÆ®·¹ÀÌ½º ½ÃÀÛ
+//ê²Ÿì˜¤ë„ˆë¡œ í”Œë ˆì´ì–´ ì €ì¥í•˜ê³ , ì´ ì»´í¬ë„ŒíŠ¸ì˜ ë¨¸ì¦ ìœ„ì¹˜ì •ë³´ ì—¬ê¸°ì„œ ë¼ì¸íŠ¸ë ˆì´ìŠ¤ ì‹œì‘
 void UShootingComponent::PistolFire()
 {
 	

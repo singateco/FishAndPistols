@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "PlayerCharacter.h"
@@ -51,7 +51,7 @@ void APlayerCharacter::BeginPlay()
 	Super::BeginPlay();
 
 
-	// Çìµå ¸¶¿îÆ® µğ½ºÇÃ·¹ÀÌ ÀåºñÀÇ ±âÁØ À§Ä¡¸¦ ½ºÅ×ÀÌÁö·Î ¼³Á¤ÇÑ´Ù.
+	// í—¤ë“œ ë§ˆìš´íŠ¸ ë””ìŠ¤í”Œë ˆì´ ì¥ë¹„ì˜ ê¸°ì¤€ ìœ„ì¹˜ë¥¼ ìŠ¤í…Œì´ì§€ë¡œ ì„¤ì •í•œë‹¤.
 	UHeadMountedDisplayFunctionLibrary::SetTrackingOrigin(EHMDTrackingOrigin::Stage);
 
 }

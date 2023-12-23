@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -32,22 +32,22 @@ public:
 
 	// ============= PROPERTIES =============
 
-	//Ä«¸Ş¶ó
+	//ì¹´ë©”ë¼
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|Components")
 	class UCameraComponent* CameraComponent;
 	
-	// Ä«¸Ş¶ó ¸Ş½Ã
+	// ì¹´ë©”ë¼ ë©”ì‹œ
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|Components")
 	UStaticMeshComponent* HMDMesh;
 	
-	// ¿ŞÂÊ ¼Õ
+	// ì™¼ìª½ ì†
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|Components")
 	class UMotionControllerComponent* LeftHand;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|Components")
 	USkeletalMeshComponent* LeftHandMesh;
 	
-	// ¿À¸¥ÂÊ ¼Õ
+	// ì˜¤ë¥¸ìª½ ì†
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|Components")
 	UMotionControllerComponent* RightHand;
 	
@@ -57,7 +57,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|FishingComponent")
 	class UFishingComponent* FishingComponent;
 	
-	// ³¬½Ã´ë ¸Ş½Ã ÄÄÆ÷³ÍÆ®
+	// ë‚šì‹œëŒ€ ë©”ì‹œ ì»´í¬ë„ŒíŠ¸
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MySettings|Components")
 	UStaticMeshComponent* FishingRodMeshComponent;
 
