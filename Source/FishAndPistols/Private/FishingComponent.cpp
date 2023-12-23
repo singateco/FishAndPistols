@@ -2,12 +2,13 @@
 
 
 #include "FishingComponent.h"
-#include "MotionControllerComponent.h"
 #include "PlayerCharacter.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "InputMappingContext.h"
 #include "Components/ArrowComponent.h"
+#include "Misc/DateTime.h"
+
 
 // Sets default values for this component's properties
 UFishingComponent::UFishingComponent()
@@ -22,6 +23,8 @@ UFishingComponent::UFishingComponent()
 	{
 		DotMotionBuffer[i] = -9999;
 	}
+
+
 }
 
 
@@ -35,18 +38,20 @@ void UFishingComponent::BeginPlay()
 
 	OwningPlayer = GetOwner<APlayerCharacter>();
 
-	check(InputMapping)
 
+	// Add the enhanced input mapping to the player.
+	check(InputMapping)
 	ULocalPlayer* LocalPlayer = OwningPlayer->GetController<APlayerController>()->GetLocalPlayer();
 	UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(LocalPlayer);
 
 	check(Subsystem)
-
 	if (Subsystem)
 	{
 		Subsystem->AddMappingContext(InputMapping, 0);
 	}
 
+
+	// Start checking for motion value for detecting fishing motion
 	GetWorld()->GetTimerManager().SetTimer(MotionTimer, this, &UFishingComponent::CheckMotionValue, 0.05f, true);
 }
 
@@ -58,14 +63,8 @@ void UFishingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 
 	// ...
 
-	FVector PlayerForward = OwningPlayer->GetArrowComponent()->GetForwardVector();
 	FVector RightHandLocation = OwningPlayer->RightHandMesh->GetComponentLocation();
-
 	DrawDebugPoint(GetWorld(), RightHandLocation, 45, FColor::Red, false, .4f);
-
-	//UE_LOG(LogTemp, Warning, TEXT("%f"), PlayerForward.Dot(RightHandLocation));
-
-
 }
 
 void UFishingComponent::SetupPlayerInputComponent(UInputComponent* InputComponent)
@@ -96,7 +95,7 @@ void UFishingComponent::CheckMotionValue()
 	{
 		if (DotMotionBuffer[i] == -9999)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Motion Buff isn't ready yet."))
+			UE_LOG(LogTemp, Warning, TEXT("Motion Buffer isn't ready yet."))
 			return;
 		}
 
@@ -111,7 +110,12 @@ void UFishingComponent::CheckMotionValue()
 		}
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("Min Max Difference = %.2f"), min - max);
+	if (min - max < -52.5)
+	{
+		FDateTime Now = FDateTime::Now();
+		UE_LOG(LogTemp, Warning, TEXT("Detected, %d, %d"), Now.GetSecond(), Now.GetMillisecond());
+	}
+	//UE_LOG(LogTemp, Warning, TEXT("Min Max Difference = %.2f"), min - max);
 }
 
 void UFishingComponent::RightIndexTrigger(const FInputActionValue& Value)

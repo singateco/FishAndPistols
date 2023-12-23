@@ -32,30 +32,33 @@ public:
 
 	// ============= PROPERTIES =============
 
-	// 카메라
+	//카메라
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|Components")
 	class UCameraComponent* CameraComponent;
-
+	
 	// 카메라 메시
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|Components")
 	UStaticMeshComponent* HMDMesh;
-
+	
 	// 왼쪽 손
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|Components")
 	class UMotionControllerComponent* LeftHand;
-
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|Components")
 	USkeletalMeshComponent* LeftHandMesh;
-
+	
 	// 오른쪽 손
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|Components")
 	UMotionControllerComponent* RightHand;
-
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|Components")
 	USkeletalMeshComponent* RightHandMesh;
-
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|FishingComponent")
 	class UFishingComponent* FishingComponent;
 	
+	// 낚시대 메시 컴포넌트
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MySettings|Components")
+	UStaticMeshComponent* FishingRodMeshComponent;
 
 };

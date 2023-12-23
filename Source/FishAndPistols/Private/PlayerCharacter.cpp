@@ -11,14 +11,15 @@
 // Sets default values
 APlayerCharacter::APlayerCharacter()
 	:
-	CameraComponent(CreateDefaultSubobject<UCameraComponent>(TEXT("Camera Component"))),
-	HMDMesh(CreateDefaultSubobject<UStaticMeshComponent>(TEXT("HMD Mesh"))),
-	LeftHand(CreateDefaultSubobject<UMotionControllerComponent>(TEXT("Left Hand Motion Controller"))),
-	LeftHandMesh(CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Left Hand Mesh"))),
-	RightHand(CreateDefaultSubobject<UMotionControllerComponent>(TEXT("Right Hand"))),
-	RightHandMesh(CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Right Hand Mesh"))),
-	FishingComponent(CreateDefaultSubobject<UFishingComponent>(FName("Fishing Component")))
-{
+ 	CameraComponent(CreateDefaultSubobject<UCameraComponent>(TEXT("Camera Component"))),
+ 	HMDMesh(CreateDefaultSubobject<UStaticMeshComponent>(TEXT("HMD Mesh"))),
+ 	LeftHand(CreateDefaultSubobject<UMotionControllerComponent>(TEXT("Left Hand Motion Controller"))),
+ 	LeftHandMesh(CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Left Hand Mesh"))),
+ 	RightHand(CreateDefaultSubobject<UMotionControllerComponent>(TEXT("Right Hand Motion Controller"))),
+ 	RightHandMesh(CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Right Hand Mesh"))),
+ 	FishingComponent(CreateDefaultSubobject<UFishingComponent>(TEXT("Fishing Component"))),
+ 	FishingRodMeshComponent(CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Fishing Rod Mesh Comp")))
+ {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -31,6 +32,11 @@ APlayerCharacter::APlayerCharacter()
 
 	RightHand->SetupAttachment(RootComponent);
 	RightHandMesh->SetupAttachment(RightHand);
+	FishingRodMeshComponent->SetupAttachment(RightHandMesh, FName("palm_rSocket"));
+
+	// (X=6.070411,Y=0.112364,Z=4.035356)
+	// (Pitch=2.401839,Yaw=629.462922,Roll=-478.018271)
+	// 0.25
 
 	// Set up tracking motion sources.
 	LeftHand->SetTrackingMotionSource(FName("Left"));
@@ -61,5 +67,5 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	FishingComponent->SetupPlayerInputComponent(PlayerInputComponent);
+	//FishingComponent->SetupPlayerInputComponent(PlayerInputComponent);
 }

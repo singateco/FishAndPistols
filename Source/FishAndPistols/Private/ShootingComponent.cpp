@@ -44,10 +44,6 @@ void UShootingComponent::RightTriggerInput_Bool(const FInputActionValue& value)
 {
 
 }
-void UShootingComponent::SetupPlayerInput(UInputComponent* PlayerInputComponent)
-{
-	//Super::SetupPlayerInput(PlayerInputComponent);
-}
 
 void UShootingComponent::ActionFire()
 {
