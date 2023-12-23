@@ -3,6 +3,9 @@
 
 #include "ShootingComponent.h"
 
+#include "EnhancedInputComponent.h"
+#include "PlayerCharacter.h"
+
 // Sets default values for this component's properties
 UShootingComponent::UShootingComponent()
 {
@@ -19,7 +22,7 @@ void UShootingComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
+	//Me = Cast<APlayerCharacter>(GetOwner());
 	
 }
 
@@ -33,19 +36,28 @@ void UShootingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 }
 
 
-
 void UShootingComponent::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
-
+	if (UEnhancedInputComponent* EnhancedInput = Cast<UEnhancedInputComponent>(PlayerInputComponent))
+	{
+		EnhancedInput->BindAction(IA_RightTriggerBool, ETriggerEvent::Started, this, &UShootingComponent::RightTriggerInput_Bool);
+		EnhancedInput->BindAction(IA_RightTriggerBool, ETriggerEvent::Triggered, this, &UShootingComponent::RightTriggerInput_Float);
+		EnhancedInput->BindAction(IA_RightTriggerBool, ETriggerEvent::Completed, this, &UShootingComponent::RightTriggerInput_Float);
+		
+	}
 }
-
 
 void UShootingComponent::RightTriggerInput_Bool(const FInputActionValue& value)
 {
-
+	ActionSemiAutoFire();
 }
 
-void UShootingComponent::ActionFire()
+void UShootingComponent::RightTriggerInput_Float(const FInputActionValue& value)
+{
+	ActionFullAutoFire();
+}
+
+void UShootingComponent::ActionSemiAutoFire()
 {
 	if(bChoosePistol)
 	{
@@ -56,10 +68,10 @@ void UShootingComponent::ActionFire()
 		SpadeAceFire();
 	}
 }
-
+//겟오너로 플레이어 저장하고, 총 컴포넌트의 머즐 위치정보 여기서 라인트레이스 시작
 void UShootingComponent::PistolFire()
 {
-
+	
 }
 
 void UShootingComponent::SpadeAceFire()
@@ -67,3 +79,7 @@ void UShootingComponent::SpadeAceFire()
 
 }
 
+void UShootingComponent::ActionFullAutoFire()
+{
+
+}

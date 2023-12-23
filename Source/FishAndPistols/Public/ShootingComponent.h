@@ -3,8 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
 #include "Components/ActorComponent.h"
-#include "EnhancedInputLibrary.h"
+#include "InputAction.h"
+
 #include "ShootingComponent.generated.h"
 
 
@@ -25,12 +27,15 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent);
-
+	void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent);
 
 	//----------------------------Variable--------------------------------
+
+	//UPROPERTY()
+	//class APlayerCharacter* Me;
+
 	UPROPERTY(EditAnywhere)
-	bool bChoosePistol;
+	bool bChoosePistol = true; //디버그용 수정필요#######
 
 	UPROPERTY(EditAnywhere)
 	bool bChooseSpadeAce;
@@ -38,12 +43,17 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MySettings|Inputs")
 	class UInputAction* IA_RightTriggerBool;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MySettings|Inputs")
+	class UInputAction* IA_RightTriggerFloat;
 
 
 	//----------------------------Function--------------------------------
 
 	void RightTriggerInput_Bool(const FInputActionValue& value);
-	void ActionFire();
+	void RightTriggerInput_Float(const FInputActionValue& value);
+
+	void ActionSemiAutoFire();
+	void ActionFullAutoFire();
 	void PistolFire();
 	void SpadeAceFire();
 
