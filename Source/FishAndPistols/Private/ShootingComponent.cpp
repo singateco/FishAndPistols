@@ -1,4 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "ShootingComponent.h"
@@ -41,8 +41,8 @@ void UShootingComponent::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 	if (UEnhancedInputComponent* EnhancedInput = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
 		EnhancedInput->BindAction(IA_RightTriggerBool, ETriggerEvent::Started, this, &UShootingComponent::RightTriggerInput_Bool);
-		EnhancedInput->BindAction(IA_RightTriggerBool, ETriggerEvent::Triggered, this, &UShootingComponent::RightTriggerInput_Float);
-		EnhancedInput->BindAction(IA_RightTriggerBool, ETriggerEvent::Completed, this, &UShootingComponent::RightTriggerInput_Float);
+		EnhancedInput->BindAction(IA_RightTriggerFloat, ETriggerEvent::Triggered, this, &UShootingComponent::RightTriggerInput_Float);
+		EnhancedInput->BindAction(IA_RightTriggerFloat, ETriggerEvent::Completed, this, &UShootingComponent::RightTriggerInput_Float);
 		
 	}
 }

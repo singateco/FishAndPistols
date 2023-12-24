@@ -4,16 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Revolver.generated.h"
+#include "SpadeAce.generated.h"
 
 UCLASS()
-class FISHANDPISTOLS_API ARevolver : public AActor
+class FISHANDPISTOLS_API ASpadeAce : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ARevolver();
+	ASpadeAce();
 
 protected:
 	// Called when the game starts or when spawned
@@ -28,7 +28,7 @@ public:
 private:
 
 	UPROPERTY()
-		class UStaticMeshComponent* Revolver;
+		class UStaticMeshComponent* SpadeAce;
 
 	UPROPERTY()
 		class UStaticMeshComponent* BulletREF;

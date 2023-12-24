@@ -1,46 +1,46 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Revolver.h"
+#include "SpadeAce.h"
 
 #include "Components/BoxComponent.h"
 
 // Sets default values
-ARevolver::ARevolver()
+ASpadeAce::ASpadeAce()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	Revolver = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Revolver"));
-	Revolver->SetupAttachment(RootComponent);
+	SpadeAce = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SpadeAce"));
+	SpadeAce->SetupAttachment(RootComponent);
 
-	ConstructorHelpers::FObjectFinder<UStaticMesh>MeshRevolver(TEXT("/Script/Engine.StaticMesh'/Game/Resources/KDE/revolver/source/Revolver.Revolver'"));
+	ConstructorHelpers::FObjectFinder<UStaticMesh>MeshSpadeAce(TEXT("/Script/Engine.StaticMesh'/Game/Resources/KDE/ace-of-spades-destiny-2/source/Ace_of_Spades.Ace_of_Spades'"));
 
-	if(MeshRevolver.Succeeded())
+	if (MeshSpadeAce.Succeeded())
 	{
-		Revolver->SetStaticMesh(MeshRevolver.Object);
-		Revolver->SetRelativeRotation(FRotator(0, 180, 0));
+		SpadeAce->SetStaticMesh(MeshSpadeAce.Object);
+		SpadeAce->SetRelativeRotation(FRotator(0, -90, 0));
 	}
 
 	BulletREF = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BulletREF"));
-	BulletREF->SetupAttachment(Revolver);
+	BulletREF->SetupAttachment(SpadeAce);
 	BulletREF->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
-	BulletREF->SetRelativeLocationAndRotation(FVector(-24, 0, 22), FRotator(0, -180, 0));
+	BulletREF->SetRelativeLocationAndRotation(FVector(0, 28, 18), FRotator(0, 90, 0));
 	BulletREF->SetRelativeScale3D(FVector(0.1));
 	BulletREF->bHiddenInGame = true;
 
 }
 
 // Called when the game starts or when spawned
-void ARevolver::BeginPlay()
+void ASpadeAce::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
 // Called every frame
-void ARevolver::Tick(float DeltaTime)
+void ASpadeAce::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
