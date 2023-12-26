@@ -18,6 +18,7 @@ ARevolver::ARevolver()
 	BulletREF->SetupAttachment(Revolver);
 	BulletREF->SetRelativeLocationAndRotation(FVector(-22, 0, 22), FRotator(0, 180, 0));
 
+
 	ConstructorHelpers::FObjectFinder<UStaticMesh>MeshRevolver(TEXT("/Script/Engine.StaticMesh'/Game/Resources/KDE/revolver/source/Revolver.Revolver'"));
 
 	if(MeshRevolver.Succeeded())
