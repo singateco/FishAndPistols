@@ -34,11 +34,14 @@ public:
 	UPROPERTY()
 	class APlayerCharacter* Player;
 
-	UPROPERTY(EditAnywhere)
-	bool bChoosePistol = true; //디버그용 수정필요#######
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UInputMappingContext* InputMapping;
 
 	UPROPERTY(EditAnywhere)
-	bool bChooseSpadeAce;
+	bool bChooseSemiAuto = true; //디버그용 수정필요#######
+
+	UPROPERTY(EditAnywhere)
+	bool bChooseFullAuto;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MySettings|Inputs")
 	class UInputAction* IA_RightTriggerBool;
@@ -54,9 +57,6 @@ public:
 
 	void ActionSemiAutoFire();
 	void ActionFullAutoFire();
-	void PistolFire();
-	void SpadeAceFire();
-
 
 
 };

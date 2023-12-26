@@ -2,6 +2,8 @@
 
 
 #include "ShootingComponent.h"
+#include "InputMappingContext.h"
+#include "EnhancedInputSubsystems.h"
 
 #include "EnhancedInputComponent.h"
 #include "PlayerCharacter.h"
@@ -25,7 +27,15 @@ void UShootingComponent::BeginPlay()
 	Player = GetOwner<APlayerCharacter>();
 
 	//Add enhanced Input Mapping
+	check(InputMapping)
+	ULocalPlayer* LocalPlayer = Player->GetController<APlayerController>()->GetLocalPlayer();
+	UEnhancedInputLocalPlayerSubsystem* Subsystem =ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(LocalPlayer);
 
+	check(Subsystem)
+	if(Subsystem)
+	{
+		Subsystem->AddMappingContext(InputMapping, 1);
+	}
 
 }
 
@@ -43,6 +53,8 @@ void UShootingComponent::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 {
 	if (UEnhancedInputComponent* EnhancedInput = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
+		check(IA_RightTriggerBool)
+		check(IA_RightTriggerFloat)
 		EnhancedInput->BindAction(IA_RightTriggerBool, ETriggerEvent::Started, this, &UShootingComponent::RightTriggerInput_Bool);
 		EnhancedInput->BindAction(IA_RightTriggerFloat, ETriggerEvent::Triggered, this, &UShootingComponent::RightTriggerInput_Float);
 		EnhancedInput->BindAction(IA_RightTriggerFloat, ETriggerEvent::Completed, this, &UShootingComponent::RightTriggerInput_Float);
@@ -52,37 +64,25 @@ void UShootingComponent::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 
 void UShootingComponent::RightTriggerInput_Bool(const FInputActionValue& value)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Semi Auto"))
 	ActionSemiAutoFire();
 }
 
 void UShootingComponent::RightTriggerInput_Float(const FInputActionValue& value)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Full Auto"))
 	ActionFullAutoFire();
 }
 
 void UShootingComponent::ActionSemiAutoFire()
 {
-	if(bChoosePistol)
-	{
-		PistolFire();
-	}
-	else if(bChooseSpadeAce)
-	{
-		SpadeAceFire();
-	}
-}
-//겟오너로 플레이어 저장하고, 총 컴포넌트의 머즐 위치정보 여기서 라인트레이스 시작
-void UShootingComponent::PistolFire()
-{
 	
-}
-
-void UShootingComponent::SpadeAceFire()
-{
-
 }
 
 void UShootingComponent::ActionFullAutoFire()
 {
 
 }
+
+//겟오너로 플레이어 저장하고, 총 컴포넌트의 머즐 위치정보 여기서 라인트레이스 시작
+
