@@ -49,6 +49,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MySettings|Inputs")
 	class UInputAction* IA_RightTriggerFloat;
 
+	UPROPERTY(EditAnywhere)
+		class ARevolver* Revolver;
+
+	UPROPERTY(EditAnywhere)
+		class ASpadeAce* SpadeAce;
 
 	//----------------------------Function--------------------------------
 

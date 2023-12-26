@@ -3,12 +3,14 @@
 
 #include "Revolver.h"
 #include "Components/ArrowComponent.h"
+#include "Fish.h"
+#include "Kismet/GameplayStatics.h"
 
 
 // Sets default values
 ARevolver::ARevolver()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+ 	// Set this actor to call Tick() every frame. You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	Revolver = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Revolver"));
@@ -34,13 +36,34 @@ ARevolver::ARevolver()
 void ARevolver::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+
 }
 
 // Called every frame
 void ARevolver::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+}
+
+void ARevolver::ActionFire()
+{
+	FHitResult HitResult;
+	check(BulletREF)
+
+	FVector StartLoc = BulletREF->GetComponentLocation();
+	FVector EndLoc = StartLoc + BulletREF->GetForwardVector() * GunRange;
+
+	if(GetWorld()->LineTraceSingleByChannel(HitResult, StartLoc, EndLoc, ECollisionChannel::ECC_Visibility))
+	{
+		DrawDebugLine(GetWorld(), StartLoc, EndLoc, FColor::Red, false, 5.0f);
+
+		AFish* Fish = Cast<AFish>(HitResult.GetActor());
+		if(Fish)
+		{
+			Fish->Destroy();
+		}
+	}
 
 }
 

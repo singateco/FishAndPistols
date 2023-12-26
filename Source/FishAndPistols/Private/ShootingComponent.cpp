@@ -7,6 +7,7 @@
 
 #include "EnhancedInputComponent.h"
 #include "PlayerCharacter.h"
+#include "Revolver.h"
 
 // Sets default values for this component's properties
 UShootingComponent::UShootingComponent()
@@ -15,7 +16,7 @@ UShootingComponent::UShootingComponent()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	// ...
+
 }
 
 
@@ -36,6 +37,8 @@ void UShootingComponent::BeginPlay()
 	{
 		Subsystem->AddMappingContext(InputMapping, 1);
 	}
+
+	Revolver = GetWorld()->SpawnActor<ARevolver>();
 
 }
 
@@ -76,7 +79,8 @@ void UShootingComponent::RightTriggerInput_Float(const FInputActionValue& value)
 
 void UShootingComponent::ActionSemiAutoFire()
 {
-	
+	check(Revolver)
+	Revolver->ActionFire();
 }
 
 void UShootingComponent::ActionFullAutoFire()

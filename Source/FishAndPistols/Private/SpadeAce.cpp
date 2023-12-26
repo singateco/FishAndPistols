@@ -2,7 +2,7 @@
 
 
 #include "SpadeAce.h"
-
+#include "Fish.h"
 #include "Components/ArrowComponent.h"
 
 
@@ -44,4 +44,5 @@ void ASpadeAce::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 }
+
 
