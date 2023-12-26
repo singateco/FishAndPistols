@@ -33,8 +33,5 @@ public:
 	class UProjectileMovementComponent* ProjectileMovementComponent;
 
 	UPROPERTY(EditAnywhere)
-	float MinimumSpeed {500};
-
-	UPROPERTY(EditAnywhere)
-	float MaximumSpeed {750};
+	float DefaultSpeed {1500};
 };
