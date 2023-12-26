@@ -2,7 +2,7 @@
 
 
 #include "PlayerCharacter.h"
-
+#include "ShootingComponent.h"
 #include "FishingComponent.h"
 #include "MotionControllerComponent.h"
 #include "Camera/CameraComponent.h"
@@ -19,6 +19,8 @@ APlayerCharacter::APlayerCharacter()
  	RightHand(CreateDefaultSubobject<UMotionControllerComponent>(TEXT("Right Hand Motion Controller"))),
  	RightHandMesh(CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Right Hand Mesh"))),
  	FishingComponent(CreateDefaultSubobject<UFishingComponent>(TEXT("Fishing Component"))),
+//슈팅컴포넌트
+	ShootingComponent(CreateDefaultSubobject<UShootingComponent>(TEXT("Shooting Component"))),
  	FishingRodMeshComponent(CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Fishing Rod Mesh Comp"))),
 	FishingLineComponent(CreateDefaultSubobject<USplineMeshComponent>(TEXT("Fishing Line Component")))
  {
@@ -79,4 +81,6 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 	FishingComponent->SetupPlayerInputComponent(PlayerInputComponent);
+
+	ShootingComponent->SetupPlayerInputComponent(PlayerInputComponent);
 }

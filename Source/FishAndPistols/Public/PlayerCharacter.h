@@ -56,6 +56,10 @@ public:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|FishingComponent")
 	class UFishingComponent* FishingComponent;
+
+	//슈팅 컴포넌트
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|ShootingComponent")
+	class UShootingComponent* ShootingComponent;
 	
 	// 낚시대 메시 컴포넌트
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MySettings|Components")
