@@ -3,7 +3,8 @@
 
 #include "SpadeAce.h"
 
-#include "Components/BoxComponent.h"
+#include "Components/ArrowComponent.h"
+
 
 // Sets default values
 ASpadeAce::ASpadeAce()
@@ -12,7 +13,11 @@ ASpadeAce::ASpadeAce()
 	PrimaryActorTick.bCanEverTick = true;
 
 	SpadeAce = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SpadeAce"));
-	SpadeAce->SetupAttachment(RootComponent);
+	SetRootComponent(SpadeAce);
+
+	BulletREF = CreateDefaultSubobject<UArrowComponent>(TEXT("BulletREF"));
+	BulletREF->SetupAttachment(SpadeAce);
+	BulletREF->SetRelativeLocationAndRotation(FVector(0, 23, 17), FRotator(0, 90, 0));
 
 	ConstructorHelpers::FObjectFinder<UStaticMesh>MeshSpadeAce(TEXT("/Script/Engine.StaticMesh'/Game/Resources/KDE/ace-of-spades-destiny-2/source/Ace_of_Spades.Ace_of_Spades'"));
 
@@ -22,13 +27,7 @@ ASpadeAce::ASpadeAce()
 		SpadeAce->SetRelativeRotation(FRotator(0, -90, 0));
 	}
 
-	BulletREF = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BulletREF"));
-	BulletREF->SetupAttachment(SpadeAce);
-	BulletREF->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-
-	BulletREF->SetRelativeLocationAndRotation(FVector(0, 28, 18), FRotator(0, 90, 0));
-	BulletREF->SetRelativeScale3D(FVector(0.1));
-	BulletREF->bHiddenInGame = true;
+	
 
 }
 
