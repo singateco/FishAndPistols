@@ -35,6 +35,8 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	virtual void InitializeComponent() override;
+
 	UFUNCTION()
 	void SetupPlayerInputComponent(UInputComponent* InputComponent);
 
@@ -53,13 +55,18 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UInputAction* RightIndexTriggerInputAction;
 
+	// Motion Buffer
 	TCircularBuffer<double> DotMotionBuffer {8};
 
+	// Sentinel value for the motion buffer.
+	const float BufferIgnoreValue{ -9999 };
+
+	// Index Value for the buffer.
 	uint32 BufferIndex {0};
 
+	// Threshold for the buffer.
 	UPROPERTY(EditAnywhere)
 	float MotionThreshold { -45.f };
-
 
 	UPROPERTY()
 	FTimerHandle MotionTimer;
@@ -79,12 +86,10 @@ public:
 	UPROPERTY()
 	FTimerHandle MotionDetectedTimer;
 
+	
+
 private:
 	void RightIndexTrigger(const FInputActionValue& Value);
-
 	void FishingStarted();
 	void CaughtFish();
-
-public:
-	virtual void InitializeComponent() override;
 };

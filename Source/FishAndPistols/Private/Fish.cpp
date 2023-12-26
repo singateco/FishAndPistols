@@ -14,11 +14,18 @@ AFish::AFish()
 	ProjectileMovementComponent(CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Projectile Movement Component")))
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	SetRootComponent(Box);
 	StaticMeshComponent->SetupAttachment(Box);
 	ProjectileMovementComponent->bAutoActivate = true;
+
+
+	// Set lifetime.
+	AActor::SetLifeSpan(15.f);
+
+	// Set up speed.
+	ProjectileMovementComponent->InitialSpeed = DefaultSpeed;
 
 }
 
@@ -26,9 +33,6 @@ AFish::AFish()
 void AFish::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// Set up the speed of the flying fish.
-	ProjectileMovementComponent->InitialSpeed = FMath::RandRange(MinimumSpeed, MaximumSpeed);
 }
 
 // Called every frame

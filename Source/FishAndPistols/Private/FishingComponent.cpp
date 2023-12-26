@@ -21,7 +21,7 @@ UFishingComponent::UFishingComponent()
 	bWantsInitializeComponent = true;
 	for (uint32 i = 0; i < DotMotionBuffer.Capacity(); i++)
 	{
-		DotMotionBuffer[i] = -9999;
+		DotMotionBuffer[i] = BufferIgnoreValue;
 	}
 
 
@@ -102,7 +102,7 @@ void UFishingComponent::CheckMotionValue()
 
 	for (uint32 i = 0; i < DotMotionBuffer.Capacity(); i++)
 	{
-		if (DotMotionBuffer[i] == -9999)
+		if (DotMotionBuffer[i] == BufferIgnoreValue)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Motion Buffer isn't ready yet."))
 			return;
