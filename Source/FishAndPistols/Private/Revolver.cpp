@@ -2,8 +2,8 @@
 
 
 #include "Revolver.h"
+#include "Components/ArrowComponent.h"
 
-#include "Components/BoxComponent.h"
 
 // Sets default values
 ARevolver::ARevolver()
@@ -12,7 +12,12 @@ ARevolver::ARevolver()
 	PrimaryActorTick.bCanEverTick = true;
 
 	Revolver = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Revolver"));
-	Revolver->SetupAttachment(RootComponent);
+	SetRootComponent(Revolver);
+
+	BulletREF = CreateDefaultSubobject<UArrowComponent>(TEXT("BulletREF"));
+	BulletREF->SetupAttachment(Revolver);
+	BulletREF->SetRelativeLocationAndRotation(FVector(-22, 0, 22), FRotator(0, 180, 0));
+
 
 	ConstructorHelpers::FObjectFinder<UStaticMesh>MeshRevolver(TEXT("/Script/Engine.StaticMesh'/Game/Resources/KDE/revolver/source/Revolver.Revolver'"));
 
@@ -22,13 +27,8 @@ ARevolver::ARevolver()
 		Revolver->SetRelativeRotation(FRotator(0, 180, 0));
 	}
 
-	BulletREF = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BulletREF"));
-	BulletREF->SetupAttachment(Revolver);
-	BulletREF->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	
 
-	BulletREF->SetRelativeLocationAndRotation(FVector(-24, 0, 22), FRotator(0, -180, 0));
-	BulletREF->SetRelativeScale3D(FVector(0.1));
-	BulletREF->bHiddenInGame = true;
 
 }
 
