@@ -14,10 +14,13 @@ ASpadeAce::ASpadeAce()
 
 	SpadeAce = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SpadeAce"));
 	SetRootComponent(SpadeAce);
+<<<<<<< HEAD
 
 	BulletREF = CreateDefaultSubobject<UArrowComponent>(TEXT("BulletREF"));
 	BulletREF->SetupAttachment(SpadeAce);
 	BulletREF->SetRelativeLocationAndRotation(FVector(0, 23, 17), FRotator(0, 90, 0));
+=======
+>>>>>>> e3a7bb5fdf2b2f8ae445a053bf43a7e7e303dd10
 
 	ConstructorHelpers::FObjectFinder<UStaticMesh>MeshSpadeAce(TEXT("/Script/Engine.StaticMesh'/Game/Resources/KDE/ace-of-spades-destiny-2/source/Ace_of_Spades.Ace_of_Spades'"));
 

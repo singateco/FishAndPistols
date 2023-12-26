@@ -13,10 +13,13 @@ ARevolver::ARevolver()
 
 	Revolver = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Revolver"));
 	SetRootComponent(Revolver);
+<<<<<<< HEAD
 
 	BulletREF = CreateDefaultSubobject<UArrowComponent>(TEXT("BulletREF"));
 	BulletREF->SetupAttachment(Revolver);
 	BulletREF->SetRelativeLocationAndRotation(FVector(-22, 0, 22), FRotator(0, 180, 0));
+=======
+>>>>>>> e3a7bb5fdf2b2f8ae445a053bf43a7e7e303dd10
 
 	ConstructorHelpers::FObjectFinder<UStaticMesh>MeshRevolver(TEXT("/Script/Engine.StaticMesh'/Game/Resources/KDE/revolver/source/Revolver.Revolver'"));
 
