@@ -13,6 +13,7 @@ ARevolver::ARevolver()
 
 	Revolver = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Revolver"));
 	SetRootComponent(Revolver);
+	Revolver->SetRelativeScale3D(FVector(0.7));
 
 	BulletREF = CreateDefaultSubobject<UArrowComponent>(TEXT("BulletREF"));
 	BulletREF->SetupAttachment(Revolver);
@@ -26,9 +27,6 @@ ARevolver::ARevolver()
 		Revolver->SetStaticMesh(MeshRevolver.Object);
 		Revolver->SetRelativeRotation(FRotator(0, 180, 0));
 	}
-
-	
-
 
 }
 

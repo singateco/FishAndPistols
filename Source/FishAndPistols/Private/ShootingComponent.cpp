@@ -22,8 +22,11 @@ void UShootingComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	//Me = Cast<APlayerCharacter>(GetOwner());
-	
+	Player = GetOwner<APlayerCharacter>();
+
+	//Add enhanced Input Mapping
+
+
 }
 
 

@@ -31,8 +31,8 @@ public:
 
 	//----------------------------Variable--------------------------------
 
-	//UPROPERTY()
-	//class APlayerCharacter* Me;
+	UPROPERTY()
+	class APlayerCharacter* Player;
 
 	UPROPERTY(EditAnywhere)
 	bool bChoosePistol = true; //디버그용 수정필요#######
