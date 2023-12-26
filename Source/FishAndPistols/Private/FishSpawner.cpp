@@ -6,6 +6,7 @@
 #include "Fish.h"
 #include "FishingComponent.h"
 #include "PlayerCharacter.h"
+#include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -19,11 +20,25 @@ AFishSpawner::AFishSpawner()
 void AFishSpawner::SpawnFish()
 {
 
-	FActorSpawnParameters Params;
-	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	// Add variance to spawner angle
+	float AngleVariance = FMath::RandRange(-15, 15);
+	this->SetActorRotation(GetActorRotation() + FRotator(0, AngleVariance, 0));
 
-	// TODO: Add variance with angles and speed
-	GetWorld()->SpawnActor<AFish>(FishClass, this->GetTransform(), Params);
+	// Add variance with the angles to fish themselves
+	FRotator Rotator = this->GetActorRotation();
+	Rotator.Yaw += FMath::RandRange(-20, 20);
+	Rotator.Roll += FMath::RandRange(-20, 20);
+
+	FTransform SpawnTransform = FTransform(Rotator, GetActorLocation());
+
+	AFish* SpawnedFish = GetWorld()->SpawnActorDeferred<AFish>(FishClass, SpawnTransform, nullptr, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+
+	// Add variance with the speed
+	SpawnedFish->ProjectileMovementComponent->InitialSpeed = SpawnedFish->DefaultSpeed += FMath::RandRange(200, -200);
+	UGameplayStatics::FinishSpawningActor(SpawnedFish, SpawnTransform);
+
+	// Reset the spawner angle
+	this->SetActorRotation(GetActorRotation() + FRotator(0, -1 * AngleVariance, 0));
 }
 
 // Called when the game starts or when spawned

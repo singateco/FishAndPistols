@@ -26,7 +26,7 @@ AFish::AFish()
 
 	// Set up speed.
 	ProjectileMovementComponent->InitialSpeed = DefaultSpeed;
-
+	ProjectileMovementComponent->Velocity = FVector(0, 0, 1);
 }
 
 // Called when the game starts or when spawned
