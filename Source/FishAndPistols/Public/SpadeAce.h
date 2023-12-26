@@ -25,15 +25,16 @@ public:
 
 
 	//----------------------------Variable--------------------------------
-private:
+public:
 
-	UPROPERTY()
-		class UStaticMeshComponent* SpadeAce;
+	UPROPERTY(EditAnywhere)
+	class UStaticMeshComponent* SpadeAce;
 
-	UPROPERTY()
-		class UStaticMeshComponent* BulletREF;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UArrowComponent* BulletREF;
 
 	float GunRange = 2000;
+	int32 Bullet = 8;
 
 	//----------------------------Function--------------------------------
 
