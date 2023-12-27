@@ -39,6 +39,7 @@ void UShootingComponent::BeginPlay()
 	}
 
 	ChooseRevolver();
+	ChooseSpadeAce();
 }
 
 
@@ -59,36 +60,44 @@ void UShootingComponent::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 		check(IA_RightTriggerFloat)
 		check(IA_LeftTriggerFloat)
 		check(IA_LeftTriggerFloat)
+		check(IA_AButton)
 
-		EnhancedInput->BindAction(IA_LeftTriggerBool, ETriggerEvent::Started, this, &UShootingComponent::RightTriggerInput_Bool);
-		EnhancedInput->BindAction(IA_LeftTriggerFloat, ETriggerEvent::Triggered, this, &UShootingComponent::RightTriggerInput_Float);
-		EnhancedInput->BindAction(IA_LeftTriggerFloat, ETriggerEvent::Completed, this, &UShootingComponent::RightTriggerInput_Float);
+		EnhancedInput->BindAction(IA_LeftTriggerBool, ETriggerEvent::Started, this, &UShootingComponent::LeftTriggerInput_Bool);
+		EnhancedInput->BindAction(IA_LeftTriggerFloat, ETriggerEvent::Triggered, this, &UShootingComponent::LeftTriggerInput_Float);
+		EnhancedInput->BindAction(IA_LeftTriggerFloat, ETriggerEvent::Completed, this, &UShootingComponent::LeftTriggerInput_Float);
 
 		EnhancedInput->BindAction(IA_RightTriggerBool, ETriggerEvent::Started, this, &UShootingComponent::RightTriggerInput_Bool);
 		EnhancedInput->BindAction(IA_RightTriggerFloat, ETriggerEvent::Triggered, this, &UShootingComponent::RightTriggerInput_Float);
 		EnhancedInput->BindAction(IA_RightTriggerFloat, ETriggerEvent::Completed, this, &UShootingComponent::RightTriggerInput_Float);
-		
+
+		EnhancedInput->BindAction(IA_AButton, ETriggerEvent::Started, this, &UShootingComponent::AButton);
+
 	}
 }
 
 void UShootingComponent::LeftTriggerInput_Bool(const FInputActionValue& value)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Semi Auto"))
-	ActionSemiAutoFire();
+	ActionLeftFire();
 }
 
 void UShootingComponent::LeftTriggerInput_Float(const FInputActionValue& value)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Full Auto"))
-	ActionFullAutoFire();
+	
 }
 
 void UShootingComponent::RightTriggerInput_Bool(const FInputActionValue& value)
 {
-	
+	//UE_LOG(LogTemp, Warning, TEXT("Semi Auto"))
+	ActionRightFire();
 }
 
 void UShootingComponent::RightTriggerInput_Float(const FInputActionValue& value)
+{
+	//UE_LOG(LogTemp, Warning, TEXT("Full Auto"))
+	
+}
+
+void UShootingComponent::AButton(const FInputActionValue& value)
 {
 	
 }
@@ -98,9 +107,10 @@ void UShootingComponent::ChooseRevolver()
 	bChooseRevolver = true;
 	bChooseSpadeAce = false;
 
-	Revolver = GetWorld()->SpawnActor<ARevolver>();
+	checkf(RevolverClass, TEXT("리볼버 클래스 지정안함"))
+	Revolver = GetWorld()->SpawnActor<ARevolver>(RevolverClass);
 	FAttachmentTransformRules Rules = FAttachmentTransformRules::SnapToTargetNotIncludingScale;
-	Revolver->AttachToComponent(Player->LeftHandMesh, Rules);
+	Revolver->AttachToComponent(Player->RightHandMesh, Rules, FName("Gun_Socket_Right"));
 
 }
 
@@ -109,27 +119,20 @@ void UShootingComponent::ChooseSpadeAce()
 	bChooseRevolver = false;
 	bChooseSpadeAce = true;
 
-	SpadeAce = GetWorld()->SpawnActor<ASpadeAce>();
+	checkf(SpadeAceClass, TEXT("스페이드에이스 클래스 지정안함"))
+	SpadeAce = GetWorld()->SpawnActor<ASpadeAce>(SpadeAceClass);
 	FAttachmentTransformRules Rules = FAttachmentTransformRules::SnapToTargetNotIncludingScale;
-	SpadeAce->AttachToComponent(Player->RightHandMesh, Rules);
+	SpadeAce->AttachToComponent(Player->LeftHandMesh, Rules, FName("Gun_Socket_Left"));
 }
 
-void UShootingComponent::ActionSemiAutoFire()
+void UShootingComponent::ActionLeftFire()
 {
-	if(bChooseRevolver)
-	{
-		Revolver->ActionFire();
-		UE_LOG(LogTemp, Warning, TEXT("Debug1"))
-	}
-	else if(bChooseSpadeAce)
-	{
-		SpadeAce->ActionFire();
-	}
+	SpadeAce->ActionFire();
 }
 
-void UShootingComponent::ActionFullAutoFire()
+void UShootingComponent::ActionRightFire()
 {
-
+	Revolver->ActionFire();
 }
 
 

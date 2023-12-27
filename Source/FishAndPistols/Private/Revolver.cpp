@@ -5,6 +5,7 @@
 #include "Components/ArrowComponent.h"
 #include "Fish.h"
 #include "PlayerCharacter.h"
+#include "DynamicMesh/MeshTransforms.h"
 #include "Kismet/GameplayStatics.h"
 
 
@@ -31,17 +32,6 @@ ARevolver::ARevolver()
 		Revolver->SetRelativeRotation(FRotator(0, 180, 0));
 	}
 	//나중에 사운드 에셋 추가 필요
-
-	/*ConstructorHelpers::FObjectFinder<USoundBase>fireSound(TEXT("/Script/Engine.SoundWave'/Game/StarterContent/Audio/Explosion01.Explosion01'"));
-	if(fireSound.Succeeded())
-	{
-		
-	}
-	ConstructorHelpers::FObjectFinder<UParticleSystem>muzzleFlash(TEXT("/Script/Engine.ParticleSystem'/Game/StarterContent/Particles/P_Explosion.P_Explosion'"));
-	if(muzzleFlash.Succeeded())
-	{
-		
-	}*/
 
 }
 
@@ -75,7 +65,7 @@ void ARevolver::ActionFire()
 		}
 	}
 
-	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), MuzzleFlash, FTransform(StartLoc));
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), MuzzleFlash, FVector(StartLoc), FRotator(0), FVector(0.1));
 
 	UGameplayStatics::PlaySound2D(GetWorld(), FireSound);
 }

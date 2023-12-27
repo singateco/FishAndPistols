@@ -4,6 +4,7 @@
 #include "SpadeAce.h"
 #include "Fish.h"
 #include "Components/ArrowComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 
 // Sets default values
@@ -26,8 +27,6 @@ ASpadeAce::ASpadeAce()
 		SpadeAce->SetStaticMesh(MeshSpadeAce.Object);
 		SpadeAce->SetRelativeRotation(FRotator(0, -90, 0));
 	}
-
-	
 
 }
 
@@ -63,6 +62,10 @@ void ASpadeAce::ActionFire()
 			Fish->Destroy();
 		}
 	}
+
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), MuzzleFlash, FVector(StartLoc), FRotator(0), FVector(0.1));
+
+	UGameplayStatics::PlaySound2D(GetWorld(), FireSound);
 
 }
 

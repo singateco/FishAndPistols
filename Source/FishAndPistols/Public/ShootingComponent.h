@@ -55,25 +55,36 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MySettings|Inputs")
 	class UInputAction* IA_RightTriggerFloat;
 
-	UPROPERTY()
-		class ARevolver* Revolver;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MySettings|Inputs")
+	class UInputAction* IA_AButton;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class ARevolver> RevolverClass;
 
 	UPROPERTY()
-		class ASpadeAce* SpadeAce;
+	ARevolver* Revolver;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class ASpadeAce> SpadeAceClass;
+
+	UPROPERTY()
+	ASpadeAce* SpadeAce;
+
 
 	//----------------------------Function--------------------------------
 
 	void LeftTriggerInput_Bool(const FInputActionValue& value);
 	void LeftTriggerInput_Float(const FInputActionValue& value);
-
 	void RightTriggerInput_Bool(const FInputActionValue& value);
 	void RightTriggerInput_Float(const FInputActionValue& value);
+
+	void AButton(const FInputActionValue& value);
 
 	void ChooseRevolver();
 	void ChooseSpadeAce();
 
-	void ActionSemiAutoFire();
-	void ActionFullAutoFire();
+	void ActionLeftFire();
+	void ActionRightFire();
 
 
 };
