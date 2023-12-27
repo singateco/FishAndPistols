@@ -37,6 +37,7 @@ APlayerCharacter::APlayerCharacter()
 	RightHand->SetupAttachment(RootComponent);
 	RightHandMesh->SetupAttachment(RightHand);
 	FishingRodMeshComponent->SetupAttachment(RightHandMesh, FName("palm_rSocket"));
+	FishingRodMeshComponent->SetMobility(EComponentMobility::Movable);
 	FishingLineComponent->SetupAttachment(FishingRodMeshComponent, FName("LineStart"));
 	FishingLineComponent->SetMobility(EComponentMobility::Movable);
 	FishingLineComponent->SetStartPosition(FVector::ZeroVector);
@@ -73,6 +74,10 @@ void APlayerCharacter::Tick(float DeltaTime)
 	{
 		FishingLineComponent->SetEndPosition(FishingRodMeshComponent->GetSocketTransform(FName("LineEnd"), RTS_Component).GetLocation());
 	}
+
+	FVector EndLoc = FishingRodMeshComponent->GetSocketLocation(FName("LineEnd"));
+	DrawDebugPoint(GetWorld(), EndLoc, 25.f, FColor::Cyan);
+
 }
 
 // Called to bind functionality to input

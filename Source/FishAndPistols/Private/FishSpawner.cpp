@@ -10,16 +10,19 @@
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
-AFishSpawner::AFishSpawner()
+AFishSpawner::AFishSpawner(): TimeLineCurve(nullptr)
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
+}
 
+void AFishSpawner::BindWithPlayer(APlayerCharacter* Player)
+{
+	Player->FishingComponent->OnFishCaught.AddDynamic(this, &AFishSpawner::SpawnMultipleFish);
 }
 
 void AFishSpawner::SpawnFish()
 {
-
 	// Add variance to spawner angle
 	float AngleVariance = FMath::RandRange(-15, 15);
 	this->SetActorRotation(GetActorRotation() + FRotator(0, AngleVariance, 0));
@@ -41,14 +44,28 @@ void AFishSpawner::SpawnFish()
 	this->SetActorRotation(GetActorRotation() + FRotator(0, -1 * AngleVariance, 0));
 }
 
+void AFishSpawner::SlowdownTime()
+{
+	// TODO
+}
+
+void AFishSpawner::SpawnMultipleFish()
+{
+	SlowdownTime();
+	for (int i = 0; i < AmountToSpawn; i++)
+	{
+		SpawnFish();
+	}
+}
+
+void AFishSpawner::TimelineUpdate(float Val)
+{
+}
+
 // Called when the game starts or when spawned
 void AFishSpawner::BeginPlay()
 {
 	Super::BeginPlay();
-
-	const APlayerCharacter* Player = Cast<APlayerCharacter>(UGameplayStatics::GetActorOfClass(GetWorld(), APlayerCharacter::StaticClass()));
-
-	Player->FishingComponent->OnFishCaught.AddDynamic(this, &AFishSpawner::SpawnFish);
 }
 
 // Called every frame

@@ -5,10 +5,17 @@
 #include "PlayerCharacter.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
+#include "FishSpawner.h"
 #include "InputMappingContext.h"
 #include "Components/ArrowComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Misc/DateTime.h"
-
+#include "CableActor.h"
+#include "CableComponent.h"
+#include "Components/BoxComponent.h"
+#include "Fish.h"
+#include "FishCable.h"
+#include "FishHook.h"
 
 // Sets default values for this component's properties
 UFishingComponent::UFishingComponent()
@@ -51,17 +58,25 @@ void UFishingComponent::BeginPlay()
 	}
 
 
+	UWorld* World = GetWorld();
+
 	// Start checking for motion value for detecting fishing motion
-	GetWorld()->GetTimerManager().SetTimer(MotionTimer, this, &UFishingComponent::CheckMotionValue, 0.1f, true);
+	World->GetTimerManager().SetTimer(MotionTimer, this, &UFishingComponent::CheckMotionValue, 0.1f, true);
 
 	// Wait 1 second before able to detect motion
-	GetWorld()->GetTimerManager().SetTimer(MotionDetectedTimer, FTimerDelegate::CreateLambda(
+	World->GetTimerManager().SetTimer(MotionDetectedTimer, FTimerDelegate::CreateLambda(
 		[&]()->void
 		{
 			bIsAbleToDetectMotion = true;
 			MotionDetectedTimer.Invalidate();
 		}
 	), 1.0f, false);
+
+	AFishSpawner* Spawner = Cast<AFishSpawner>(UGameplayStatics::GetActorOfClass(World, AFishSpawner::StaticClass()));
+
+	checkf(Spawner, TEXT("맵에 물고기 스포너가 없음"))
+
+	Spawner->BindWithPlayer(OwningPlayer);
 }
 
 
@@ -167,11 +182,39 @@ void UFishingComponent::MotionDetected()
 	}
 }
 
+void UFishingComponent::MakeFishHook()
+{
+	
+	if (!Cable)
+	{
+		// Make Hook
+		FActorSpawnParameters Params;
+		Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+		check(HookClass)
+		AFishHook* Hook = GetWorld()->SpawnActor<AFishHook>(HookClass, OwningPlayer->FishingRodMeshComponent->GetSocketLocation(FName("LineEnd")), FRotator(90, 0, 0), Params);
+
+		check(CableActorClass)
+		Cable = GetWorld()->SpawnActorDeferred<AFishCable>(CableActorClass, OwningPlayer->FishingRodMeshComponent->GetSocketTransform(FName("LineEnd"), RTS_ParentBoneSpace), OwningPlayer, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+		Cable->AttachToComponent(OwningPlayer->FishingRodMeshComponent, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), FName("LineEnd"));
+		Cable->SetActorRelativeLocation(FVector(0, 0, 0));
+
+		// Attach the hook to cable
+		Cable->CableComponent->SetAttachEndToComponent(Hook->BoxComp);
+		// Make Cable visible
+		Cable->CableComponent->SetVisibility(true);
+
+		UGameplayStatics::FinishSpawningActor(Cable, FTransform(OwningPlayer->FishingRodMeshComponent->GetSocketLocation(FName("LineEnd"))));
+	}
+
+}
+
 void UFishingComponent::RightIndexTrigger(const FInputActionValue& Value)
 {
 	if (Value.Get<bool>())
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Triggered"))
+		MakeFishHook();
 		//OnFishCaught.Broadcast();
 	}
 	else
@@ -184,6 +227,8 @@ void UFishingComponent::FishingStarted()
 {
 	Status = EFishingStatus::Fishing;
 	UE_LOG(LogTemp, Warning, TEXT("Fishing Started"))
+
+	MakeFishHook();
 }
 
 void UFishingComponent::CaughtFish()

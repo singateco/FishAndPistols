@@ -8,8 +8,8 @@ public class FishAndPistols : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "XRBase", "UMG", "HeadMountedDisplay", "EnhancedInput" });
-
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "XRBase", "UMG", "HeadMountedDisplay", "EnhancedInput", "CableComponent" });
+		
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 
 		// Uncomment if you are using Slate UI
