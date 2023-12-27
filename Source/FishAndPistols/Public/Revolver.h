@@ -33,9 +33,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UArrowComponent* BulletREF;
 
-	float GunRange = 2000;
-	int32 Bullet = 6;
+	UPROPERTY(EditAnywhere)
+	class USoundBase* FireSound;
 
+	UPROPERTY(EditAnywhere)
+	class UParticleSystem* MuzzleFlash;
+
+	float GunRange = 20000;
+	int32 Bullet = 6;
+	
 	//----------------------------Function--------------------------------
 
 	void ActionFire();

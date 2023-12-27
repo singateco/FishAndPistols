@@ -45,4 +45,25 @@ void ASpadeAce::Tick(float DeltaTime)
 
 }
 
+void ASpadeAce::ActionFire()
+{
+	FHitResult HitResult;
+	check(BulletREF)
+
+		FVector StartLoc = BulletREF->GetComponentLocation();
+	FVector EndLoc = StartLoc + BulletREF->GetForwardVector() * GunRange;
+
+	if (GetWorld()->LineTraceSingleByChannel(HitResult, StartLoc, EndLoc, ECollisionChannel::ECC_Visibility))
+	{
+		DrawDebugLine(GetWorld(), StartLoc, EndLoc, FColor::Red, false, 5.0f);
+
+		AFish* Fish = Cast<AFish>(HitResult.GetActor());
+		if (Fish)
+		{
+			Fish->Destroy();
+		}
+	}
+
+}
+
 

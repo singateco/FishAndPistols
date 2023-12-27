@@ -38,10 +38,16 @@ public:
 	class UInputMappingContext* InputMapping;
 
 	UPROPERTY(EditAnywhere)
-	bool bChooseSemiAuto = true; //디버그용 수정필요#######
+	bool bChooseRevolver;
 
 	UPROPERTY(EditAnywhere)
-	bool bChooseFullAuto;
+	bool bChooseSpadeAce;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MySettings|Inputs")
+	class UInputAction* IA_LeftTriggerBool;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MySettings|Inputs")
+	class UInputAction* IA_LeftTriggerFloat;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MySettings|Inputs")
 	class UInputAction* IA_RightTriggerBool;
@@ -49,16 +55,22 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MySettings|Inputs")
 	class UInputAction* IA_RightTriggerFloat;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY()
 		class ARevolver* Revolver;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY()
 		class ASpadeAce* SpadeAce;
 
 	//----------------------------Function--------------------------------
 
+	void LeftTriggerInput_Bool(const FInputActionValue& value);
+	void LeftTriggerInput_Float(const FInputActionValue& value);
+
 	void RightTriggerInput_Bool(const FInputActionValue& value);
 	void RightTriggerInput_Float(const FInputActionValue& value);
+
+	void ChooseRevolver();
+	void ChooseSpadeAce();
 
 	void ActionSemiAutoFire();
 	void ActionFullAutoFire();
