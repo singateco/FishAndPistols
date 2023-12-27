@@ -39,8 +39,8 @@ public:
 	UPROPERTY(EditAnywhere)
 	class UParticleSystem* MuzzleFlash;
 
-	float GunRange = 20000;
-	int32 Bullet = 6;
+	float GunRange = 200000.f;
+	//int32 Bullet = 6;
 	
 	//----------------------------Function--------------------------------
 

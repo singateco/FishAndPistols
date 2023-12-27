@@ -21,8 +21,7 @@ ARevolver::ARevolver()
 
 	BulletREF = CreateDefaultSubobject<UArrowComponent>(TEXT("BulletREF"));
 	BulletREF->SetupAttachment(Revolver);
-	BulletREF->SetRelativeLocationAndRotation(FVector(-22, 0, 22), FRotator(0, 180, 0));
-
+	BulletREF->SetRelativeLocationAndRotation(FVector(-22, 0, 25), FRotator(0, 180, 0));
 
 	ConstructorHelpers::FObjectFinder<UStaticMesh>MeshRevolver(TEXT("/Script/Engine.StaticMesh'/Game/Resources/KDE/revolver/source/Revolver.Revolver'"));
 
@@ -31,7 +30,6 @@ ARevolver::ARevolver()
 		Revolver->SetStaticMesh(MeshRevolver.Object);
 		Revolver->SetRelativeRotation(FRotator(0, 180, 0));
 	}
-	//나중에 사운드 에셋 추가 필요
 
 }
 
@@ -46,6 +44,7 @@ void ARevolver::BeginPlay()
 void ARevolver::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
 }
 
 void ARevolver::ActionFire()

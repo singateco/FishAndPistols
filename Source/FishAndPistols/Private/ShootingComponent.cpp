@@ -104,9 +104,6 @@ void UShootingComponent::AButton(const FInputActionValue& value)
 
 void UShootingComponent::ChooseRevolver()
 {
-	bChooseRevolver = true;
-	bChooseSpadeAce = false;
-
 	checkf(RevolverClass, TEXT("리볼버 클래스 지정안함"))
 	Revolver = GetWorld()->SpawnActor<ARevolver>(RevolverClass);
 	FAttachmentTransformRules Rules = FAttachmentTransformRules::SnapToTargetNotIncludingScale;
@@ -116,9 +113,6 @@ void UShootingComponent::ChooseRevolver()
 
 void UShootingComponent::ChooseSpadeAce()
 {
-	bChooseRevolver = false;
-	bChooseSpadeAce = true;
-
 	checkf(SpadeAceClass, TEXT("스페이드에이스 클래스 지정안함"))
 	SpadeAce = GetWorld()->SpawnActor<ASpadeAce>(SpadeAceClass);
 	FAttachmentTransformRules Rules = FAttachmentTransformRules::SnapToTargetNotIncludingScale;

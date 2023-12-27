@@ -38,10 +38,10 @@ public:
 	class UInputMappingContext* InputMapping;
 
 	UPROPERTY(EditAnywhere)
-	bool bChooseRevolver;
+	bool bChooseSemiAuto;
 
 	UPROPERTY(EditAnywhere)
-	bool bChooseSpadeAce;
+	bool bChooseFullAuto;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MySettings|Inputs")
 	class UInputAction* IA_LeftTriggerBool;
