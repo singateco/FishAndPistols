@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/TimelineComponent.h"
 #include "GameFramework/Actor.h"
 #include "FishSpawner.generated.h"
 
@@ -35,16 +34,11 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class AFish> FishClass;
 
-	UPROPERTY()
-	UTimelineComponent* TimeLineComp;
+	UPROPERTY(EditAnywhere)
+	float SlowDownStartSecond {1.5f};
 
-	UPROPERTY()
-	UCurveFloat* TimeLineCurve;
-
-	FOnTimelineFloat InterpFunction{};
-
-	UFUNCTION()
-	void TimelineUpdate(float Val);
+	UPROPERTY(EditAnywhere)
+	float SlowDownEndSecond {3.1f};
 
 
 protected:

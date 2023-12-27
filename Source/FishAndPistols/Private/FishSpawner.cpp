@@ -10,7 +10,7 @@
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
-AFishSpawner::AFishSpawner(): TimeLineCurve(nullptr)
+AFishSpawner::AFishSpawner()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
@@ -47,6 +47,36 @@ void AFishSpawner::SpawnFish()
 void AFishSpawner::SlowdownTime()
 {
 	// TODO
+	FTimerHandle SlowDownTimer;
+	FTimerHandle FastBackDownTimer;
+
+	// Slow down time.
+	GetWorld()->GetTimerManager().SetTimer(
+		SlowDownTimer,
+		FTimerDelegate::CreateLambda(
+			[&]()->void
+			{
+				GetWorldSettings()->SetTimeDilation(0.5f);
+			}
+		),
+		SlowDownStartSecond,
+		false
+	);
+
+
+	// Set speed to normal.
+	GetWorld()->GetTimerManager().SetTimer(
+		FastBackDownTimer,
+		FTimerDelegate::CreateLambda(
+			[&]()->void
+			{
+				GetWorldSettings()->SetTimeDilation(1.0f);
+			}
+		),
+		SlowDownEndSecond,
+		false
+	);
+
 }
 
 void AFishSpawner::SpawnMultipleFish()
@@ -56,10 +86,6 @@ void AFishSpawner::SpawnMultipleFish()
 	{
 		SpawnFish();
 	}
-}
-
-void AFishSpawner::TimelineUpdate(float Val)
-{
 }
 
 // Called when the game starts or when spawned
