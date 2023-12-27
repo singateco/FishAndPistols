@@ -10,11 +10,6 @@
 #include "Components/ArrowComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Misc/DateTime.h"
-#include "CableActor.h"
-#include "CableComponent.h"
-#include "Components/BoxComponent.h"
-#include "Fish.h"
-#include "FishCable.h"
 #include "FishHook.h"
 
 // Sets default values for this component's properties
@@ -30,8 +25,6 @@ UFishingComponent::UFishingComponent()
 	{
 		DotMotionBuffer[i] = BufferIgnoreValue;
 	}
-
-
 }
 
 
@@ -184,29 +177,12 @@ void UFishingComponent::MotionDetected()
 
 void UFishingComponent::MakeFishHook()
 {
-	
-	if (!Cable)
-	{
-		// Make Hook
-		FActorSpawnParameters Params;
-		Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	// Make Hook
+	FActorSpawnParameters Params;
+	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-		check(HookClass)
-		AFishHook* Hook = GetWorld()->SpawnActor<AFishHook>(HookClass, OwningPlayer->FishingRodMeshComponent->GetSocketLocation(FName("LineEnd")), FRotator(90, 0, 0), Params);
-
-		check(CableActorClass)
-		Cable = GetWorld()->SpawnActorDeferred<AFishCable>(CableActorClass, OwningPlayer->FishingRodMeshComponent->GetSocketTransform(FName("LineEnd"), RTS_ParentBoneSpace), OwningPlayer, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
-		Cable->AttachToComponent(OwningPlayer->FishingRodMeshComponent, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), FName("LineEnd"));
-		Cable->SetActorRelativeLocation(FVector(0, 0, 0));
-
-		// Attach the hook to cable
-		Cable->CableComponent->SetAttachEndToComponent(Hook->BoxComp);
-		// Make Cable visible
-		Cable->CableComponent->SetVisibility(true);
-
-		UGameplayStatics::FinishSpawningActor(Cable, FTransform(OwningPlayer->FishingRodMeshComponent->GetSocketLocation(FName("LineEnd"))));
-	}
-
+	check(HookClass)
+	AFishHook* Hook = GetWorld()->SpawnActor<AFishHook>(HookClass, OwningPlayer->FishingRodMeshComponent->GetSocketLocation(FName("LineEnd")), FRotator(90, 0, 0), Params);
 }
 
 void UFishingComponent::RightIndexTrigger(const FInputActionValue& Value)

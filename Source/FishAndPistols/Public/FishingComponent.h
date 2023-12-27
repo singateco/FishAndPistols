@@ -89,12 +89,6 @@ public:
 	UPROPERTY()
 	FTimerHandle MotionDetectedTimer;
 
-	UPROPERTY(VisibleAnywhere)
-	class ACableActor* Cable;
-
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<class AFishCable> CableActorClass;
-
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AFishHook> HookClass;
 

@@ -2,6 +2,8 @@
 
 
 #include "PlayerCharacter.h"
+
+#include "CableComponent.h"
 #include "ShootingComponent.h"
 #include "FishingComponent.h"
 #include "MotionControllerComponent.h"
@@ -22,7 +24,8 @@ APlayerCharacter::APlayerCharacter()
 //슈팅컴포넌트
 	ShootingComponent(CreateDefaultSubobject<UShootingComponent>(TEXT("Shooting Component"))),
  	FishingRodMeshComponent(CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Fishing Rod Mesh Comp"))),
-	FishingLineComponent(CreateDefaultSubobject<USplineMeshComponent>(TEXT("Fishing Line Component")))
+	FishingLineComponent(CreateDefaultSubobject<USplineMeshComponent>(TEXT("Fishing Line Component"))),
+	FishCable(CreateDefaultSubobject<UCableComponent>(TEXT("Fishing Rod Cable")))
  {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -41,7 +44,13 @@ APlayerCharacter::APlayerCharacter()
 	FishingLineComponent->SetupAttachment(FishingRodMeshComponent, FName("LineStart"));
 	FishingLineComponent->SetMobility(EComponentMobility::Movable);
 	FishingLineComponent->SetStartPosition(FVector::ZeroVector);
-	
+
+	// 낚시줄 세팅
+	FishCable->SetupAttachment(FishingRodMeshComponent, TEXT("LineEnd"));
+	FishCable->bAttachStart = true;
+	FishCable->bAttachEnd = true;
+	FishCable->EndLocation = FVector(0, 0, 0);
+	FishCable->SetVisibility(false);
 
 	// (X=6.070411,Y=0.112364,Z=4.035356)
 	// (Pitch=2.401839,Yaw=629.462922,Roll=-478.018271)
@@ -52,6 +61,7 @@ APlayerCharacter::APlayerCharacter()
 	RightHand->SetTrackingMotionSource(FName("Right"));
 
 	FishingComponent->Activate();
+
 }
 
 // Called when the game starts or when spawned
