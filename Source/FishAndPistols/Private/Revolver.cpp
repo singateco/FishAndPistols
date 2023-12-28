@@ -64,7 +64,7 @@ void ARevolver::ActionFire()
 		}
 	}
 
-	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), MuzzleFlash, FVector(StartLoc), FRotator(0), FVector(0.1));
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), MuzzleFlash, FVector(StartLoc), FRotator(0), FVector(0.05));
 
 	UGameplayStatics::PlaySound2D(GetWorld(), FireSound);
 }
