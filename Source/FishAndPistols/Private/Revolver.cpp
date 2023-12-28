@@ -61,6 +61,7 @@ void ARevolver::ActionFire()
 		if(Fish)
 		{
 			Fish->Destroy();
+			Fish->FishDeadEffect();
 		}
 	}
 

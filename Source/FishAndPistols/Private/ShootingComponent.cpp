@@ -78,10 +78,12 @@ void UShootingComponent::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 		check(IA_AButton)
 
 		EnhancedInput->BindAction(IA_LeftTriggerBool, ETriggerEvent::Started, this, &UShootingComponent::LeftTriggerInput_Bool);
+		
 		EnhancedInput->BindAction(IA_LeftTriggerFloat, ETriggerEvent::Triggered, this, &UShootingComponent::LeftTriggerInput_Float);
 		EnhancedInput->BindAction(IA_LeftTriggerFloat, ETriggerEvent::Completed, this, &UShootingComponent::LeftTriggerInput_Float);
 
 		EnhancedInput->BindAction(IA_RightTriggerBool, ETriggerEvent::Started, this, &UShootingComponent::RightTriggerInput_Bool);
+		
 		EnhancedInput->BindAction(IA_RightTriggerFloat, ETriggerEvent::Triggered, this, &UShootingComponent::RightTriggerInput_Float);
 		EnhancedInput->BindAction(IA_RightTriggerFloat, ETriggerEvent::Completed, this, &UShootingComponent::RightTriggerInput_Float);
 

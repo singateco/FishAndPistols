@@ -5,6 +5,7 @@
 
 #include "Components/BoxComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AFish::AFish()
@@ -39,5 +40,12 @@ void AFish::BeginPlay()
 void AFish::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+}
+
+void AFish::FishDeadEffect()
+{
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Explosion, GetActorLocation(), FRotator(0), FVector(1));
+
+	UGameplayStatics::PlaySound2D(GetWorld(), CoinSound, 0.5f);
 }
 

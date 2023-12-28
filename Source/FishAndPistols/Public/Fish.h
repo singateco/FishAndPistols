@@ -34,4 +34,14 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	float DefaultSpeed {1500};
+
+	//물고기 터질때 이펙트와 사운드 by Undoe
+	UPROPERTY(EditAnywhere)
+	class USoundBase* CoinSound;
+
+	UPROPERTY(EditAnywhere)
+	class UParticleSystem* Explosion;
+
+	void FishDeadEffect();
+
 };

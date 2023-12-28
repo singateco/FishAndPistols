@@ -36,12 +36,13 @@ APlayerCharacter::APlayerCharacter()
 
 	LeftHand->SetupAttachment(RootComponent);
 	LeftHandMesh->SetupAttachment(LeftHand);
+	LeftHandMesh->SetRelativeRotation(FRotator(90, -180, -25));
 	LeftHand->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	RightHand->SetupAttachment(RootComponent);
 	RightHandMesh->SetupAttachment(RightHand);
+	RightHandMesh->SetRelativeRotation(FRotator(90, 0, 25));
 	RightHand->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-
 
 
 	FishingRodMeshComponent->SetupAttachment(RightHandMesh, FName("palm_rSocket"));

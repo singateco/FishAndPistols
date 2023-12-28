@@ -49,7 +49,7 @@ void ASpadeAce::ActionFire()
 	FHitResult HitResult;
 	check(BulletREF)
 
-		FVector StartLoc = BulletREF->GetComponentLocation();
+	FVector StartLoc = BulletREF->GetComponentLocation();
 	FVector EndLoc = StartLoc + BulletREF->GetForwardVector() * GunRange;
 
 	if (GetWorld()->LineTraceSingleByChannel(HitResult, StartLoc, EndLoc, ECollisionChannel::ECC_Visibility))
@@ -60,6 +60,7 @@ void ASpadeAce::ActionFire()
 		if (Fish)
 		{
 			Fish->Destroy();
+			Fish->FishDeadEffect();
 		}
 	}
 
