@@ -104,7 +104,9 @@ private:
 	void RightIndexTrigger(const FInputActionValue& Value);
 	void FishingStarted();
 	void CaughtFish();
+	void StartCheckingMotionValue();
 
 public:
 	virtual void Deactivate() override;
+	virtual void Activate(bool bReset) override;
 };

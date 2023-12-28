@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "FishSpawner.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FWaveOver);
+
 UCLASS()
 class FISHANDPISTOLS_API AFishSpawner : public AActor
 {
@@ -34,12 +36,24 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class AFish> FishClass;
 
+	// 슬로우 모션 속도
+	UPROPERTY(EditAnywhere, meta = (ClampMin = 0.0f, UIMin = 0.0f, ClampMax = 1.0f, UIMax = 1.0f))
+	float SlowMotionTimeScale {0.4f};
+
 	UPROPERTY(EditAnywhere)
 	float SlowDownStartSecond {1.5f};
 
 	UPROPERTY(EditAnywhere)
 	float SlowDownEndSecond {3.1f};
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float WaveOverSecond {10.f};
+
+	UPROPERTY()
+	FTimerHandle WaveTimerHandle;
+
+	UPROPERTY(BlueprintAssignable)
+	FWaveOver OnWaveOverDelegate;
 
 protected:
 	// Called when the game starts or when spawned

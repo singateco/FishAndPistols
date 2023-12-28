@@ -13,7 +13,9 @@
 #include "Kismet/GameplayStatics.h"
 #include "Misc/DateTime.h"
 #include "FishHook.h"
+#include "ShootingComponent.h"
 #include "Components/BoxComponent.h"
+#include "Components/SplineMeshComponent.h"
 
 // Sets default values for this component's properties
 UFishingComponent::UFishingComponent()
@@ -22,8 +24,8 @@ UFishingComponent::UFishingComponent()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	// ...
-	bWantsInitializeComponent = true;
+	bAutoActivate = false;
+	//bWantsInitializeComponent = true;
 	for (uint32 i = 0; i < DotMotionBuffer.Capacity(); i++)
 	{
 		DotMotionBuffer[i] = BufferIgnoreValue;
@@ -56,8 +58,7 @@ void UFishingComponent::BeginPlay()
 
 	UWorld* World = GetWorld();
 
-	// Start checking for motion value for detecting fishing motion
-	World->GetTimerManager().SetTimer(MotionTimer, this, &UFishingComponent::CheckMotionValue, 0.1f, true);
+	StartCheckingMotionValue();
 
 	// Wait 1 second before able to detect motion
 	World->GetTimerManager().SetTimer(MotionDetectedTimer, FTimerDelegate::CreateLambda(
@@ -83,8 +84,8 @@ void UFishingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 
 	// ...
 
-	const FVector RightHandLocation = OwningPlayer->RightHandMesh->GetSocketLocation(FName("middle_01_rSocket"));
-	DrawDebugPoint(GetWorld(), RightHandLocation, 45, FColor::Red, false, .4f);
+	// const FVector RightHandLocation = OwningPlayer->RightHandMesh->GetSocketLocation(FName("middle_01_rSocket"));
+	//DrawDebugPoint(GetWorld(), RightHandLocation, 45, FColor::Red, false, .4f);
 }
 
 void UFishingComponent::SetupPlayerInputComponent(UInputComponent* InputComponent)
@@ -104,6 +105,8 @@ void UFishingComponent::CheckMotionValue()
 {
 	const FVector PlayerForward = OwningPlayer->GetArrowComponent()->GetForwardVector();
 	const FVector RightHandLocation = OwningPlayer->RightHandMesh->GetSocketLocation(FName("middle_01_rSocket"));
+
+	DrawDebugPoint(GetWorld(), RightHandLocation, 25.f, FColor::Cyan, false, .2f);
 
 	DotMotionBuffer[BufferIndex] = PlayerForward.Dot(RightHandLocation);
 
@@ -150,12 +153,14 @@ void UFishingComponent::MotionDetected(bool bBackward)
 	//UE_LOG(LogTemp, Warning, TEXT("Detected, %d, %d"), Now.GetSecond(), Now.GetMillisecond());
 
 
+
+
 	if (!bIsAbleToDetectMotion)
 	{
 		return;
 	}
 
-	//UE_LOG(LogTemp, Warning, TEXT("Motion Detected"));
+	UE_LOG(LogTemp, Warning, TEXT("Motion Detected"));
 
 	switch (Status)
 	{
@@ -235,20 +240,55 @@ void UFishingComponent::CaughtFish()
 	OnFishCaught.Broadcast();
 	UE_LOG(LogTemp, Warning, TEXT("Fish Caught"))
 
-	//Deactivate();
+	OwningPlayer->ShootingComponent->Activate(false);
+	Deactivate();
 
-	OwningPlayer->FishCable->SetVisibility(false);
+	/*OwningPlayer->FishCable->SetVisibility(false);
 	Hook->Destroy();
-	OwningPlayer->FishingRodMeshComponent->SetVisibility(false);
+	OwningPlayer->FishingRodMeshComponent->SetVisibility(false);*/
+}
+
+// Start checking for motion value for detecting fishing motion
+void UFishingComponent::StartCheckingMotionValue()
+{
+	GetWorld()->GetTimerManager().SetTimer(MotionTimer, this, &UFishingComponent::CheckMotionValue, 0.1f, true);
 }
 
 void UFishingComponent::Deactivate()
 {
 	OwningPlayer->FishCable->SetVisibility(false);
-	Hook->Destroy();
-	OwningPlayer->FishingRodMeshComponent->SetVisibility(false);
+
+	if (Hook)
+	{
+		Hook->Destroy();
+	}
 	
+	OwningPlayer->FishingRodMeshComponent->SetVisibility(false);
+	OwningPlayer->FishingLineComponent->SetVisibility(false);
+
+	for (uint32 i = 0; i < DotMotionBuffer.Capacity(); i++)
+	{
+		DotMotionBuffer[i] = BufferIgnoreValue;
+	}
+
+	// Stop Checking Motion Value
+	if (MotionTimer.IsValid())
+	{
+		GetWorld()->GetTimerManager().ClearTimer(MotionTimer);
+		MotionTimer.Invalidate();
+	}
+
 	Super::Deactivate();
+}
+
+void UFishingComponent::Activate(bool bReset)
+{
+	Super::Activate(bReset);
+
+	OwningPlayer->FishingLineComponent->SetVisibility(true);
+	OwningPlayer->FishingRodMeshComponent->SetVisibility(true);
+
+	StartCheckingMotionValue();
 }
 
 void UFishingComponent::InitializeComponent()

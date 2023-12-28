@@ -64,9 +64,6 @@ APlayerCharacter::APlayerCharacter()
 	// Set up tracking motion sources.
 	LeftHand->SetTrackingMotionSource(FName("Left"));
 	RightHand->SetTrackingMotionSource(FName("Right"));
-
-	FishingComponent->Activate();
-
 }
 
 // Called when the game starts or when spawned
@@ -74,6 +71,8 @@ void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	ShootingComponent->Deactivate();
+	FishingComponent->Activate(false);
 
 	// 헤드 마운트 디스플레이 장비의 기준 위치를 스테이지로 설정한다.
 	UHeadMountedDisplayFunctionLibrary::SetTrackingOrigin(EHMDTrackingOrigin::Stage);
@@ -90,7 +89,7 @@ void APlayerCharacter::Tick(float DeltaTime)
 	}
 
 	FVector EndLoc = FishingRodMeshComponent->GetSocketLocation(FName("LineEnd"));
-	DrawDebugPoint(GetWorld(), EndLoc, 25.f, FColor::Cyan);
+	//DrawDebugPoint(GetWorld(), EndLoc, 25.f, FColor::Cyan);
 
 }
 

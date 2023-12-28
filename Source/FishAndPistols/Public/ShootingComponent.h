@@ -70,8 +70,13 @@ public:
 	UPROPERTY()
 	ASpadeAce* SpadeAce;
 
+	UPROPERTY()
+	UEnhancedInputComponent* InputComponent;
 
 	//----------------------------Function--------------------------------
+
+	UFUNCTION()
+	void WaveOver();
 
 	void LeftTriggerInput_Bool(const FInputActionValue& value);
 	void LeftTriggerInput_Float(const FInputActionValue& value);
@@ -86,5 +91,7 @@ public:
 	void ActionLeftFire();
 	void ActionRightFire();
 
+	virtual void Deactivate() override;
 
+	virtual void Activate(bool bReset) override;
 };

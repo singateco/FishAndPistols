@@ -46,7 +46,6 @@ void AFishSpawner::SpawnFish()
 
 void AFishSpawner::SlowdownTime()
 {
-	// TODO
 	FTimerHandle SlowDownTimer;
 	FTimerHandle FastBackDownTimer;
 
@@ -56,7 +55,7 @@ void AFishSpawner::SlowdownTime()
 		FTimerDelegate::CreateLambda(
 			[&]()->void
 			{
-				GetWorldSettings()->SetTimeDilation(0.5f);
+				GetWorldSettings()->SetTimeDilation(SlowMotionTimeScale);
 			}
 		),
 		SlowDownStartSecond,
@@ -86,6 +85,18 @@ void AFishSpawner::SpawnMultipleFish()
 	{
 		SpawnFish();
 	}
+
+	// Start Wave over timer.
+	GetWorld()->GetTimerManager().SetTimer(
+			WaveTimerHandle,
+			FTimerDelegate::CreateLambda(
+			[&]
+			{
+				OnWaveOverDelegate.Broadcast();
+			}),
+			WaveOverSecond,
+			false
+	);
 }
 
 // Called when the game starts or when spawned
