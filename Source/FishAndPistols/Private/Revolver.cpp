@@ -4,6 +4,8 @@
 #include "Revolver.h"
 #include "Components/ArrowComponent.h"
 #include "Fish.h"
+#include "PlayerCharacter.h"
+#include "DynamicMesh/MeshTransforms.h"
 #include "Kismet/GameplayStatics.h"
 
 
@@ -19,8 +21,7 @@ ARevolver::ARevolver()
 
 	BulletREF = CreateDefaultSubobject<UArrowComponent>(TEXT("BulletREF"));
 	BulletREF->SetupAttachment(Revolver);
-	BulletREF->SetRelativeLocationAndRotation(FVector(-22, 0, 22), FRotator(0, 180, 0));
-
+	BulletREF->SetRelativeLocationAndRotation(FVector(-22, 0, 25), FRotator(0, 180, 0));
 
 	ConstructorHelpers::FObjectFinder<UStaticMesh>MeshRevolver(TEXT("/Script/Engine.StaticMesh'/Game/Resources/KDE/revolver/source/Revolver.Revolver'"));
 
@@ -36,21 +37,19 @@ ARevolver::ARevolver()
 void ARevolver::BeginPlay()
 {
 	Super::BeginPlay();
-
-
+	
 }
 
 // Called every frame
 void ARevolver::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
 }
 
 void ARevolver::ActionFire()
 {
 	FHitResult HitResult;
-	check(BulletREF)
-
 	FVector StartLoc = BulletREF->GetComponentLocation();
 	FVector EndLoc = StartLoc + BulletREF->GetForwardVector() * GunRange;
 
@@ -65,5 +64,8 @@ void ARevolver::ActionFire()
 		}
 	}
 
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), MuzzleFlash, FVector(StartLoc), FRotator(0), FVector(0.05));
+
+	UGameplayStatics::PlaySound2D(GetWorld(), FireSound);
 }
 

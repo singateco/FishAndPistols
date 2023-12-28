@@ -4,16 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "SpadeAce.generated.h"
+#include "SunShot.generated.h"
 
 UCLASS()
-class FISHANDPISTOLS_API ASpadeAce : public AActor
+class FISHANDPISTOLS_API ASunShot : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ASpadeAce();
+	ASunShot();
 
 protected:
 	// Called when the game starts or when spawned
@@ -23,12 +23,10 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-
 	//----------------------------Variable--------------------------------
-public:
 
 	UPROPERTY(EditAnywhere)
-	class UStaticMeshComponent* SpadeAce;
+	class UStaticMeshComponent* SunShot;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UArrowComponent* BulletREF;
@@ -40,11 +38,9 @@ public:
 	class UParticleSystem* MuzzleFlash;
 
 	float GunRange = 200000.f;
-	//int32 Bullet = 8;
+	//int32 Bullet = 6;
 
 	//----------------------------Function--------------------------------
 	void ActionFire();
-
-
 
 };

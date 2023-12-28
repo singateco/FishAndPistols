@@ -1,55 +1,54 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "SpadeAce.h"
+#include "SunShot.h"
+
 #include "Fish.h"
 #include "Components/ArrowComponent.h"
 #include "Kismet/GameplayStatics.h"
 
-
 // Sets default values
-ASpadeAce::ASpadeAce()
+ASunShot::ASunShot()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	SpadeAce = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SpadeAce"));
-	SetRootComponent(SpadeAce);
+	SunShot = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SunShot"));
+	SetRootComponent(SunShot);
+	SunShot->SetRelativeScale3D(FVector(0.02));
 
 	BulletREF = CreateDefaultSubobject<UArrowComponent>(TEXT("BulletREF"));
-	BulletREF->SetupAttachment(SpadeAce);
-	BulletREF->SetRelativeLocationAndRotation(FVector(0, 23, 21), FRotator(0, 90, 0));
+	BulletREF->SetupAttachment(SunShot);
+	BulletREF->SetRelativeLocationAndRotation(FVector(-1050, 0, 400), FRotator(0, 0, 180));
+	BulletREF->ArrowSize = 30;
 
-	ConstructorHelpers::FObjectFinder<UStaticMesh>MeshSpadeAce(TEXT("/Script/Engine.StaticMesh'/Game/Resources/KDE/ace-of-spades-destiny-2/source/Ace_of_Spades.Ace_of_Spades'"));
+	ConstructorHelpers::FObjectFinder<UStaticMesh>MeshSunShot(TEXT("/Script/Engine.StaticMesh'/Game/Resources/KDE/destiny_2_-_sunshot/scene.scene'"));
 
-	if (MeshSpadeAce.Succeeded())
+	if(MeshSunShot.Succeeded())
 	{
-		SpadeAce->SetStaticMesh(MeshSpadeAce.Object);
-		SpadeAce->SetRelativeRotation(FRotator(0, -90, 0));
+		SunShot->SetStaticMesh(MeshSunShot.Object);
+		SunShot->SetRelativeRotation(FRotator(0, 180, 0));
 	}
-
 }
 
 // Called when the game starts or when spawned
-void ASpadeAce::BeginPlay()
+void ASunShot::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
 // Called every frame
-void ASpadeAce::Tick(float DeltaTime)
+void ASunShot::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
 }
 
-void ASpadeAce::ActionFire()
+void ASunShot::ActionFire()
 {
 	FHitResult HitResult;
-	check(BulletREF)
-
-		FVector StartLoc = BulletREF->GetComponentLocation();
+	FVector StartLoc = BulletREF->GetComponentLocation();
 	FVector EndLoc = StartLoc + BulletREF->GetForwardVector() * GunRange;
 
 	if (GetWorld()->LineTraceSingleByChannel(HitResult, StartLoc, EndLoc, ECollisionChannel::ECC_Visibility))
@@ -66,7 +65,5 @@ void ASpadeAce::ActionFire()
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), MuzzleFlash, FVector(StartLoc), FRotator(0), FVector(0.05));
 
 	UGameplayStatics::PlaySound2D(GetWorld(), FireSound);
-
 }
-
 

@@ -8,6 +8,8 @@
 #include "EnhancedInputComponent.h"
 #include "PlayerCharacter.h"
 #include "Revolver.h"
+#include "SpadeAce.h"
+
 
 // Sets default values for this component's properties
 UShootingComponent::UShootingComponent()
@@ -15,8 +17,6 @@ UShootingComponent::UShootingComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
-
 }
 
 
@@ -38,8 +38,8 @@ void UShootingComponent::BeginPlay()
 		Subsystem->AddMappingContext(InputMapping, 1);
 	}
 
-	Revolver = GetWorld()->SpawnActor<ARevolver>();
-
+	ChooseRevolver();
+	ChooseSpadeAce();
 }
 
 
@@ -58,35 +58,75 @@ void UShootingComponent::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 	{
 		check(IA_RightTriggerBool)
 		check(IA_RightTriggerFloat)
+		check(IA_LeftTriggerFloat)
+		check(IA_LeftTriggerFloat)
+		check(IA_AButton)
+
+		EnhancedInput->BindAction(IA_LeftTriggerBool, ETriggerEvent::Started, this, &UShootingComponent::LeftTriggerInput_Bool);
+		EnhancedInput->BindAction(IA_LeftTriggerFloat, ETriggerEvent::Triggered, this, &UShootingComponent::LeftTriggerInput_Float);
+		EnhancedInput->BindAction(IA_LeftTriggerFloat, ETriggerEvent::Completed, this, &UShootingComponent::LeftTriggerInput_Float);
+
 		EnhancedInput->BindAction(IA_RightTriggerBool, ETriggerEvent::Started, this, &UShootingComponent::RightTriggerInput_Bool);
 		EnhancedInput->BindAction(IA_RightTriggerFloat, ETriggerEvent::Triggered, this, &UShootingComponent::RightTriggerInput_Float);
 		EnhancedInput->BindAction(IA_RightTriggerFloat, ETriggerEvent::Completed, this, &UShootingComponent::RightTriggerInput_Float);
-		
+
+		EnhancedInput->BindAction(IA_AButton, ETriggerEvent::Started, this, &UShootingComponent::AButton);
+
 	}
+}
+
+void UShootingComponent::LeftTriggerInput_Bool(const FInputActionValue& value)
+{
+	ActionLeftFire();
+}
+
+void UShootingComponent::LeftTriggerInput_Float(const FInputActionValue& value)
+{
+	
 }
 
 void UShootingComponent::RightTriggerInput_Bool(const FInputActionValue& value)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Semi Auto"))
-	ActionSemiAutoFire();
+	//UE_LOG(LogTemp, Warning, TEXT("Semi Auto"))
+	ActionRightFire();
 }
 
 void UShootingComponent::RightTriggerInput_Float(const FInputActionValue& value)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Full Auto"))
-	ActionFullAutoFire();
+	//UE_LOG(LogTemp, Warning, TEXT("Full Auto"))
+	
 }
 
-void UShootingComponent::ActionSemiAutoFire()
+void UShootingComponent::AButton(const FInputActionValue& value)
 {
-	check(Revolver)
+	
+}
+
+void UShootingComponent::ChooseRevolver()
+{
+	checkf(RevolverClass, TEXT("리볼버 클래스 지정안함"))
+	Revolver = GetWorld()->SpawnActor<ARevolver>(RevolverClass);
+	FAttachmentTransformRules Rules = FAttachmentTransformRules::SnapToTargetNotIncludingScale;
+	Revolver->AttachToComponent(Player->RightHandMesh, Rules, FName("Gun_Socket_Right"));
+
+}
+
+void UShootingComponent::ChooseSpadeAce()
+{
+	checkf(SpadeAceClass, TEXT("스페이드에이스 클래스 지정안함"))
+	SpadeAce = GetWorld()->SpawnActor<ASpadeAce>(SpadeAceClass);
+	FAttachmentTransformRules Rules = FAttachmentTransformRules::SnapToTargetNotIncludingScale;
+	SpadeAce->AttachToComponent(Player->LeftHandMesh, Rules, FName("Gun_Socket_Left"));
+}
+
+void UShootingComponent::ActionLeftFire()
+{
+	SpadeAce->ActionFire();
+}
+
+void UShootingComponent::ActionRightFire()
+{
 	Revolver->ActionFire();
 }
 
-void UShootingComponent::ActionFullAutoFire()
-{
-
-}
-
-//겟오너로 플레이어 저장하고, 총 컴포넌트의 머즐 위치정보 여기서 라인트레이스 시작
 

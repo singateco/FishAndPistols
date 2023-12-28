@@ -67,4 +67,7 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|Components")
 	class USplineMeshComponent* FishingLineComponent;
+
+	UPROPERTY(VisibleAnywhere, Category = "MySettings|Components")
+	class UCableComponent* FishCable;
 };

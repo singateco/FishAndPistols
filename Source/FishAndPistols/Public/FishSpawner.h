@@ -15,11 +15,31 @@ public:
 	// Sets default values for this actor's properties
 	AFishSpawner();
 
+
+	UFUNCTION()
+	void BindWithPlayer(class APlayerCharacter* Player);
+
 	UFUNCTION(BlueprintCallable)
 	void SpawnFish();
 
+	UFUNCTION()
+	void SlowdownTime();
+
+	UFUNCTION(BlueprintCallable)
+	void SpawnMultipleFish();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 AmountToSpawn {6};
+
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class AFish> FishClass;
+
+	UPROPERTY(EditAnywhere)
+	float SlowDownStartSecond {1.5f};
+
+	UPROPERTY(EditAnywhere)
+	float SlowDownEndSecond {3.1f};
+
 
 protected:
 	// Called when the game starts or when spawned

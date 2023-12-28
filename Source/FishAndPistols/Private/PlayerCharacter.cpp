@@ -2,6 +2,8 @@
 
 
 #include "PlayerCharacter.h"
+
+#include "CableComponent.h"
 #include "ShootingComponent.h"
 #include "FishingComponent.h"
 #include "MotionControllerComponent.h"
@@ -22,7 +24,8 @@ APlayerCharacter::APlayerCharacter()
 //슈팅컴포넌트
 	ShootingComponent(CreateDefaultSubobject<UShootingComponent>(TEXT("Shooting Component"))),
  	FishingRodMeshComponent(CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Fishing Rod Mesh Comp"))),
-	FishingLineComponent(CreateDefaultSubobject<USplineMeshComponent>(TEXT("Fishing Line Component")))
+	FishingLineComponent(CreateDefaultSubobject<USplineMeshComponent>(TEXT("Fishing Line Component"))),
+	FishCable(CreateDefaultSubobject<UCableComponent>(TEXT("Fishing Rod Cable")))
  {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -33,14 +36,26 @@ APlayerCharacter::APlayerCharacter()
 
 	LeftHand->SetupAttachment(RootComponent);
 	LeftHandMesh->SetupAttachment(LeftHand);
+	LeftHand->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	RightHand->SetupAttachment(RootComponent);
 	RightHandMesh->SetupAttachment(RightHand);
+	RightHand->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+
+
 	FishingRodMeshComponent->SetupAttachment(RightHandMesh, FName("palm_rSocket"));
+	FishingRodMeshComponent->SetMobility(EComponentMobility::Movable);
 	FishingLineComponent->SetupAttachment(FishingRodMeshComponent, FName("LineStart"));
 	FishingLineComponent->SetMobility(EComponentMobility::Movable);
 	FishingLineComponent->SetStartPosition(FVector::ZeroVector);
-	
+
+	// 낚시줄 세팅
+	FishCable->SetupAttachment(FishingRodMeshComponent, TEXT("LineEnd"));
+	FishCable->bAttachStart = true;
+	FishCable->bAttachEnd = true;
+	FishCable->EndLocation = FVector(0, 0, 0);
+	FishCable->SetVisibility(false);
 
 	// (X=6.070411,Y=0.112364,Z=4.035356)
 	// (Pitch=2.401839,Yaw=629.462922,Roll=-478.018271)
@@ -51,6 +66,7 @@ APlayerCharacter::APlayerCharacter()
 	RightHand->SetTrackingMotionSource(FName("Right"));
 
 	FishingComponent->Activate();
+
 }
 
 // Called when the game starts or when spawned
@@ -61,7 +77,6 @@ void APlayerCharacter::BeginPlay()
 
 	// 헤드 마운트 디스플레이 장비의 기준 위치를 스테이지로 설정한다.
 	UHeadMountedDisplayFunctionLibrary::SetTrackingOrigin(EHMDTrackingOrigin::Stage);
-
 }
 
 // Called every frame
@@ -73,6 +88,10 @@ void APlayerCharacter::Tick(float DeltaTime)
 	{
 		FishingLineComponent->SetEndPosition(FishingRodMeshComponent->GetSocketTransform(FName("LineEnd"), RTS_Component).GetLocation());
 	}
+
+	FVector EndLoc = FishingRodMeshComponent->GetSocketLocation(FName("LineEnd"));
+	DrawDebugPoint(GetWorld(), EndLoc, 25.f, FColor::Cyan);
+
 }
 
 // Called to bind functionality to input
