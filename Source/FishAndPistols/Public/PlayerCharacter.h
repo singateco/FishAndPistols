@@ -60,7 +60,11 @@ public:
 	//슈팅 컴포넌트
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|ShootingComponent")
 	class UShootingComponent* ShootingComponent;
-	
+
+	//손 애니메이션 컴포넌트
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|HandAnimComponent")
+	class UHandAnimComponent* HandAnimComponent;
+
 	// 낚시대 메시 컴포넌트
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MySettings|Components")
 	UStaticMeshComponent* FishingRodMeshComponent;
@@ -70,4 +74,8 @@ public:
 
 	UPROPERTY(VisibleAnywhere, Category = "MySettings|Components")
 	class UCableComponent* FishCable;
+
+	UPROPERTY(EditAnywhere, Category = "MySettings|Input")
+	TArray<class UInputAction*> InputActions;
+
 };

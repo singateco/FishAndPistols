@@ -4,8 +4,10 @@
 #include "PlayerCharacter.h"
 
 #include "CableComponent.h"
+#include "EnhancedInputComponent.h"
 #include "ShootingComponent.h"
 #include "FishingComponent.h"
+#include "HandAnimComponent.h"
 #include "MotionControllerComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/SplineMeshComponent.h"
@@ -23,6 +25,7 @@ APlayerCharacter::APlayerCharacter()
  	FishingComponent(CreateDefaultSubobject<UFishingComponent>(TEXT("Fishing Component"))),
 //슈팅컴포넌트
 	ShootingComponent(CreateDefaultSubobject<UShootingComponent>(TEXT("Shooting Component"))),
+	HandAnimComponent(CreateDefaultSubobject<UHandAnimComponent>(TEXT("Hand Anim Component"))),
  	FishingRodMeshComponent(CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Fishing Rod Mesh Comp"))),
 	FishingLineComponent(CreateDefaultSubobject<USplineMeshComponent>(TEXT("Fishing Line Component"))),
 	FishCable(CreateDefaultSubobject<UCableComponent>(TEXT("Fishing Rod Cable")))
@@ -100,6 +103,11 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 	FishingComponent->SetupPlayerInputComponent(PlayerInputComponent);
-
 	ShootingComponent->SetupPlayerInputComponent(PlayerInputComponent);
+
+	if(UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
+	{
+		HandAnimComponent->SetupPlayerInputComponent(EnhancedInputComponent, InputActions);
+	}
+
 }
