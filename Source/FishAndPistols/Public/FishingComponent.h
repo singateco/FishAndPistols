@@ -8,11 +8,13 @@
 #include "Containers/CircularBuffer.h"
 #include "FishingComponent.generated.h"
 
+
 UENUM(BlueprintType)
 enum class EFishingStatus: uint8
 {
 	Idle,
-	Fishing
+	Waiting,
+	Bite
 };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FFishCaught);
@@ -53,7 +55,7 @@ public:
 
 	// Value to determine the impulse power to throw fish line (hook)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float HookThrowSpeed{ 500 };
+	float HookThrowSpeed{ 5000 };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UInputMappingContext* InputMapping;
@@ -98,13 +100,33 @@ public:
 	UPROPERTY(EditAnywhere)
 	AFishHook* Hook;
 
+	UPROPERTY(EditAnywhere, Category = "Haptic")
+	class UHapticFeedbackEffect_Curve* FishBiteHapticCurve;
 
+	UPROPERTY(EditAnywhere, Category = "Fishing")
+	FTimerHandle BiteTimer;
+
+	UPROPERTY(EditAnywhere, Category = "Fishing")
+	FTimerHandle FishRunAwayTimer;
+
+	UPROPERTY(EditAnywhere, Category = "Values|Fishing")
+	float BiteTimeMinSeconds { 4.5f };
+
+	UPROPERTY(EditAnywhere, Category = "Values|Fishing")
+	float BiteTimeMaxSeconds { 15.0f };
+
+	UPROPERTY(EditAnywhere, Category = "Values|Fishing")
+	float FishRunAwayTime { 4.5f };
 
 private:
 	void RightIndexTrigger(const FInputActionValue& Value);
 	void FishingStarted();
+	void FishBited();
+	void EarlyMotionBeforeFishBite();
+	void FishRanAway();
 	void CaughtFish();
 	void StartCheckingMotionValue();
+	void HideHookAndLine();
 
 public:
 	virtual void Deactivate() override;

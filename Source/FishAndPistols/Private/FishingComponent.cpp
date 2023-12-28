@@ -16,6 +16,7 @@
 #include "ShootingComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/SplineMeshComponent.h"
+#include "Haptics/HapticFeedbackEffect_Curve.h"
 
 // Sets default values for this component's properties
 UFishingComponent::UFishingComponent()
@@ -40,9 +41,10 @@ void UFishingComponent::BeginPlay()
 
 	// ...
 
+	check(FishBiteHapticCurve);
+
 
 	OwningPlayer = GetOwner<APlayerCharacter>();
-
 
 	// Add the enhanced input mapping to the player.
 	check(InputMapping)
@@ -74,6 +76,7 @@ void UFishingComponent::BeginPlay()
 	checkf(Spawner, TEXT("맵에 물고기 스포너가 없음"))
 
 	Spawner->BindWithPlayer(OwningPlayer);
+
 }
 
 
@@ -172,14 +175,22 @@ void UFishingComponent::MotionDetected(bool bBackward)
 			FishingStarted();
 		}
 		break;
-	case EFishingStatus::Fishing:
+	case EFishingStatus::Waiting:
+		if (bBackward)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Motion Detected And Accepted"));
+			bIsAbleToDetectMotion = false;
+
+			EarlyMotionBeforeFishBite();
+		}
+		break;
+	case EFishingStatus::Bite:
 		if (bBackward)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Motion Detected And Accepted"));
 			bIsAbleToDetectMotion = false;
 			CaughtFish();
 		}
-		break;
 	default: ;
 	}
 
@@ -218,7 +229,6 @@ void UFishingComponent::RightIndexTrigger(const FInputActionValue& Value)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Triggered"))
 		MakeFishHook();
-		//OnFishCaught.Broadcast();
 	}
 	else
 	{
@@ -228,15 +238,72 @@ void UFishingComponent::RightIndexTrigger(const FInputActionValue& Value)
 
 void UFishingComponent::FishingStarted()
 {
-	Status = EFishingStatus::Fishing;
+	Status = EFishingStatus::Waiting;
 	UE_LOG(LogTemp, Warning, TEXT("Fishing Started"))
 
 	MakeFishHook();
+
+	// Set timer for when fish bites
+	GetWorld()->GetTimerManager().SetTimer(
+		BiteTimer,
+		this,
+		&UFishingComponent::FishBited,
+		FMath::RandRange(BiteTimeMinSeconds, BiteTimeMinSeconds),
+		false
+	);
+}
+
+void UFishingComponent::FishBited()
+{
+	Status = EFishingStatus::Bite;
+	OwningPlayer->GetController<APlayerController>()->PlayHapticEffect(FishBiteHapticCurve, EControllerHand::Right, 1, true);
+
+	// Set timer for when fish runs away
+	GetWorld()->GetTimerManager().SetTimer(
+		FishRunAwayTimer,
+		this,
+		&UFishingComponent::FishRanAway,
+		FishRunAwayTime,
+		false
+	);
+}
+
+void UFishingComponent::EarlyMotionBeforeFishBite()
+{
+	HideHookAndLine();
+
+	if (BiteTimer.IsValid())
+	{
+		GetWorld()->GetTimerManager().ClearTimer(BiteTimer);
+		BiteTimer.Invalidate();
+	}
+	Status = EFishingStatus::Idle;
+}
+
+void UFishingComponent::FishRanAway()
+{
+	OwningPlayer->GetController<APlayerController>()->StopHapticEffect(EControllerHand::Right);
+	Status = EFishingStatus::Waiting;
+
+	GetWorld()->GetTimerManager().SetTimer(
+		BiteTimer,
+		this,
+		&UFishingComponent::FishBited,
+		FMath::RandRange(BiteTimeMinSeconds, BiteTimeMinSeconds),
+		false
+	);
 }
 
 void UFishingComponent::CaughtFish()
 {
-	Status = EFishingStatus::Idle;
+	OwningPlayer->GetController<APlayerController>()->StopHapticEffect(EControllerHand::Right);
+
+	if (FishRunAwayTimer.IsValid())
+	{
+		GetWorld()->GetTimerManager().ClearTimer(FishRunAwayTimer);
+		FishRunAwayTimer.Invalidate();
+	}
+
 	OnFishCaught.Broadcast();
 	UE_LOG(LogTemp, Warning, TEXT("Fish Caught"))
 
@@ -254,7 +321,7 @@ void UFishingComponent::StartCheckingMotionValue()
 	GetWorld()->GetTimerManager().SetTimer(MotionTimer, this, &UFishingComponent::CheckMotionValue, 0.1f, true);
 }
 
-void UFishingComponent::Deactivate()
+void UFishingComponent::HideHookAndLine()
 {
 	OwningPlayer->FishCable->SetVisibility(false);
 
@@ -262,6 +329,14 @@ void UFishingComponent::Deactivate()
 	{
 		Hook->Destroy();
 	}
+}
+
+void UFishingComponent::Deactivate()
+{
+
+	Status = EFishingStatus::Idle;
+
+	HideHookAndLine();
 	
 	OwningPlayer->FishingRodMeshComponent->SetVisibility(false);
 	OwningPlayer->FishingLineComponent->SetVisibility(false);
