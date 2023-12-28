@@ -36,9 +36,14 @@ APlayerCharacter::APlayerCharacter()
 
 	LeftHand->SetupAttachment(RootComponent);
 	LeftHandMesh->SetupAttachment(LeftHand);
+	LeftHand->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	RightHand->SetupAttachment(RootComponent);
 	RightHandMesh->SetupAttachment(RightHand);
+	RightHand->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+
+
 	FishingRodMeshComponent->SetupAttachment(RightHandMesh, FName("palm_rSocket"));
 	FishingRodMeshComponent->SetMobility(EComponentMobility::Movable);
 	FishingLineComponent->SetupAttachment(FishingRodMeshComponent, FName("LineStart"));
@@ -72,7 +77,6 @@ void APlayerCharacter::BeginPlay()
 
 	// 헤드 마운트 디스플레이 장비의 기준 위치를 스테이지로 설정한다.
 	UHeadMountedDisplayFunctionLibrary::SetTrackingOrigin(EHMDTrackingOrigin::Stage);
-
 }
 
 // Called every frame

@@ -12,8 +12,7 @@ UENUM(BlueprintType)
 enum class EFishingStatus: uint8
 {
 	Idle,
-	Fishing,
-	Caught
+	Fishing
 };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FFishCaught);
@@ -44,13 +43,17 @@ public:
 	void CheckMotionValue();
 
 	UFUNCTION()
-	void MotionDetected();
+	void MotionDetected(bool bBackward);
 
 	UFUNCTION(BlueprintCallable)
 	void MakeFishHook();
 
 	UPROPERTY()
 	class APlayerCharacter* OwningPlayer;
+
+	// Value to determine the impulse power to throw fish line (hook)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float HookThrowSpeed{ 500 };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UInputMappingContext* InputMapping;
@@ -62,14 +65,14 @@ public:
 	TCircularBuffer<double> DotMotionBuffer {8};
 
 	// Sentinel value for the motion buffer.
-	const float BufferIgnoreValue{ -9999 };
+	const float BufferIgnoreValue {-9999};
 
 	// Index Value for the buffer.
 	uint32 BufferIndex {0};
 
 	// Threshold for the buffer.
 	UPROPERTY(EditAnywhere)
-	float MotionThreshold { -45.f };
+	float MotionThreshold {-45.f};
 
 	UPROPERTY()
 	FTimerHandle MotionTimer;
@@ -92,10 +95,16 @@ public:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AFishHook> HookClass;
 
+	UPROPERTY(EditAnywhere)
+	AFishHook* Hook;
+
 
 
 private:
 	void RightIndexTrigger(const FInputActionValue& Value);
 	void FishingStarted();
 	void CaughtFish();
+
+public:
+	virtual void Deactivate() override;
 };
