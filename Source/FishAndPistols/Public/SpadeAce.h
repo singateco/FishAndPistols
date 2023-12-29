@@ -3,11 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Gun.h"
 #include "GameFramework/Actor.h"
 #include "SpadeAce.generated.h"
 
 UCLASS()
-class FISHANDPISTOLS_API ASpadeAce : public AActor
+class FISHANDPISTOLS_API ASpadeAce : public AGun
 {
 	GENERATED_BODY()
 	
@@ -22,29 +23,5 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-
-	//----------------------------Variable--------------------------------
-public:
-
-	UPROPERTY(EditAnywhere)
-	class UStaticMeshComponent* SpadeAce;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class UArrowComponent* BulletREF;
-
-	UPROPERTY(EditAnywhere)
-	class USoundBase* FireSound;
-
-	UPROPERTY(EditAnywhere)
-	class UParticleSystem* MuzzleFlash;
-
-	float GunRange = 200000.f;
-	//int32 Bullet = 8;
-
-	//----------------------------Function--------------------------------
-	void ActionFire();
-
-
 
 };
