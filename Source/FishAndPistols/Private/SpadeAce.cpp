@@ -63,6 +63,8 @@ void ASpadeAce::ActionFire()
 			Fish->FishDeadEffect();
 			DrawDebugLine(GetWorld(), StartLoc, EndLoc, FColor::Green, false, 0.3f);
 		}
+
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), MuzzleFlash, HitResult.ImpactPoint, FRotator(0), FVector(1));
 	}
 
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), MuzzleFlash, FVector(StartLoc), FRotator(0), FVector(0.03));

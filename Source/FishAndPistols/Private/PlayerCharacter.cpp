@@ -61,7 +61,8 @@ APlayerCharacter::APlayerCharacter()
 	FishCable->EndLocation = FVector(0, 0, 0);
 	FishCable->SetVisibility(false);
 	FishCable->CableWidth = 4.f;
-	FishCable->CableLength = 1000.f;
+	FishCable->CableLength = 500.f;
+	FishCable->NumSegments = 20;
 	FishCable->bEnableCollision = true;
 	FishCable->bEnableStiffness = true;
 
@@ -101,6 +102,17 @@ APlayerCharacter::APlayerCharacter()
 	check(RightTriggerFloatFinder.Succeeded())
 	InputActions[3] = RightTriggerFloatFinder.Object;
 
+
+	ConstructorHelpers::FClassFinder<UAnimInstance> AnimInstanceFinder{
+		TEXT("Blueprint'/Game/FishAndPistols/FP_KDE/Blueprints/ABP_HandAnim.ABP_HandAnim_C'")
+	};
+
+	check(AnimInstanceFinder.Succeeded());
+
+	RightHandMesh->SetAnimationMode(EAnimationMode::AnimationBlueprint);
+	RightHandMesh->SetAnimClass(AnimInstanceFinder.Class);
+	LeftHandMesh->SetAnimationMode(EAnimationMode::AnimationBlueprint);
+	LeftHandMesh->SetAnimClass(AnimInstanceFinder.Class);
 }
 
 // Called when the game starts or when spawned

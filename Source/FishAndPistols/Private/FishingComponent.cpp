@@ -62,14 +62,14 @@ void UFishingComponent::BeginPlay()
 
 	StartCheckingMotionValue();
 
-	// Wait 1 second before able to detect motion
+	// Wait 4 seconds before able to detect motion
 	World->GetTimerManager().SetTimer(MotionDetectedTimer, FTimerDelegate::CreateLambda(
 		[&]()->void
 		{
 			bIsAbleToDetectMotion = true;
 			MotionDetectedTimer.Invalidate();
 		}
-	), 2.0f, false);
+	), 4.0f, false);
 
 	AFishSpawner* Spawner = Cast<AFishSpawner>(UGameplayStatics::GetActorOfClass(World, AFishSpawner::StaticClass()));
 
@@ -278,6 +278,18 @@ void UFishingComponent::EarlyMotionBeforeFishBite()
 		BiteTimer.Invalidate();
 	}
 	Status = EFishingStatus::Idle;
+
+	// Reset Motion timer cooldown.
+	if (!bIsAbleToDetectMotion)
+	{
+		GetWorld()->GetTimerManager().SetTimer(MotionDetectedTimer, FTimerDelegate::CreateLambda(
+			[&]()->void
+			{
+				bIsAbleToDetectMotion = true;
+				MotionDetectedTimer.Invalidate();
+			}
+		), 1.f, false);
+	}
 }
 
 void UFishingComponent::FishRanAway()
