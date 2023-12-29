@@ -60,6 +60,20 @@ APlayerCharacter::APlayerCharacter()
 	FishCable->bAttachEnd = true;
 	FishCable->EndLocation = FVector(0, 0, 0);
 	FishCable->SetVisibility(false);
+	FishCable->CableWidth = 4.f;
+	FishCable->CableLength = 1000.f;
+	FishCable->bEnableCollision = true;
+	FishCable->bEnableStiffness = true;
+
+	FishCable->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+
+	FCollisionResponseContainer Cont;
+	Cont.SetAllChannels(ECR_Ignore);
+	Cont.SetResponse(ECC_Visibility, ECR_Block);
+	Cont.SetResponse(ECC_Camera, ECR_Block);
+	Cont.SetResponse(ECC_WorldStatic, ECR_Block);
+
+	FishCable->SetCollisionResponseToChannels(Cont);
 
 	// (X=6.070411,Y=0.112364,Z=4.035356)
 	// (Pitch=2.401839,Yaw=629.462922,Roll=-478.018271)
@@ -68,6 +82,25 @@ APlayerCharacter::APlayerCharacter()
 	// Set up tracking motion sources.
 	LeftHand->SetTrackingMotionSource(FName("Left"));
 	RightHand->SetTrackingMotionSource(FName("Right"));
+
+	InputActions.SetNum(4);
+
+	const ConstructorHelpers::FObjectFinder<UInputAction> LeftTriggerTouchFinder { TEXT("/Script/EnhancedInput.InputAction'/Game/FishAndPistols/FP_KDE/Inputs/IA_LeftTrigger_Touch.IA_LeftTrigger_Touch'") };
+	check(LeftTriggerTouchFinder.Succeeded())
+	InputActions[0] = LeftTriggerTouchFinder.Object;
+
+	const ConstructorHelpers::FObjectFinder<UInputAction> LeftTriggerFloatFinder { TEXT("/Script/EnhancedInput.InputAction'/Game/FishAndPistols/FP_KDE/Inputs/IA_LeftTrigger_Float.IA_LeftTrigger_Float'") };
+	check(LeftTriggerFloatFinder.Succeeded())
+	InputActions[1] = LeftTriggerFloatFinder.Object;
+
+	const ConstructorHelpers::FObjectFinder<UInputAction> RightTriggerTouchFinder { TEXT("/Script/EnhancedInput.InputAction'/Game/FishAndPistols/FP_KDE/Inputs/IA_RightTrgger_Touch.IA_RightTrgger_Touch'") };
+	check(RightTriggerTouchFinder.Succeeded())
+	InputActions[2] = RightTriggerTouchFinder.Object;
+
+	const ConstructorHelpers::FObjectFinder<UInputAction> RightTriggerFloatFinder{ TEXT("/Script/EnhancedInput.InputAction'/Game/FishAndPistols/FP_KDE/Inputs/IA_RightTrigger_Float.IA_RightTrigger_Float'") };
+	check(RightTriggerFloatFinder.Succeeded())
+	InputActions[3] = RightTriggerFloatFinder.Object;
+
 }
 
 // Called when the game starts or when spawned
