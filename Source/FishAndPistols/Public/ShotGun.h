@@ -17,6 +17,6 @@ class FISHANDPISTOLS_API AShotGun : public AGun
 
 public:
 	AShotGun();
-	
-	virtual void ActionFire() override;
+
+	void ActionFire() override;
 };

@@ -2,10 +2,8 @@
 
 
 #include "SunShot.h"
-
-#include "Fish.h"
 #include "Components/ArrowComponent.h"
-#include "Kismet/GameplayStatics.h"
+
 
 // Sets default values
 ASunShot::ASunShot()
@@ -13,8 +11,8 @@ ASunShot::ASunShot()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	GunMeshComponent->SetRelativeScale3D(FVector(0.02));
 
+	BulletREF->SetupAttachment(GunMeshComponent);
 	BulletREF->SetRelativeLocationAndRotation(FVector(-1050, 0, 400), FRotator(0, 0, 180));
 	BulletREF->ArrowSize = 30;
 
@@ -22,6 +20,7 @@ ASunShot::ASunShot()
 
 	if(MeshSunShot.Succeeded())
 	{
+		GunMeshComponent->SetRelativeScale3D(FVector(0.02));
 		GunMeshComponent->SetStaticMesh(MeshSunShot.Object);
 		GunMeshComponent->SetRelativeRotation(FRotator(0, 180, 0));
 	}

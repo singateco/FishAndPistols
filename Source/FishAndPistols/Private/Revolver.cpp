@@ -8,7 +8,6 @@
 // Sets default values
 ARevolver::ARevolver()
 {
-	GunMeshComponent->SetRelativeScale3D(FVector(0.7));
 
 	BulletREF->SetupAttachment(GunMeshComponent);
 	BulletREF->SetRelativeLocationAndRotation(FVector(-22, 0, 25), FRotator(0, 180, 0));
@@ -17,9 +16,12 @@ ARevolver::ARevolver()
 
 	if (MeshRevolver.Succeeded())
 	{
+		GunMeshComponent->SetRelativeScale3D(FVector(0.8));
 		GunMeshComponent->SetStaticMesh(MeshRevolver.Object);
 		GunMeshComponent->SetRelativeRotation(FRotator(0, 180, 0));
 	}
+
+	Bullet = 6;
 }
 
 // Called when the game starts or when spawned
