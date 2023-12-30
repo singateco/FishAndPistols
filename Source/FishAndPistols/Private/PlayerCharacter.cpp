@@ -5,6 +5,7 @@
 
 #include "CableComponent.h"
 #include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
 #include "ShootingComponent.h"
 #include "FishingComponent.h"
 #include "HandAnimComponent.h"
@@ -125,6 +126,16 @@ void APlayerCharacter::BeginPlay()
 
 	// 헤드 마운트 디스플레이 장비의 기준 위치를 스테이지로 설정한다.
 	UHeadMountedDisplayFunctionLibrary::SetTrackingOrigin(EHMDTrackingOrigin::Stage);
+
+	ULocalPlayer* LocalPlayer = GetController<APlayerController>()->GetLocalPlayer();
+	UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(LocalPlayer);
+
+	check(InteractMappingContext)
+	check(Subsystem)
+	if (Subsystem)
+	{
+		Subsystem->AddMappingContext(InteractMappingContext, 2);
+	}
 }
 
 // Called every frame
@@ -150,7 +161,7 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	FishingComponent->SetupPlayerInputComponent(PlayerInputComponent);
 	ShootingComponent->SetupPlayerInputComponent(PlayerInputComponent);
 
-	if(UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
+	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
 		HandAnimComponent->SetupPlayerInputComponent(EnhancedInputComponent, InputActions);
 	}
