@@ -3,11 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Gun.h"
 #include "GameFramework/Actor.h"
 #include "Revolver.generated.h"
 
 UCLASS()
-class FISHANDPISTOLS_API ARevolver : public AActor
+class FISHANDPISTOLS_API ARevolver : public AGun
 {
 	GENERATED_BODY()
 	
@@ -24,26 +25,5 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 
-	//----------------------------Variable--------------------------------
-public:
-
-	UPROPERTY(EditAnywhere)
-	class UStaticMeshComponent* Revolver;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class UArrowComponent* BulletREF;
-
-	UPROPERTY(EditAnywhere)
-	class USoundBase* FireSound;
-
-	UPROPERTY(EditAnywhere)
-	class UParticleSystem* MuzzleFlash;
-
-	float GunRange = 200000.f;
-	//int32 Bullet = 6;
-	
-	//----------------------------Function--------------------------------
-
-	void ActionFire();
 
 };
