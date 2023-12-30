@@ -49,8 +49,7 @@ void AGun::ActionFire()
 		AFish* Fish = Cast<AFish>(HitResult.GetActor());
 		if (Fish)
 		{
-			Fish->Destroy();
-			Fish->FishDeadEffect();
+			Fish->Die();
 			DrawDebugLine(GetWorld(), StartLoc, EndLoc, FColor::Green, false, 0.3f);
 		}
 

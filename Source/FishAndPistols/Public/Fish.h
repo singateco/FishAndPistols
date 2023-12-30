@@ -32,6 +32,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UProjectileMovementComponent* ProjectileMovementComponent;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 GoldDropAmount {1};
+
 	UPROPERTY(EditAnywhere)
 	float DefaultSpeed {1500};
 
@@ -42,6 +45,7 @@ public:
 	UPROPERTY(EditAnywhere)
 	class UNiagaraSystem* ExplosionEffect;
 
+	void Die();
 	void FishDeadEffect();
 
 };

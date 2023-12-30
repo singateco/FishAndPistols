@@ -3,6 +3,7 @@
 
 #include "Fish.h"
 
+#include "Fish_GameModeBase.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -41,6 +42,14 @@ void AFish::BeginPlay()
 void AFish::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+}
+
+void AFish::Die()
+{
+	AFish_GameModeBase* GameMode = GetWorld()->GetAuthGameMode<AFish_GameModeBase>();
+	GameMode->AddGold(GoldDropAmount);
+	FishDeadEffect();
+	Destroy();
 }
 
 void AFish::FishDeadEffect()
