@@ -19,10 +19,11 @@ ASpadeAce::ASpadeAce()
 	if (MeshSpadeAce.Succeeded())
 	{
 		GunMeshComponent->SetStaticMesh(MeshSpadeAce.Object);
-		GunMeshComponent->SetRelativeRotation(FRotator(0, -90, 0));
+		//GunMeshComponent->SetRelativeRotation(FRotator(0, -90, 0));
 	}
 
-	Bullet = 9;
+	MaxBullet = 9;
+	
 }
 
 // Called when the game starts or when spawned

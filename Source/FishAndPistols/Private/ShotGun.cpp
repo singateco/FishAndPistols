@@ -18,10 +18,10 @@ AShotGun::AShotGun()
 	{
 		GunMeshComponent->SetRelativeScale3D(FVector(2.5f));
 		GunMeshComponent->SetStaticMesh(MeshShotGun.Object);
-		GunMeshComponent->SetRelativeRotation(FRotator(0, 90, 0));
+		//GunMeshComponent->SetRelativeRotation(FRotator(0, 90, 0));
 	}
 
-	Bullet = 2;
+	MaxBullet = 2;
 }
 
 void AShotGun::ActionFire()

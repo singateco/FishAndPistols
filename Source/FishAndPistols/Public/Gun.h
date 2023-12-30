@@ -35,10 +35,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UArrowComponent* BulletREF;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = Effect)
 	class USoundBase* FireSound;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = Effect)
 	class UParticleSystem* MuzzleFlash;
 
 	UPROPERTY(EditAnywhere)
@@ -46,6 +46,13 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	int Bullet;
+
+	UPROPERTY(EditAnywhere)
+	int MaxBullet;
+
+	UPROPERTY(EditAnywhere)
+	bool IsRazor;
+
 
 	//----------------------------Function--------------------------------
 	virtual void ActionFire();
