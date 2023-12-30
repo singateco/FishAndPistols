@@ -6,6 +6,7 @@
 #include "Components/BoxComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "NiagaraFunctionLibrary.h"
 
 // Sets default values
 AFish::AFish()
@@ -44,8 +45,9 @@ void AFish::Tick(float DeltaTime)
 
 void AFish::FishDeadEffect()
 {
-	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Explosion, GetActorLocation(), FRotator(0), FVector(1));
-
+	//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Explosion, GetActorLocation(), FRotator(0), FVector(1));
+	check(ExplosionEffect)
+	UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), ExplosionEffect, GetActorLocation());
 	UGameplayStatics::PlaySound2D(GetWorld(), CoinSound, 0.5f);
 }
 

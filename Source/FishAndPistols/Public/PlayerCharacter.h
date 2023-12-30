@@ -75,6 +75,9 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = "MySettings|Components")
 	class UCableComponent* FishCable;
 
+	UPROPERTY(EditDefaultsOnly, Category = "MySettings|Input")
+	class UInputMappingContext* InteractMappingContext;
+
 	UPROPERTY(EditAnywhere, Category = "MySettings|Input")
 	TArray<class UInputAction*> InputActions;
 

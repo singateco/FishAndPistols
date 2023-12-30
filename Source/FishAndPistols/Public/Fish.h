@@ -40,7 +40,7 @@ public:
 	class USoundBase* CoinSound;
 
 	UPROPERTY(EditAnywhere)
-	class UParticleSystem* Explosion;
+	class UNiagaraSystem* ExplosionEffect;
 
 	void FishDeadEffect();
 
