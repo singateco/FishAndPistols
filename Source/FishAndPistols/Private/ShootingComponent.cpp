@@ -48,7 +48,7 @@ void UShootingComponent::BeginPlay()
 	Spawner->OnWaveOverDelegate.AddDynamic(this, &UShootingComponent::WaveOver);
 
 	ChooseRevolver();
-	ChooseSpadeAce();
+	//ChooseSpadeAce();
 }
 
 
@@ -69,8 +69,6 @@ void UShootingComponent::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 		{
 			InputComponent = EnhancedInput;
 		}
-		
-
 		check(IA_RightTriggerBool)
 		check(IA_RightTriggerFloat)
 		check(IA_LeftTriggerFloat)
@@ -129,7 +127,7 @@ void UShootingComponent::ChooseRevolver()
 	checkf(RevolverClass, TEXT("리볼버 클래스 지정안함"))
 	Revolver = GetWorld()->SpawnActor<ARevolver>(RevolverClass);
 	FAttachmentTransformRules Rules = FAttachmentTransformRules::SnapToTargetNotIncludingScale;
-	Revolver->AttachToComponent(Player->RightHandMesh, Rules, FName("Gun_Socket_Right"));
+	Revolver->AttachToComponent(Player->RightHandMesh, Rules, FName("Revolver_Right"));
 
 }
 

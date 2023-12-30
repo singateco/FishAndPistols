@@ -22,10 +22,10 @@ ASunShot::ASunShot()
 	{
 		GunMeshComponent->SetRelativeScale3D(FVector(0.02));
 		GunMeshComponent->SetStaticMesh(MeshSunShot.Object);
-		GunMeshComponent->SetRelativeRotation(FRotator(0, 180, 0));
+		//GunMeshComponent->SetRelativeRotation(FRotator(0, 180, 0));
 	}
 
-	Bullet = 6;
+	MaxBullet = 6;
 }
 
 // Called when the game starts or when spawned

@@ -18,7 +18,7 @@ ARevolver::ARevolver()
 	{
 		GunMeshComponent->SetRelativeScale3D(FVector(0.8));
 		GunMeshComponent->SetStaticMesh(MeshRevolver.Object);
-		GunMeshComponent->SetRelativeRotation(FRotator(0, 180, 0));
+		//GunMeshComponent->SetRelativeRotation(FRotator(0, 180, 0));
 	}
 
 	Bullet = 6;

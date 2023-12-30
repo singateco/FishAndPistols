@@ -87,6 +87,7 @@ void UHandAnimComponent::Left_Trigger_Value(const FInputActionValue& value)
 	if(nullptr != HandAnim_Left)
 	{
 		HandAnim_Left->PoseAlphaIndexCurl_cpp = value.Get<float>();
+		
 	}
 }
 

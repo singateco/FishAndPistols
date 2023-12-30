@@ -37,12 +37,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UInputMappingContext* InputMapping;
 
-	UPROPERTY(EditAnywhere)
-	bool bChooseSemiAuto;
-
-	UPROPERTY(EditAnywhere)
-	bool bChooseFullAuto;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MySettings|Inputs")
 	class UInputAction* IA_LeftTriggerBool;
 
@@ -58,6 +52,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MySettings|Inputs")
 	class UInputAction* IA_AButton;
 
+	UPROPERTY()
+	UEnhancedInputComponent* InputComponent;
+
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class ARevolver> RevolverClass;
 
@@ -70,8 +67,12 @@ public:
 	UPROPERTY()
 	ASpadeAce* SpadeAce;
 
-	UPROPERTY()
-	UEnhancedInputComponent* InputComponent;
+	UPROPERTY(EditAnywhere)
+	bool bChooseSemiAuto;
+
+	UPROPERTY(EditAnywhere)
+	bool bChooseFullAuto;
+	
 
 	//----------------------------Function--------------------------------
 
