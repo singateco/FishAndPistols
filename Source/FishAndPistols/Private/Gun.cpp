@@ -12,9 +12,12 @@ AGun::AGun()
 	// Set this actor to call Tick() every frame. You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	GunMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("GunMeshComponent"));
-	SetRootComponent(GunMeshComponent);
+	RootComp = CreateDefaultSubobject<USceneComponent>(TEXT("RootComp"));
 
+	GunMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("GunMeshComponent"));
+	SetRootComponent(RootComp);
+
+	GunMeshComponent->SetupAttachment(RootComp);
 	BulletREF = CreateDefaultSubobject<UArrowComponent>(TEXT("BulletREF"));
 
 }

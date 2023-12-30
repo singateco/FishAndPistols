@@ -24,6 +24,8 @@ ASunShot::ASunShot()
 		GunMeshComponent->SetStaticMesh(MeshSunShot.Object);
 		GunMeshComponent->SetRelativeRotation(FRotator(0, 180, 0));
 	}
+
+	Bullet = 6;
 }
 
 // Called when the game starts or when spawned

@@ -9,17 +9,19 @@ AShotGun::AShotGun()
 	PrimaryActorTick.bCanEverTick = true;
 
 	BulletREF->SetupAttachment(GunMeshComponent);
-	BulletREF->SetRelativeLocationAndRotation(FVector(0.029998, -2467727.513593, 174129.028756), FRotator(-10, -90, 0));
-	BulletREF->ArrowSize = 50000;
+	BulletREF->SetRelativeLocation(FVector(10, 0, 2));
+	BulletREF->ArrowSize = 0.3f;
 
-	ConstructorHelpers::FObjectFinder<UStaticMesh>MeshShotGun(TEXT("/Script/Engine.StaticMesh'/Game/Resources/KDE/double-barreled_shotgun/scene.scene'"));
+	ConstructorHelpers::FObjectFinder<UStaticMesh>MeshShotGun(TEXT("/Script/Engine.StaticMesh'/Game/Resources/KDE/shotgun/source/shotgunFinal.shotgunFinal'"));
 
 	if (MeshShotGun.Succeeded())
 	{
-		GunMeshComponent->SetRelativeScale3D(FVector(0.00001));
+		GunMeshComponent->SetRelativeScale3D(FVector(2.5f));
 		GunMeshComponent->SetStaticMesh(MeshShotGun.Object);
-		GunMeshComponent->SetRelativeRotation(FRotator(0, 90, 10));
+		GunMeshComponent->SetRelativeRotation(FRotator(0, 90, 0));
 	}
+
+	Bullet = 2;
 }
 
 void AShotGun::ActionFire()

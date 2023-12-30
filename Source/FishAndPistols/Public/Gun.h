@@ -26,6 +26,9 @@ public:
 	//----------------------------Variable--------------------------------
 public:
 
+	UPROPERTY()
+	class USceneComponent* RootComp;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UStaticMeshComponent* GunMeshComponent;
 
