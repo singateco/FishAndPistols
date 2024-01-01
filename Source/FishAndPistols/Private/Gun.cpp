@@ -20,6 +20,19 @@ AGun::AGun()
 	GunMeshComponent->SetupAttachment(RootComp);
 	BulletREF = CreateDefaultSubobject<UArrowComponent>(TEXT("BulletREF"));
 
+	Laser = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Laser"));
+	Laser->SetupAttachment(BulletREF);
+	Laser->SetRelativeScale3D(FVector(10, 0.01, 0.01));
+	Laser->SetRelativeLocation(FVector(500, 0, 0));
+	Laser->SetHiddenInGame(true);
+	ConstructorHelpers::FObjectFinder<UStaticMeshComponent> LaserMesh(TEXT("/Script/Engine.StaticMesh'/Engine/BasicShapes/Cube.Cube'"));
+	if(LaserMesh.Succeeded())
+	{
+		Laser = LaserMesh.Object;
+	}
+
+	//메테리얼?
+
 	ConstructorHelpers::FObjectFinder<USoundBase> dryFireSound(TEXT("/Script/Engine.SoundWave'/Game/Resources/KDE/Sound/DryFireSound.DryFireSound'"));
 	if(dryFireSound.Succeeded())
 	{
@@ -31,6 +44,9 @@ AGun::AGun()
 	{
 		MuzzleFlash = muzzleFlash.Object;
 	}*/
+
+	//Laser = CreateDefaultSubobject<UNaiagaraParticleSystem>()
+
 }
 
 // Called when the game starts or when spawned
@@ -88,7 +104,6 @@ void AGun::UpgradeExtendMag()
 void AGun::UpgradeLaserSight()
 {
 	IsRazor = true;
-
-
+	Laser->SetHiddenInGame(false);
 }
 

@@ -36,7 +36,9 @@ ASpadeAce::ASpadeAce()
 void ASpadeAce::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	UpgradeLaserSight();
+
 }
 
 // Called every frame

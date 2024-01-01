@@ -36,7 +36,7 @@ void ARevolver::BeginPlay()
 	Super::BeginPlay();
 
 	UpgradeExtendMag();
-	UpgradeRazorSight();
+	UpgradeLaserSight();
 
 }
 

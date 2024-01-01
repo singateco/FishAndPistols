@@ -44,6 +44,9 @@ public:
 	UPROPERTY(EditAnywhere, Category = Effect)
 	class UParticleSystem* MuzzleFlash;
 
+	UPROPERTY(EditAnywhere, Category = Effect)
+	class UStaticMeshComponent* Laser;
+
 	UPROPERTY(EditAnywhere)
 	float GunRange = 200000.f;
 
@@ -60,11 +63,10 @@ public:
 	bool IsRazor = false;
 
 
+
 	//----------------------------Function--------------------------------
 	virtual void ActionFire();
-
 	void UpgradeExtendMag();
-
 	void UpgradeLaserSight();
 
 };
