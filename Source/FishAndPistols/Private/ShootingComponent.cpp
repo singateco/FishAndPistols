@@ -21,6 +21,8 @@ UShootingComponent::UShootingComponent()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 	bAutoActivate = false;
+
+
 }
 
 
@@ -47,8 +49,17 @@ void UShootingComponent::BeginPlay()
 	checkf(Spawner, TEXT("맵에 FishSpawner가 없음"))
 	Spawner->OnWaveOverDelegate.AddDynamic(this, &UShootingComponent::WaveOver);
 
+	Revolver = GetWorld()->SpawnActor<ARevolver>(RevolverClass);
+	FAttachmentTransformRules Rule = FAttachmentTransformRules::SnapToTargetNotIncludingScale;
+	Revolver->AttachToComponent(Player->RightHandMesh, Rule, FName("Revolver_Right"));
+	Revolver->SetActorHiddenInGame(true);
+	
+
+	SpadeAce = GetWorld()->SpawnActor<ASpadeAce>(SpadeAceClass);
+	SpadeAce->AttachToComponent(Player->RightHandMesh, Rule, FName("SpadeAce_Right"));
+	SpadeAce->SetActorHiddenInGame(true);
+
 	ChooseRevolver();
-	//ChooseSpadeAce();
 }
 
 
@@ -97,7 +108,7 @@ void UShootingComponent::WaveOver()
 
 void UShootingComponent::LeftTriggerInput_Bool(const FInputActionValue& value)
 {
-	ActionLeftFire();
+	//ActionLeftFire();
 }
 
 void UShootingComponent::LeftTriggerInput_Float(const FInputActionValue& value)
@@ -107,63 +118,69 @@ void UShootingComponent::LeftTriggerInput_Float(const FInputActionValue& value)
 
 void UShootingComponent::RightTriggerInput_Bool(const FInputActionValue& value)
 {
-	//UE_LOG(LogTemp, Warning, TEXT("Semi Auto"))
 	ActionRightFire();
 }
 
 void UShootingComponent::RightTriggerInput_Float(const FInputActionValue& value)
 {
-	//UE_LOG(LogTemp, Warning, TEXT("Full Auto"))
 	
 }
 
 void UShootingComponent::AButton(const FInputActionValue& value)
 {
-	
+	ChooseSpadeAce();
 }
 
 void UShootingComponent::ChooseRevolver()
 {
-	checkf(RevolverClass, TEXT("리볼버 클래스 지정안함"))
-	Revolver = GetWorld()->SpawnActor<ARevolver>(RevolverClass);
-	FAttachmentTransformRules Rules = FAttachmentTransformRules::SnapToTargetNotIncludingScale;
-	Revolver->AttachToComponent(Player->RightHandMesh, Rules, FName("Revolver_Right"));
+	bChooseRevolver = true;
+	bChooseSpadeAce = false;
+	bChooseShotGun = false;
+	bChooseSunShot = false;
+
+	Revolver->SetActorHiddenInGame(false);
+	SpadeAce->SetActorHiddenInGame(true);
+
 
 }
 
+//바꿀때마다 총 액터를 생성하면 스위칭 할때마다 총알 충전됨
 void UShootingComponent::ChooseSpadeAce()
 {
-	checkf(SpadeAceClass, TEXT("스페이드에이스 클래스 지정안함"))
-	SpadeAce = GetWorld()->SpawnActor<ASpadeAce>(SpadeAceClass);
-	FAttachmentTransformRules Rules = FAttachmentTransformRules::SnapToTargetNotIncludingScale;
-	SpadeAce->AttachToComponent(Player->LeftHandMesh, Rules, FName("Gun_Socket_Left"));
+	bChooseRevolver = false;
+	bChooseSpadeAce = true;
+	bChooseShotGun = false;
+	bChooseSunShot = false;
+
+	Revolver->SetActorHiddenInGame(true);
+	SpadeAce->SetActorHiddenInGame(false);
 }
 
 void UShootingComponent::ActionLeftFire()
 {
-	SpadeAce->ActionFire();
+	//왼손의 총을 가져와서 액션파이어 호출
 }
 
 void UShootingComponent::ActionRightFire()
 {
-	Revolver->ActionFire();
+	if(bChooseRevolver)
+	{
+		Revolver->ActionFire();
+	}
+
+	if(bChooseSpadeAce)
+	{
+		SpadeAce->ActionFire();
+	}
+
+
 }
 
 void UShootingComponent::Deactivate()
 {
-
 	InputComponent->ClearBindingsForObject(this);
-
-	if (Revolver)
-	{
-		Revolver->Destroy();
-	}
-
-	if (SpadeAce)
-	{
-		SpadeAce->Destroy();
-	}
-
+	Revolver->SetActorHiddenInGame(true);
+	SpadeAce->SetActorHiddenInGame(true);
 	Super::Deactivate();
 }
 
@@ -174,8 +191,11 @@ void UShootingComponent::Activate(bool bReset)
 	check(InputComponent)
 	SetupPlayerInputComponent(InputComponent);
 
+	Revolver->Bullet = Revolver->MaxBullet;
+	SpadeAce->Bullet = SpadeAce->MaxBullet;
+
 	ChooseRevolver();
-	ChooseSpadeAce();
+	
 }
 
 

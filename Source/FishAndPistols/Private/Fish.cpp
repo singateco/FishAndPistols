@@ -30,6 +30,13 @@ AFish::AFish()
 	// Set up speed.
 	ProjectileMovementComponent->InitialSpeed = DefaultSpeed;
 	ProjectileMovementComponent->Velocity = FVector(0, 0, 1);
+
+	ConstructorHelpers::FObjectFinder<USoundBase> coinSound(TEXT("/Script/Engine.SoundWave'/Game/Resources/KDE/Sound/Mario-coin-sound.Mario-coin-sound'"));
+	if (coinSound.Succeeded())
+	{
+		CoinSound = coinSound.Object;
+	}
+
 }
 
 // Called when the game starts or when spawned

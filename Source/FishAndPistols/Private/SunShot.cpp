@@ -25,6 +25,12 @@ ASunShot::ASunShot()
 		//GunMeshComponent->SetRelativeRotation(FRotator(0, 180, 0));
 	}
 
+	ConstructorHelpers::FObjectFinder<USoundBase> fireSound(TEXT("/Script/Engine.SoundWave'/Game/Resources/KDE/Sound/SunShotFireSound.SunShotFireSound'"));
+	if (fireSound.Succeeded())
+	{
+		FireSound = fireSound.Object;
+	}
+
 	MaxBullet = 6;
 }
 

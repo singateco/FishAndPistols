@@ -68,10 +68,16 @@ public:
 	ASpadeAce* SpadeAce;
 
 	UPROPERTY(EditAnywhere)
-	bool bChooseSemiAuto;
+	bool bChooseRevolver = true;
 
 	UPROPERTY(EditAnywhere)
-	bool bChooseFullAuto;
+	bool bChooseSpadeAce = false;
+
+	UPROPERTY(EditAnywhere)
+	bool bChooseShotGun = false;
+
+	UPROPERTY(EditAnywhere)
+	bool bChooseSunShot = false;
 	
 
 	//----------------------------Function--------------------------------
@@ -83,7 +89,6 @@ public:
 	void LeftTriggerInput_Float(const FInputActionValue& value);
 	void RightTriggerInput_Bool(const FInputActionValue& value);
 	void RightTriggerInput_Float(const FInputActionValue& value);
-
 	void AButton(const FInputActionValue& value);
 
 	void ChooseRevolver();

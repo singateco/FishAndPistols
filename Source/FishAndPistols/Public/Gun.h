@@ -39,6 +39,9 @@ public:
 	class USoundBase* FireSound;
 
 	UPROPERTY(EditAnywhere, Category = Effect)
+	class USoundBase* DryFireSound;
+
+	UPROPERTY(EditAnywhere, Category = Effect)
 	class UParticleSystem* MuzzleFlash;
 
 	UPROPERTY(EditAnywhere)
@@ -50,11 +53,18 @@ public:
 	UPROPERTY(EditAnywhere)
 	int MaxBullet;
 
-	UPROPERTY(EditAnywhere)
-	bool IsRazor;
+	UPROPERTY(EditAnywhere, Category = Upgrade)
+	bool IsExtendMag = false;
+
+	UPROPERTY(EditAnywhere, Category = Upgrade)
+	bool IsRazor = false;
 
 
 	//----------------------------Function--------------------------------
 	virtual void ActionFire();
+
+	void UpgradeExtendMag();
+
+	void UpgradeLaserSight();
 
 };

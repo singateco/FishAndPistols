@@ -21,6 +21,12 @@ AShotGun::AShotGun()
 		//GunMeshComponent->SetRelativeRotation(FRotator(0, 90, 0));
 	}
 
+	ConstructorHelpers::FObjectFinder<USoundBase> fireSound(TEXT("/Script/Engine.SoundWave'/Game/Resources/KDE/Sound/ShotGunFireSound.ShotGunFireSound'"));
+	if (fireSound.Succeeded())
+	{
+		FireSound = fireSound.Object;
+	}
+
 	MaxBullet = 2;
 }
 

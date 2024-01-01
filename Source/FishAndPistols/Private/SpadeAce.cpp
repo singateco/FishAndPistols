@@ -22,6 +22,12 @@ ASpadeAce::ASpadeAce()
 		//GunMeshComponent->SetRelativeRotation(FRotator(0, -90, 0));
 	}
 
+	ConstructorHelpers::FObjectFinder<USoundBase> fireSound(TEXT("/Script/Engine.SoundWave'/Game/Resources/KDE/Sound/SpadeAceFireSound.SpadeAceFireSound'"));
+	if (fireSound.Succeeded())
+	{
+		FireSound = fireSound.Object;
+	}
+
 	MaxBullet = 9;
 	
 }

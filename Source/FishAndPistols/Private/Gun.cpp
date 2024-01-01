@@ -20,6 +20,17 @@ AGun::AGun()
 	GunMeshComponent->SetupAttachment(RootComp);
 	BulletREF = CreateDefaultSubobject<UArrowComponent>(TEXT("BulletREF"));
 
+	ConstructorHelpers::FObjectFinder<USoundBase> dryFireSound(TEXT("/Script/Engine.SoundWave'/Game/Resources/KDE/Sound/DryFireSound.DryFireSound'"));
+	if(dryFireSound.Succeeded())
+	{
+		DryFireSound = dryFireSound.Object;
+	}
+
+	/*ConstructorHelpers::FObjectFinder<UParticleSystem> muzzleFlash(TEXT("/Script/Engine.ParticleSystem'/Game/StarterContent/Particles/P_Explosion.P_Explosion'"));
+	if (muzzleFlash.Succeeded())
+	{
+		MuzzleFlash = muzzleFlash.Object;
+	}*/
 }
 
 // Called when the game starts or when spawned
@@ -34,12 +45,12 @@ void AGun::BeginPlay()
 void AGun::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	
 }
 
 void AGun::ActionFire()
 {
-	if(Bullet != 0)
+	if(Bullet >= 1)
 	{
 		FHitResult HitResult;
 		FVector StartLoc = BulletREF->GetComponentLocation();
@@ -56,12 +67,28 @@ void AGun::ActionFire()
 			}
 			DrawDebugLine(GetWorld(), StartLoc, EndLoc, FColor::Green, false, 0.3f);
 		}
+		Bullet--;
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), MuzzleFlash, FVector(StartLoc), FRotator(0), FVector(0.03));
 
 		UGameplayStatics::PlaySound2D(GetWorld(), FireSound);
-
-		Bullet--;
+	}
+	else
+	{
+		UGameplayStatics::PlaySound2D(GetWorld(), DryFireSound);
 	}
 	
+}
+
+void AGun::UpgradeExtendMag()
+{
+	IsExtendMag = true;
+	MaxBullet += 3;
+}
+
+void AGun::UpgradeLaserSight()
+{
+	IsRazor = true;
+
+
 }
 

@@ -21,14 +21,23 @@ ARevolver::ARevolver()
 		//GunMeshComponent->SetRelativeRotation(FRotator(0, 180, 0));
 	}
 
-	Bullet = 6;
+	ConstructorHelpers::FObjectFinder<USoundBase> fireSound(TEXT("/Script/Engine.SoundWave'/Game/Resources/KDE/Sound/RevolverFireSound.RevolverFireSound'"));
+	if (fireSound.Succeeded())
+	{
+		FireSound = fireSound.Object;
+	}
+
+	MaxBullet = 6;
 }
 
 // Called when the game starts or when spawned
 void ARevolver::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	UpgradeExtendMag();
+	UpgradeRazorSight();
+
 }
 
 // Called every frame
