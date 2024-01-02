@@ -35,8 +35,7 @@ ATracerRound::ATracerRound()
 	MovementComponent->bShouldBounce = false;
 	MovementComponent->Friction = 0;
 	MovementComponent->InterpLocationTime = 0.05f;
-	
-	//중력 0으로
+	MovementComponent->ProjectileGravityScale = 0;
 
 }
 
@@ -44,7 +43,8 @@ ATracerRound::ATracerRound()
 void ATracerRound::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	//타이머 3초뒤에 destroy();
 }
 
 // Called every frame

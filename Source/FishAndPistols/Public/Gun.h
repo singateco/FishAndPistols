@@ -66,7 +66,6 @@ public:
 	bool IsRazor = false;
 
 
-
 	//----------------------------Function--------------------------------
 	virtual void ActionFire();
 	void UpgradeExtendedMag();
