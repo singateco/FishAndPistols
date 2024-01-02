@@ -11,10 +11,11 @@ ASunShot::ASunShot()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-
 	BulletREF->SetupAttachment(GunMeshComponent);
 	BulletREF->SetRelativeLocationAndRotation(FVector(-1050, 0, 400), FRotator(0, 0, 180));
 	BulletREF->ArrowSize = 30;
+
+	Laser->SetRelativeLocation(FVector(-522, 0, 8));
 
 	ConstructorHelpers::FObjectFinder<UStaticMesh>MeshSunShot(TEXT("/Script/Engine.StaticMesh'/Game/Resources/KDE/destiny_2_-_sunshot/scene.scene'"));
 

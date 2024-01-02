@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Gun.h"
 
 #include "Components/ActorComponent.h"
 #include "InputAction.h"
@@ -55,6 +56,9 @@ public:
 	UPROPERTY()
 	UEnhancedInputComponent* InputComponent;
 
+	UPROPERTY()
+	class AGun* CurrentGun;
+
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class ARevolver> RevolverClass;
 
@@ -96,6 +100,8 @@ public:
 
 	void ActionLeftFire();
 	void ActionRightFire();
+
+	void ReloadAllPistols();
 
 	virtual void Deactivate() override;
 

@@ -3,6 +3,7 @@
 
 #include "Gun.h"
 #include "Fish.h"
+#include "TracerRound.h"
 #include "Components/ArrowComponent.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -21,9 +22,8 @@ AGun::AGun()
 	BulletREF = CreateDefaultSubobject<UArrowComponent>(TEXT("BulletREF"));
 
 	Laser = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Laser"));
-	Laser->SetupAttachment(BulletREF);
 	Laser->SetRelativeScale3D(FVector(10, 0.01, 0.01));
-	Laser->SetRelativeLocation(FVector(500, 0, 0));
+	Laser->SetupAttachment(RootComp);
 	Laser->SetHiddenInGame(true);
 	
 	ConstructorHelpers::FObjectFinder<UStaticMesh> LaserMeshFinder(TEXT("/Script/Engine.StaticMesh'/Game/FishAndPistols/FP_KDE/Effect/LaserCube.LaserCube'"));
@@ -77,7 +77,7 @@ void AGun::ActionFire()
 		FVector StartLoc = BulletREF->GetComponentLocation();
 		FVector EndLoc = StartLoc + BulletREF->GetForwardVector() * GunRange;
 
-		DrawDebugLine(GetWorld(), StartLoc, EndLoc, FColor::Red, false, 0.2f);
+		//DrawDebugLine(GetWorld(), StartLoc, EndLoc, FColor::Red, false, 0.2f);
 
 		if (GetWorld()->LineTraceSingleByChannel(HitResult, StartLoc, EndLoc, ECollisionChannel::ECC_Visibility))
 		{
@@ -86,13 +86,15 @@ void AGun::ActionFire()
 			{
 				Fish->Die();
 			}
-			DrawDebugLine(GetWorld(), StartLoc, EndLoc, FColor::Green, false, 0.3f);
+			//DrawDebugLine(GetWorld(), StartLoc, EndLoc, FColor::Green, false, 0.3f);
 
-			UGameplayStatics::SpawnDecalAtLocation(GetWorld(), BulletDecal, FVector(5.0f, 0.25f, 0.25f), HitResult.ImpactPoint, FRotator(0, 0, 0), 5);
-
+			UGameplayStatics::SpawnDecalAtLocation(GetWorld(), BulletDecal, FVector(10, 5, 5), HitResult.ImpactPoint, FRotator(-90, 0, 0), 5);
 		}
 		Bullet--;
-		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), MuzzleFlash, FVector(StartLoc), FRotator(0), FVector(0.03));
+		
+		GetWorld()->SpawnActor<ATracerRound>(ATracerRound::StaticClass(), BulletREF->GetComponentTransform());
+
+		UGameplayStatics::SpawnEmitterAttached(MuzzleFlash, BulletREF, NAME_None, FVector(ForceInit), FRotator(FRotator::ZeroRotator), FVector(0.05));
 
 		UGameplayStatics::PlaySound2D(GetWorld(), FireSound);
 	}
@@ -103,9 +105,9 @@ void AGun::ActionFire()
 	
 }
 
-void AGun::UpgradeExtendMag()
+void AGun::UpgradeExtendedMag()
 {
-	IsExtendMag = true;
+	IsExtendedMag = true;
 	MaxBullet += 3;
 }
 

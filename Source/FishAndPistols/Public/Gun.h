@@ -60,7 +60,7 @@ public:
 	int MaxBullet;
 
 	UPROPERTY(EditAnywhere, Category = Upgrade)
-	bool IsExtendMag = false;
+	bool IsExtendedMag = false;
 
 	UPROPERTY(EditAnywhere, Category = Upgrade)
 	bool IsRazor = false;
@@ -69,7 +69,7 @@ public:
 
 	//----------------------------Function--------------------------------
 	virtual void ActionFire();
-	void UpgradeExtendMag();
+	void UpgradeExtendedMag();
 	void UpgradeLaserSight();
 
 };

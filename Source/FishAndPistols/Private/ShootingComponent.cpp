@@ -53,7 +53,6 @@ void UShootingComponent::BeginPlay()
 	FAttachmentTransformRules Rule = FAttachmentTransformRules::SnapToTargetNotIncludingScale;
 	Revolver->AttachToComponent(Player->RightHandMesh, Rule, FName("Revolver_Right"));
 	Revolver->SetActorHiddenInGame(true);
-	
 
 	SpadeAce = GetWorld()->SpawnActor<ASpadeAce>(SpadeAceClass);
 	SpadeAce->AttachToComponent(Player->RightHandMesh, Rule, FName("SpadeAce_Right"));
@@ -141,6 +140,7 @@ void UShootingComponent::ChooseRevolver()
 	Revolver->SetActorHiddenInGame(false);
 	SpadeAce->SetActorHiddenInGame(true);
 
+	CurrentGun = Revolver;
 
 }
 
@@ -154,6 +154,8 @@ void UShootingComponent::ChooseSpadeAce()
 
 	Revolver->SetActorHiddenInGame(true);
 	SpadeAce->SetActorHiddenInGame(false);
+
+	CurrentGun = SpadeAce;
 }
 
 void UShootingComponent::ActionLeftFire()
@@ -163,17 +165,13 @@ void UShootingComponent::ActionLeftFire()
 
 void UShootingComponent::ActionRightFire()
 {
-	if(bChooseRevolver)
-	{
-		Revolver->ActionFire();
-	}
+	CurrentGun->ActionFire();
+}
 
-	if(bChooseSpadeAce)
-	{
-		SpadeAce->ActionFire();
-	}
-
-
+void UShootingComponent::ReloadAllPistols()
+{
+	Revolver->Bullet = Revolver->MaxBullet;
+	SpadeAce->Bullet = SpadeAce->MaxBullet;
 }
 
 void UShootingComponent::Deactivate()
@@ -191,9 +189,7 @@ void UShootingComponent::Activate(bool bReset)
 	check(InputComponent)
 	SetupPlayerInputComponent(InputComponent);
 
-	Revolver->Bullet = Revolver->MaxBullet;
-	SpadeAce->Bullet = SpadeAce->MaxBullet;
-
+	ReloadAllPistols();
 	ChooseRevolver();
 	
 }

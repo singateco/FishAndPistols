@@ -12,7 +12,10 @@ ARevolver::ARevolver()
 	BulletREF->SetupAttachment(GunMeshComponent);
 	BulletREF->SetRelativeLocationAndRotation(FVector(-22, 0, 25), FRotator(0, 180, 0));
 
+	Laser->SetRelativeLocation(FVector(-517, 0, 20));
+
 	ConstructorHelpers::FObjectFinder<UStaticMesh> MeshRevolver(TEXT("/Script/Engine.StaticMesh'/Game/Resources/KDE/revolver/source/Revolver.Revolver'"));
+
 
 	if (MeshRevolver.Succeeded())
 	{
@@ -26,7 +29,7 @@ ARevolver::ARevolver()
 	{
 		FireSound = fireSound.Object;
 	}
-
+	
 	MaxBullet = 6;
 }
 
@@ -35,7 +38,7 @@ void ARevolver::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UpgradeExtendMag();
+	UpgradeExtendedMag();
 	UpgradeLaserSight();
 
 }

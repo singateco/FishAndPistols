@@ -9,8 +9,11 @@ AShotGun::AShotGun()
 	PrimaryActorTick.bCanEverTick = true;
 
 	BulletREF->SetupAttachment(GunMeshComponent);
-	BulletREF->SetRelativeLocation(FVector(10, 0, 2));
+	BulletREF->SetRelativeLocation(FVector(10, 0, 2.8));
 	BulletREF->ArrowSize = 0.3f;
+
+	Laser->SetRelativeLocation(FVector(524, 0, 7));
+
 
 	ConstructorHelpers::FObjectFinder<UStaticMesh>MeshShotGun(TEXT("/Script/Engine.StaticMesh'/Game/Resources/KDE/shotgun/source/shotgunFinal.shotgunFinal'"));
 

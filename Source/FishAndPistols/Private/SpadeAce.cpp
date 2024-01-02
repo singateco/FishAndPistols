@@ -14,6 +14,9 @@ ASpadeAce::ASpadeAce()
 	BulletREF->SetupAttachment(GunMeshComponent);
 	BulletREF->SetRelativeLocationAndRotation(FVector(0, 23, 21), FRotator(0, 90, 0));
 
+	Laser->SetRelativeLocation(FVector(0, 521, 21));
+	Laser->SetRelativeRotation(FRotator(0, 90, 0));
+
 	ConstructorHelpers::FObjectFinder<UStaticMesh>MeshSpadeAce(TEXT("/Script/Engine.StaticMesh'/Game/Resources/KDE/ace-of-spades-destiny-2/source/Ace_of_Spades.Ace_of_Spades'"));
 
 	if (MeshSpadeAce.Succeeded())
@@ -37,7 +40,8 @@ void ASpadeAce::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UpgradeLaserSight();
+	UpgradeExtendedMag();
+	//UpgradeLaserSight();
 
 }
 
