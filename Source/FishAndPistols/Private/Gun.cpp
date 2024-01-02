@@ -25,13 +25,19 @@ AGun::AGun()
 	Laser->SetRelativeScale3D(FVector(10, 0.01, 0.01));
 	Laser->SetRelativeLocation(FVector(500, 0, 0));
 	Laser->SetHiddenInGame(true);
-	ConstructorHelpers::FObjectFinder<UStaticMeshComponent> LaserMesh(TEXT("/Script/Engine.StaticMesh'/Engine/BasicShapes/Cube.Cube'"));
-	if(LaserMesh.Succeeded())
+	
+	ConstructorHelpers::FObjectFinder<UStaticMesh> LaserMeshFinder(TEXT("/Script/Engine.StaticMesh'/Game/FishAndPistols/FP_KDE/Effect/LaserCube.LaserCube'"));
+
+	if(LaserMeshFinder.Succeeded())
 	{
-		Laser = LaserMesh.Object;
+		Laser->SetStaticMesh(LaserMeshFinder.Object);
 	}
 
-	//메테리얼?
+	ConstructorHelpers::FObjectFinder<UMaterialInterface> bulletDecal(TEXT("/Script/Engine.Material'/Game/FishAndPistols/FP_KDE/Effect/M_BulletDecal.M_BulletDecal'"));
+	if(bulletDecal.Succeeded())
+	{
+		BulletDecal = bulletDecal.Object;
+	}
 
 	ConstructorHelpers::FObjectFinder<USoundBase> dryFireSound(TEXT("/Script/Engine.SoundWave'/Game/Resources/KDE/Sound/DryFireSound.DryFireSound'"));
 	if(dryFireSound.Succeeded())
@@ -45,7 +51,6 @@ AGun::AGun()
 		MuzzleFlash = muzzleFlash.Object;
 	}*/
 
-	//Laser = CreateDefaultSubobject<UNaiagaraParticleSystem>()
 
 }
 
@@ -82,6 +87,9 @@ void AGun::ActionFire()
 				Fish->Die();
 			}
 			DrawDebugLine(GetWorld(), StartLoc, EndLoc, FColor::Green, false, 0.3f);
+
+			UGameplayStatics::SpawnDecalAtLocation(GetWorld(), BulletDecal, FVector(5.0f, 0.25f, 0.25f), HitResult.ImpactPoint, FRotator(0, 0, 0), 5);
+
 		}
 		Bullet--;
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), MuzzleFlash, FVector(StartLoc), FRotator(0), FVector(0.03));
