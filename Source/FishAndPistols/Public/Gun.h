@@ -47,6 +47,9 @@ public:
 	UPROPERTY(EditAnywhere, Category = Effect)
 	class UStaticMeshComponent* Laser;
 
+	UPROPERTY(EditAnywhere, Category = Effect)
+	class UMaterialInterface* BulletDecal;
+
 	UPROPERTY(EditAnywhere)
 	float GunRange = 200000.f;
 
