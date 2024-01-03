@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "Gun.generated.h"
 
+
 UCLASS()
 class FISHANDPISTOLS_API AGun : public AActor
 {
@@ -51,6 +52,12 @@ public:
 	class UMaterialInterface* BulletDecal;
 
 	UPROPERTY(EditAnywhere)
+	class UWidgetComponent* BulletWidget;
+
+	UPROPERTY(EditAnywhere)
+	class UBulletAmount* BulletWidgetObject;
+
+	UPROPERTY(EditAnywhere)
 	float GunRange = 200000.f;
 
 	UPROPERTY(EditAnywhere)
@@ -70,6 +77,7 @@ public:
 	virtual void ActionFire();
 	void GunFireEffect();
 
+	void Reload();
 	void UpgradeExtendedMag();
 	void UpgradeLaserSight();
 

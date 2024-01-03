@@ -5,7 +5,10 @@
 #include "Fish.h"
 #include "TracerRound.h"
 #include "Components/ArrowComponent.h"
+#include "Components/WidgetComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "BulletAmount.h"
+
 
 // Sets default values
 AGun::AGun()
@@ -25,7 +28,18 @@ AGun::AGun()
 	Laser->SetRelativeScale3D(FVector(10, 0.005, 0.005));
 	Laser->SetupAttachment(RootComp);
 	Laser->SetHiddenInGame(true);
-	
+
+	BulletWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("BulletWidget"));
+	BulletWidget->SetupAttachment(RootComp);
+
+	ConstructorHelpers::FClassFinder<UUserWidget> tempWidget(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/FishAndPistols/FP_KDE/UI/WBP_BulletAmount.WBP_BulletAmount_C'"));
+	if(tempWidget.Succeeded())
+	{
+		BulletWidget->SetWidgetClass(tempWidget.Class);
+		BulletWidget->SetDrawSize(FVector2D(100, 40));
+		BulletWidget->SetRelativeScale3D(FVector(0.1f));
+	}
+
 	ConstructorHelpers::FObjectFinder<UStaticMesh> LaserMeshFinder(TEXT("/Script/Engine.StaticMesh'/Game/FishAndPistols/FP_KDE/Effect/LaserCube.LaserCube'"));
 
 	if(LaserMeshFinder.Succeeded())
@@ -59,6 +73,10 @@ void AGun::BeginPlay()
 	Super::BeginPlay();
 	Bullet = MaxBullet;
 
+	BulletWidgetObject = Cast<UBulletAmount>(BulletWidget->GetUserWidgetObject());
+	BulletWidgetObject->UpdateBulletAmount(Bullet);
+
+
 }
 
 // Called every frame
@@ -91,8 +109,9 @@ void AGun::ActionFire()
 
 			UGameplayStatics::SpawnDecalAtLocation(GetWorld(), BulletDecal, FVector(10, 5, 5), HitResult.ImpactPoint, Rotator, 10);
 		}
+
 		Bullet--;
-		
+		BulletWidgetObject->UpdateBulletAmount(Bullet);
 		GunFireEffect();
 	}
 	else
@@ -111,10 +130,18 @@ void AGun::GunFireEffect()
 	UGameplayStatics::PlaySound2D(GetWorld(), FireSound);
 }
 
+void AGun::Reload()
+{
+	this->Bullet = this->MaxBullet;
+	BulletWidgetObject->UpdateBulletAmount(Bullet);
+
+}
+
 void AGun::UpgradeExtendedMag()
 {
 	IsExtendedMag = true;
 	MaxBullet += 3;
+
 }
 
 void AGun::UpgradeLaserSight()

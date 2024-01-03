@@ -94,6 +94,9 @@ public:
 	UPROPERTY()
 	ASunShot* LeftSunShot;
 
+	UPROPERTY()
+	AGun* Gun;
+
 	UPROPERTY(EditAnywhere)
 	bool bChooseRevolver = true;
 
@@ -118,7 +121,6 @@ public:
 	void RightTriggerInput_Bool(const FInputActionValue& value);
 	void AButton(const FInputActionValue& value);
 	void BButton(const FInputActionValue& value);
-
 
 	void ChooseRevolver();
 	void ChooseSpadeAce();

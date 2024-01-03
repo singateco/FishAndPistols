@@ -4,7 +4,6 @@
 #include "ShootingComponent.h"
 #include "InputMappingContext.h"
 #include "EnhancedInputSubsystems.h"
-
 #include "EnhancedInputComponent.h"
 #include "FishingComponent.h"
 #include "FishSpawner.h"
@@ -13,6 +12,7 @@
 #include "ShotGun.h"
 #include "SpadeAce.h"
 #include "SunShot.h"
+#include "Gun.h"
 #include "Kismet/GameplayStatics.h"
 
 
@@ -34,6 +34,7 @@ void UShootingComponent::BeginPlay()
 	Super::BeginPlay();
 
 	Player = GetOwner<APlayerCharacter>();
+	//Gun = Cast<AGun>();
 
 	//Add enhanced Input Mapping
 	check(InputMapping)
