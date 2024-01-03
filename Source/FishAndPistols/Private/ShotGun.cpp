@@ -3,6 +3,7 @@
 
 #include "ShotGun.h"
 #include "Components/ArrowComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 AShotGun::AShotGun()
 {
@@ -35,5 +36,7 @@ AShotGun::AShotGun()
 
 void AShotGun::ActionFire()
 {
-	
+	Super::ActionFire();
+
+
 }

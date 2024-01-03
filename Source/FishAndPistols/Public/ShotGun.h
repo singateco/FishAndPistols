@@ -18,5 +18,10 @@ class FISHANDPISTOLS_API AShotGun : public AGun
 public:
 	AShotGun();
 
+
+private:
+	UPROPERTY(EditAnywhere)
+	float Spread;
+
 	void ActionFire() override;
 };

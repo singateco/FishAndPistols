@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Gun.h"
 
 #include "Components/ActorComponent.h"
 #include "InputAction.h"
@@ -42,22 +41,22 @@ public:
 	class UInputAction* IA_LeftTriggerBool;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MySettings|Inputs")
-	class UInputAction* IA_LeftTriggerFloat;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MySettings|Inputs")
 	class UInputAction* IA_RightTriggerBool;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MySettings|Inputs")
-	class UInputAction* IA_RightTriggerFloat;
+	class UInputAction* IA_AButton;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MySettings|Inputs")
-	class UInputAction* IA_AButton;
+	class UInputAction* IA_BButton;
 
 	UPROPERTY()
 	UEnhancedInputComponent* InputComponent;
 
 	UPROPERTY()
-	class AGun* CurrentGun;
+	class AGun* CurrentRightGun;
+
+	UPROPERTY()
+	AGun* CurrentLeftGun;
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class ARevolver> RevolverClass;
@@ -71,6 +70,30 @@ public:
 	UPROPERTY()
 	ASpadeAce* SpadeAce;
 
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class AShotGun> ShotGunClass;
+
+	UPROPERTY()
+	AShotGun* ShotGun;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class ASunShot> SunShotClass;
+
+	UPROPERTY()
+	ASunShot* SunShot;
+
+	UPROPERTY()
+	ARevolver* LeftRevolver;
+
+	UPROPERTY()
+	ASpadeAce* LeftSpadeAce;
+
+	UPROPERTY()
+	AShotGun* LeftShotGun;
+
+	UPROPERTY()
+	ASunShot* LeftSunShot;
+
 	UPROPERTY(EditAnywhere)
 	bool bChooseRevolver = true;
 
@@ -82,7 +105,9 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	bool bChooseSunShot = false;
-	
+
+	UPROPERTY(EditAnywhere)
+	bool IsAkimbo = false;
 
 	//----------------------------Function--------------------------------
 
@@ -90,13 +115,17 @@ public:
 	void WaveOver();
 
 	void LeftTriggerInput_Bool(const FInputActionValue& value);
-	void LeftTriggerInput_Float(const FInputActionValue& value);
 	void RightTriggerInput_Bool(const FInputActionValue& value);
-	void RightTriggerInput_Float(const FInputActionValue& value);
 	void AButton(const FInputActionValue& value);
+	void BButton(const FInputActionValue& value);
+
 
 	void ChooseRevolver();
 	void ChooseSpadeAce();
+	void ChooseShotGun();
+	void ChooseSunShot();
+
+	void UpgradeAkimbo();
 
 	void ActionLeftFire();
 	void ActionRightFire();

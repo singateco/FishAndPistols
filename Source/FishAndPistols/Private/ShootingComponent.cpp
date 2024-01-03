@@ -10,7 +10,9 @@
 #include "FishSpawner.h"
 #include "PlayerCharacter.h"
 #include "Revolver.h"
+#include "ShotGun.h"
 #include "SpadeAce.h"
+#include "SunShot.h"
 #include "Kismet/GameplayStatics.h"
 
 
@@ -49,8 +51,9 @@ void UShootingComponent::BeginPlay()
 	checkf(Spawner, TEXT("맵에 FishSpawner가 없음"))
 	Spawner->OnWaveOverDelegate.AddDynamic(this, &UShootingComponent::WaveOver);
 
-	Revolver = GetWorld()->SpawnActor<ARevolver>(RevolverClass);
+
 	FAttachmentTransformRules Rule = FAttachmentTransformRules::SnapToTargetNotIncludingScale;
+	Revolver = GetWorld()->SpawnActor<ARevolver>(RevolverClass);
 	Revolver->AttachToComponent(Player->RightHandMesh, Rule, FName("Revolver_Right"));
 	Revolver->SetActorHiddenInGame(true);
 
@@ -58,7 +61,37 @@ void UShootingComponent::BeginPlay()
 	SpadeAce->AttachToComponent(Player->RightHandMesh, Rule, FName("SpadeAce_Right"));
 	SpadeAce->SetActorHiddenInGame(true);
 
+	ShotGun = GetWorld()->SpawnActor<AShotGun>(ShotGunClass);
+	checkf(ShotGun, TEXT("플레이어 슈팅 컴포넌트에 샷건 안넣었음"));
+	ShotGun->AttachToComponent(Player->RightHandMesh, Rule, FName("ShotGun_Right"));
+	SpadeAce->SetActorHiddenInGame(true);
+
+	SunShot = GetWorld()->SpawnActor<ASunShot>(SunShotClass);
+	checkf(SunShot, TEXT("플레이어 슈팅 컴포넌트에 선샷 안넣었음"));
+	SunShot->AttachToComponent(Player->RightHandMesh, Rule, FName("SunShot_Right"));
+	SunShot->SetActorHiddenInGame(true);
+
+	//왼손메시에 총 부착하는 코드
+	LeftRevolver = GetWorld()->SpawnActor<ARevolver>(RevolverClass);
+	LeftRevolver->AttachToComponent(Player->LeftHandMesh, Rule, FName("Revolver_Left"));
+	LeftRevolver->SetActorHiddenInGame(true);
+
+	LeftSpadeAce = GetWorld()->SpawnActor<ASpadeAce>(SpadeAceClass);
+	LeftSpadeAce->AttachToComponent(Player->LeftHandMesh, Rule, FName("SpadeAce_Left"));
+	LeftSpadeAce->SetActorHiddenInGame(true);
+
+	LeftShotGun = GetWorld()->SpawnActor<AShotGun>(ShotGunClass);
+	LeftShotGun->AttachToComponent(Player->LeftHandMesh, Rule, FName("ShotGun_Left"));
+	LeftShotGun->SetActorHiddenInGame(true);
+
+	LeftSunShot = GetWorld()->SpawnActor<ASunShot>(SunShotClass);
+	LeftSunShot->AttachToComponent(Player->LeftHandMesh, Rule, FName("SunShot_Left"));
+	LeftSunShot->SetActorHiddenInGame(true);
+
+	UpgradeAkimbo();
+
 	ChooseRevolver();
+
 }
 
 
@@ -80,22 +113,17 @@ void UShootingComponent::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 			InputComponent = EnhancedInput;
 		}
 		check(IA_RightTriggerBool)
-		check(IA_RightTriggerFloat)
-		check(IA_LeftTriggerFloat)
-		check(IA_LeftTriggerFloat)
+		check(IA_LeftTriggerBool)
 		check(IA_AButton)
+		check(IA_BButton)
 
 		EnhancedInput->BindAction(IA_LeftTriggerBool, ETriggerEvent::Started, this, &UShootingComponent::LeftTriggerInput_Bool);
-		
-		EnhancedInput->BindAction(IA_LeftTriggerFloat, ETriggerEvent::Triggered, this, &UShootingComponent::LeftTriggerInput_Float);
-		EnhancedInput->BindAction(IA_LeftTriggerFloat, ETriggerEvent::Completed, this, &UShootingComponent::LeftTriggerInput_Float);
 
 		EnhancedInput->BindAction(IA_RightTriggerBool, ETriggerEvent::Started, this, &UShootingComponent::RightTriggerInput_Bool);
-		
-		EnhancedInput->BindAction(IA_RightTriggerFloat, ETriggerEvent::Triggered, this, &UShootingComponent::RightTriggerInput_Float);
-		EnhancedInput->BindAction(IA_RightTriggerFloat, ETriggerEvent::Completed, this, &UShootingComponent::RightTriggerInput_Float);
 
 		EnhancedInput->BindAction(IA_AButton, ETriggerEvent::Started, this, &UShootingComponent::AButton);
+
+		EnhancedInput->BindAction(IA_BButton, ETriggerEvent::Started, this, &UShootingComponent::BButton);
 	}
 }
 
@@ -107,27 +135,23 @@ void UShootingComponent::WaveOver()
 
 void UShootingComponent::LeftTriggerInput_Bool(const FInputActionValue& value)
 {
-	//ActionLeftFire();
+	ActionLeftFire();
 }
 
-void UShootingComponent::LeftTriggerInput_Float(const FInputActionValue& value)
-{
-	
-}
 
 void UShootingComponent::RightTriggerInput_Bool(const FInputActionValue& value)
 {
 	ActionRightFire();
 }
 
-void UShootingComponent::RightTriggerInput_Float(const FInputActionValue& value)
-{
-	
-}
-
 void UShootingComponent::AButton(const FInputActionValue& value)
 {
 	ChooseSpadeAce();
+}
+
+void UShootingComponent::BButton(const FInputActionValue& value)
+{
+	ChooseShotGun();
 }
 
 void UShootingComponent::ChooseRevolver()
@@ -139,8 +163,21 @@ void UShootingComponent::ChooseRevolver()
 
 	Revolver->SetActorHiddenInGame(false);
 	SpadeAce->SetActorHiddenInGame(true);
+	ShotGun->SetActorHiddenInGame(true);
+	SunShot->SetActorHiddenInGame(true);
 
-	CurrentGun = Revolver;
+	CurrentRightGun = Revolver;
+
+	if(IsAkimbo)
+	{
+		LeftRevolver->SetActorHiddenInGame(false);
+		LeftSpadeAce->SetActorHiddenInGame(true);
+		LeftShotGun->SetActorHiddenInGame(true);
+		LeftSunShot->SetActorHiddenInGame(true);
+
+		CurrentLeftGun = LeftRevolver;
+	}
+	
 
 }
 
@@ -154,24 +191,103 @@ void UShootingComponent::ChooseSpadeAce()
 
 	Revolver->SetActorHiddenInGame(true);
 	SpadeAce->SetActorHiddenInGame(false);
+	ShotGun->SetActorHiddenInGame(true);
+	SunShot->SetActorHiddenInGame(true);
 
-	CurrentGun = SpadeAce;
+	CurrentRightGun = SpadeAce;
+
+	if (IsAkimbo)
+	{
+		LeftRevolver->SetActorHiddenInGame(true);
+		LeftSpadeAce->SetActorHiddenInGame(false);
+		LeftShotGun->SetActorHiddenInGame(true);
+		LeftSunShot->SetActorHiddenInGame(true);
+
+		CurrentLeftGun = LeftSpadeAce;
+	}
+}
+
+void UShootingComponent::ChooseShotGun()
+{
+	bChooseRevolver = false;
+	bChooseSpadeAce = false;
+	bChooseShotGun = true;
+	bChooseSunShot = false;
+
+	Revolver->SetActorHiddenInGame(true);
+	SpadeAce->SetActorHiddenInGame(true);
+	ShotGun->SetActorHiddenInGame(false);
+	SunShot->SetActorHiddenInGame(true);
+
+	CurrentRightGun = ShotGun;
+
+	if (IsAkimbo)
+	{
+		LeftRevolver->SetActorHiddenInGame(true);
+		LeftSpadeAce->SetActorHiddenInGame(true);
+		LeftShotGun->SetActorHiddenInGame(false);
+		LeftSunShot->SetActorHiddenInGame(true);
+
+		CurrentLeftGun = LeftShotGun;
+	}
+
+}
+
+void UShootingComponent::ChooseSunShot()
+{
+	bChooseRevolver = false;
+	bChooseSpadeAce = false;
+	bChooseShotGun = false;
+	bChooseSunShot = true;
+
+	Revolver->SetActorHiddenInGame(true);
+	SpadeAce->SetActorHiddenInGame(true);
+	ShotGun->SetActorHiddenInGame(true);
+	SunShot->SetActorHiddenInGame(false);
+
+	CurrentRightGun = SunShot;
+
+	if (IsAkimbo)
+	{
+		LeftRevolver->SetActorHiddenInGame(true);
+		LeftSpadeAce->SetActorHiddenInGame(true);
+		LeftShotGun->SetActorHiddenInGame(true);
+		LeftSunShot->SetActorHiddenInGame(false);
+
+		CurrentLeftGun = LeftSunShot;
+	}
+}
+
+void UShootingComponent::UpgradeAkimbo()
+{
+	IsAkimbo = true;
 }
 
 void UShootingComponent::ActionLeftFire()
 {
-	//왼손의 총을 가져와서 액션파이어 호출
+	if(IsAkimbo)
+	{
+		CurrentLeftGun->ActionFire();
+	}
 }
 
 void UShootingComponent::ActionRightFire()
 {
-	CurrentGun->ActionFire();
+	CurrentRightGun->ActionFire();
 }
 
 void UShootingComponent::ReloadAllPistols()
 {
 	Revolver->Bullet = Revolver->MaxBullet;
 	SpadeAce->Bullet = SpadeAce->MaxBullet;
+	ShotGun->Bullet = ShotGun->MaxBullet;
+	SunShot->Bullet = SunShot->MaxBullet;
+
+	LeftRevolver->Bullet = LeftRevolver->MaxBullet;
+	LeftSpadeAce->Bullet = LeftSpadeAce->MaxBullet;
+	LeftShotGun->Bullet = LeftShotGun->MaxBullet;
+	LeftSunShot->Bullet = LeftSunShot->MaxBullet;
+
 }
 
 void UShootingComponent::Deactivate()
@@ -179,6 +295,14 @@ void UShootingComponent::Deactivate()
 	InputComponent->ClearBindingsForObject(this);
 	Revolver->SetActorHiddenInGame(true);
 	SpadeAce->SetActorHiddenInGame(true);
+	ShotGun->SetActorHiddenInGame(true);
+	SunShot->SetActorHiddenInGame(true);
+
+	LeftRevolver->SetActorHiddenInGame(true);
+	LeftSpadeAce->SetActorHiddenInGame(true);
+	LeftShotGun->SetActorHiddenInGame(true);
+	LeftSunShot->SetActorHiddenInGame(true);
+
 	Super::Deactivate();
 }
 

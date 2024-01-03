@@ -22,7 +22,7 @@ AGun::AGun()
 	BulletREF = CreateDefaultSubobject<UArrowComponent>(TEXT("BulletREF"));
 
 	Laser = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Laser"));
-	Laser->SetRelativeScale3D(FVector(10, 0.01, 0.01));
+	Laser->SetRelativeScale3D(FVector(10, 0.005, 0.005));
 	Laser->SetupAttachment(RootComp);
 	Laser->SetHiddenInGame(true);
 	
@@ -50,7 +50,6 @@ AGun::AGun()
 	{
 		MuzzleFlash = muzzleFlash.Object;
 	}*/
-
 
 }
 
@@ -88,7 +87,9 @@ void AGun::ActionFire()
 			}
 			//DrawDebugLine(GetWorld(), StartLoc, EndLoc, FColor::Green, false, 0.3f);
 
-			/*UGameplayStatics::SpawnDecalAtLocation(GetWorld(), BulletDecal, FVector(10, 5, 5), HitResult.ImpactPoint, FRotator(-90, 0, 0), 5);*/
+			FRotator Rotator = HitResult.ImpactNormal.Rotation();
+
+			UGameplayStatics::SpawnDecalAtLocation(GetWorld(), BulletDecal, FVector(10, 5, 5), HitResult.ImpactPoint, Rotator, 10);
 		}
 		Bullet--;
 		

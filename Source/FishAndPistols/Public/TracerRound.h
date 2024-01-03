@@ -35,6 +35,4 @@ public:
 	UPROPERTY(EditAnywhere)
 	class UProjectileMovementComponent* MovementComponent;
 
-	UPROPERTY(EditAnywhere, Category = Effect)
-	class UMaterialInterface* BulletDecal;
 };

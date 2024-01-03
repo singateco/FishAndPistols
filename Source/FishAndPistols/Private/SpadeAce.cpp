@@ -40,9 +40,6 @@ void ASpadeAce::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UpgradeExtendedMag();
-	//UpgradeLaserSight();
-
 }
 
 // Called every frame
