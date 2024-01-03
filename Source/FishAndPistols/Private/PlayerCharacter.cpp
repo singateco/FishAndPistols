@@ -13,24 +13,28 @@
 #include "Camera/CameraComponent.h"
 #include "Components/SplineMeshComponent.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
+#include "UpgradeComponent.h"
+#include "Components/WidgetComponent.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
 	:
- 	CameraComponent(CreateDefaultSubobject<UCameraComponent>(TEXT("Camera Component"))),
- 	HMDMesh(CreateDefaultSubobject<UStaticMeshComponent>(TEXT("HMD Mesh"))),
- 	LeftHand(CreateDefaultSubobject<UMotionControllerComponent>(TEXT("Left Hand Motion Controller"))),
- 	LeftHandMesh(CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Left Hand Mesh"))),
- 	RightHand(CreateDefaultSubobject<UMotionControllerComponent>(TEXT("Right Hand Motion Controller"))),
- 	RightHandMesh(CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Right Hand Mesh"))),
- 	FishingComponent(CreateDefaultSubobject<UFishingComponent>(TEXT("Fishing Component"))),
-//슈팅컴포넌트
+	CameraComponent(CreateDefaultSubobject<UCameraComponent>(TEXT("Camera Component"))),
+	HMDMesh(CreateDefaultSubobject<UStaticMeshComponent>(TEXT("HMD Mesh"))),
+	LeftHand(CreateDefaultSubobject<UMotionControllerComponent>(TEXT("Left Hand Motion Controller"))),
+	LeftHandMesh(CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Left Hand Mesh"))),
+	RightHand(CreateDefaultSubobject<UMotionControllerComponent>(TEXT("Right Hand Motion Controller"))),
+	RightHandMesh(CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Right Hand Mesh"))),
+	StatusWidgetComp(CreateDefaultSubobject<UWidgetComponent>(TEXT("Status Widget"))),
+	FishingComponent(CreateDefaultSubobject<UFishingComponent>(TEXT("Fishing Component"))),
+	//슈팅컴포넌트
 	ShootingComponent(CreateDefaultSubobject<UShootingComponent>(TEXT("Shooting Component"))),
 	HandAnimComponent(CreateDefaultSubobject<UHandAnimComponent>(TEXT("Hand Anim Component"))),
- 	FishingRodMeshComponent(CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Fishing Rod Mesh Comp"))),
+	FishingRodMeshComponent(CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Fishing Rod Mesh Comp"))),
 	FishingLineComponent(CreateDefaultSubobject<USplineMeshComponent>(TEXT("Fishing Line Component"))),
+	UpgradeComponent(CreateDefaultSubobject<UUpgradeComponent>(TEXT("Upgrade Component"))),
 	FishCable(CreateDefaultSubobject<UCableComponent>(TEXT("Fishing Rod Cable")))
- {
+{
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -77,9 +81,20 @@ APlayerCharacter::APlayerCharacter()
 
 	FishCable->SetCollisionResponseToChannels(Cont);
 
-	// (X=6.070411,Y=0.112364,Z=4.035356)
-	// (Pitch=2.401839,Yaw=629.462922,Roll=-478.018271)
-	// 0.25
+	StatusWidgetComp->SetupAttachment(LeftHandMesh);
+	StatusWidgetComp->SetDrawSize(FVector2D(100, 40));
+	StatusWidgetComp->SetRelativeLocation(FVector(2.14, 2.43, 5.93));
+	StatusWidgetComp->SetRelativeRotation(FRotator(85, 0, 80));
+	StatusWidgetComp->SetRelativeScale3D(FVector(0.1));
+
+	const ConstructorHelpers::FClassFinder<UUserWidget> StatusWidgetFinder{
+		TEXT("Blueprint'/Game/FishAndPistols/KHO/UI/WBP_StatusIndicator.WBP_StatusIndicator_C'")
+	};
+
+	if (StatusWidgetFinder.Class)
+	{
+		StatusWidgetComp->SetWidgetClass(StatusWidgetFinder.Class);
+	}
 
 	// Set up tracking motion sources.
 	LeftHand->SetTrackingMotionSource(FName("Left"));
@@ -87,19 +102,31 @@ APlayerCharacter::APlayerCharacter()
 
 	InputActions.SetNum(4);
 
-	const ConstructorHelpers::FObjectFinder<UInputAction> LeftTriggerTouchFinder { TEXT("/Script/EnhancedInput.InputAction'/Game/FishAndPistols/FP_KDE/Inputs/IA_LeftTrigger_Touch.IA_LeftTrigger_Touch'") };
+	const ConstructorHelpers::FObjectFinder<UInputAction> LeftTriggerTouchFinder{
+		TEXT(
+			"/Script/EnhancedInput.InputAction'/Game/FishAndPistols/FP_KDE/Inputs/IA_LeftTrigger_Touch.IA_LeftTrigger_Touch'")
+	};
 	check(LeftTriggerTouchFinder.Succeeded())
 	InputActions[0] = LeftTriggerTouchFinder.Object;
 
-	const ConstructorHelpers::FObjectFinder<UInputAction> LeftTriggerFloatFinder { TEXT("/Script/EnhancedInput.InputAction'/Game/FishAndPistols/FP_KDE/Inputs/IA_LeftTrigger_Float.IA_LeftTrigger_Float'") };
+	const ConstructorHelpers::FObjectFinder<UInputAction> LeftTriggerFloatFinder{
+		TEXT(
+			"/Script/EnhancedInput.InputAction'/Game/FishAndPistols/FP_KDE/Inputs/IA_LeftTrigger_Float.IA_LeftTrigger_Float'")
+	};
 	check(LeftTriggerFloatFinder.Succeeded())
 	InputActions[1] = LeftTriggerFloatFinder.Object;
 
-	const ConstructorHelpers::FObjectFinder<UInputAction> RightTriggerTouchFinder { TEXT("/Script/EnhancedInput.InputAction'/Game/FishAndPistols/FP_KDE/Inputs/IA_RightTrgger_Touch.IA_RightTrgger_Touch'") };
+	const ConstructorHelpers::FObjectFinder<UInputAction> RightTriggerTouchFinder{
+		TEXT(
+			"/Script/EnhancedInput.InputAction'/Game/FishAndPistols/FP_KDE/Inputs/IA_RightTrgger_Touch.IA_RightTrgger_Touch'")
+	};
 	check(RightTriggerTouchFinder.Succeeded())
 	InputActions[2] = RightTriggerTouchFinder.Object;
 
-	const ConstructorHelpers::FObjectFinder<UInputAction> RightTriggerFloatFinder{ TEXT("/Script/EnhancedInput.InputAction'/Game/FishAndPistols/FP_KDE/Inputs/IA_RightTrigger_Float.IA_RightTrigger_Float'") };
+	const ConstructorHelpers::FObjectFinder<UInputAction> RightTriggerFloatFinder{
+		TEXT(
+			"/Script/EnhancedInput.InputAction'/Game/FishAndPistols/FP_KDE/Inputs/IA_RightTrigger_Float.IA_RightTrigger_Float'")
+	};
 	check(RightTriggerFloatFinder.Succeeded())
 	InputActions[3] = RightTriggerFloatFinder.Object;
 
@@ -136,6 +163,8 @@ void APlayerCharacter::BeginPlay()
 	{
 		Subsystem->AddMappingContext(InteractMappingContext, 2);
 	}
+
+	StatusWidget = StatusWidgetComp->GetUserWidgetObject();
 }
 
 // Called every frame
