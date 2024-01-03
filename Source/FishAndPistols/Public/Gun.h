@@ -68,6 +68,8 @@ public:
 
 	//----------------------------Function--------------------------------
 	virtual void ActionFire();
+	void GunFireEffect();
+
 	void UpgradeExtendedMag();
 	void UpgradeLaserSight();
 

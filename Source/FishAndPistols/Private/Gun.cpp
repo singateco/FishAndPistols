@@ -88,21 +88,26 @@ void AGun::ActionFire()
 			}
 			//DrawDebugLine(GetWorld(), StartLoc, EndLoc, FColor::Green, false, 0.3f);
 
-			UGameplayStatics::SpawnDecalAtLocation(GetWorld(), BulletDecal, FVector(10, 5, 5), HitResult.ImpactPoint, FRotator(-90, 0, 0), 5);
+			/*UGameplayStatics::SpawnDecalAtLocation(GetWorld(), BulletDecal, FVector(10, 5, 5), HitResult.ImpactPoint, FRotator(-90, 0, 0), 5);*/
 		}
 		Bullet--;
 		
-		GetWorld()->SpawnActor<ATracerRound>(ATracerRound::StaticClass(), BulletREF->GetComponentTransform());
-
-		UGameplayStatics::SpawnEmitterAttached(MuzzleFlash, BulletREF, NAME_None, FVector(ForceInit), FRotator(FRotator::ZeroRotator), FVector(0.05));
-
-		UGameplayStatics::PlaySound2D(GetWorld(), FireSound);
+		GunFireEffect();
 	}
 	else
 	{
 		UGameplayStatics::PlaySound2D(GetWorld(), DryFireSound);
 	}
 	
+}
+
+void AGun::GunFireEffect()
+{
+	GetWorld()->SpawnActor<ATracerRound>(ATracerRound::StaticClass(), BulletREF->GetComponentTransform());
+
+	UGameplayStatics::SpawnEmitterAttached(MuzzleFlash, BulletREF, NAME_None, FVector(ForceInit), FRotator(FRotator::ZeroRotator), FVector(0.05));
+
+	UGameplayStatics::PlaySound2D(GetWorld(), FireSound);
 }
 
 void AGun::UpgradeExtendedMag()

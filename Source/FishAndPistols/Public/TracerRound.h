@@ -23,6 +23,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION()
+	void OnSphereComponentBeginHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
 	UPROPERTY(EditAnywhere)
 	class USphereComponent* SphereCollision;
 
@@ -31,4 +34,7 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	class UProjectileMovementComponent* MovementComponent;
+
+	UPROPERTY(EditAnywhere, Category = Effect)
+	class UMaterialInterface* BulletDecal;
 };

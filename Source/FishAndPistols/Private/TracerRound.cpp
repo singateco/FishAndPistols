@@ -5,6 +5,7 @@
 
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ATracerRound::ATracerRound()
@@ -21,6 +22,12 @@ ATracerRound::ATracerRound()
 	TracerRound->SetRelativeScale3D(FVector(2.0f, 0.05f, 0.05f));
 
 	ConstructorHelpers::FObjectFinder<UStaticMesh>MeshTracer(TEXT("/Script/Engine.StaticMesh'/Game/FishAndPistols/FP_KDE/Effect/TracerRound.TracerRound'"));
+
+	ConstructorHelpers::FObjectFinder<UMaterialInterface> bulletDecal(TEXT("/Script/Engine.Material'/Game/FishAndPistols/FP_KDE/Effect/M_BulletDecal.M_BulletDecal'"));
+	if (bulletDecal.Succeeded())
+	{
+		BulletDecal = bulletDecal.Object;
+	}
 
 	if(MeshTracer.Succeeded())
 	{
@@ -51,6 +58,16 @@ void ATracerRound::BeginPlay()
 void ATracerRound::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+}
+
+void ATracerRound::OnSphereComponentBeginHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+	UGameplayStatics::SpawnDecalAtLocation(GetWorld(), BulletDecal, FVector(5, 2.5f, 2.5f), OtherActor->GetActorLocation(), FRotator(-90, 0, 0), 5.0f);
+
+
+	Destroy();
 
 }
 
