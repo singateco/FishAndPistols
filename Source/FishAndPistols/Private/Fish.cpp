@@ -61,8 +61,7 @@ void AFish::Die()
 
 void AFish::FishDeadEffect()
 {
-	//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Explosion, GetActorLocation(), FRotator(0), FVector(1));
-	check(ExplosionEffect)
+	SetActorEnableCollision(false);
 	UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), ExplosionEffect, GetActorLocation());
 	UGameplayStatics::PlaySound2D(GetWorld(), CoinSound, 0.5f);
 }

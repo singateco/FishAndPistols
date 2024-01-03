@@ -53,7 +53,14 @@ public:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|Components")
 	USkeletalMeshComponent* RightHandMesh;
-	
+
+	// 왼손 위 골드 표시 위젯
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|Widgets")
+	class UWidgetComponent* StatusWidgetComp;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|Widgets")
+	UUserWidget* StatusWidget;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|FishingComponent")
 	class UFishingComponent* FishingComponent;
 
@@ -71,6 +78,10 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|Components")
 	class USplineMeshComponent* FishingLineComponent;
+
+	// 업그레이드 컴포넌트
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|UpgradeComponent")
+	class UUpgradeComponent* UpgradeComponent;
 
 	UPROPERTY(VisibleAnywhere, Category = "MySettings|Components")
 	class UCableComponent* FishCable;
