@@ -79,6 +79,20 @@ void UUpgradeComponent::UpgradeBought(FName UpgradeName)
 	OnUpgradeStatusChanged.Broadcast(this);
 }
 
+void UUpgradeComponent::ToggleWidgetVisibility()
+{
+	if (UpgradeWidget->GetVisibility() == ESlateVisibility::Hidden)
+	{
+		UpgradeWidgetComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+		UpgradeWidget->SetVisibility(ESlateVisibility::Visible);
+	}
+	else if (UpgradeWidget->GetVisibility() == ESlateVisibility::Visible)
+	{
+		UpgradeWidgetComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		UpgradeWidget->SetVisibility(ESlateVisibility::Hidden);
+	}
+}
+
 // Called when the game starts
 void UUpgradeComponent::BeginPlay()
 {
@@ -127,6 +141,9 @@ void UUpgradeComponent::BeginPlay()
 		default: ;
 		}
 	}
+
+	UpgradeWidgetComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	UpgradeWidget->SetVisibility(ESlateVisibility::Hidden);
 }
 
 void UUpgradeComponent::InitializeComponent()

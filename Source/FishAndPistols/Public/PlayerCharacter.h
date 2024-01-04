@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "InputAction.h"
 #include "GameFramework/Character.h"
 #include "PlayerCharacter.generated.h"
 
@@ -27,8 +28,12 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	void HoldUpgradeWidget(const FInputActionInstance& InputActionInstance);
+	void ToggleUpgradeWidget(const FInputActionInstance& InputActionInstance);
+
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
 
 	// ============= PROPERTIES =============
 
@@ -61,6 +66,13 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|Widgets")
 	UUserWidget* StatusWidget;
 
+	// 왼손 위 업그레이드 창 열기
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|Widgets")
+	UWidgetComponent* OpenerWidgetComp;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "MySettings|Widgets")
+	class UUpgradeOpenerWidget* OpenerWidget;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|FishingComponent")
 	class UFishingComponent* FishingComponent;
 
@@ -92,4 +104,9 @@ public:
 	UPROPERTY(EditAnywhere, Category = "MySettings|Input")
 	TArray<class UInputAction*> InputActions;
 
+	UPROPERTY(EditDefaultsOnly, Category = "MySettings|Input")
+	UInputAction* InputAction_HoldY;
+
+
+	
 };
