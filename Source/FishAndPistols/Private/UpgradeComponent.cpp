@@ -49,35 +49,48 @@ void UUpgradeComponent::UpgradeBought(FName UpgradeName)
 	if (UpgradeName.IsEqual(FName("Shotgun")))
 	{
 		bShotgun = true;
-		return;
 	}
 	else if (UpgradeName.IsEqual(FName("SpadeAce")))
 	{
 		bSpadeAce = true;
-		return;
 	}
 	else if (UpgradeName.IsEqual(FName("SunShot")))
 	{
 		bSunShot = true;
-		return;
 	}
 	else if (UpgradeName.IsEqual(FName("LaserSight")))
 	{
 		bLaserSight = true;
-		return;
 	}
 	else if (UpgradeName.IsEqual(FName("DualWield")))
 	{
 		bDualWield = true;
-		return;
 	}
 	else if (UpgradeName.IsEqual(FName("ExtendedAmmo")))
 	{
 		bExtendedAmmo = true;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Unidentified item bought: %s"), *UpgradeName.ToString())
 		return;
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("Unidentified item bought: %s"), *UpgradeName.ToString())
+	OnUpgradeStatusChanged.Broadcast(this);
+}
+
+void UUpgradeComponent::ToggleWidgetVisibility()
+{
+	if (UpgradeWidget->GetVisibility() == ESlateVisibility::Hidden)
+	{
+		UpgradeWidgetComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+		UpgradeWidget->SetVisibility(ESlateVisibility::Visible);
+	}
+	else if (UpgradeWidget->GetVisibility() == ESlateVisibility::Visible)
+	{
+		UpgradeWidgetComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		UpgradeWidget->SetVisibility(ESlateVisibility::Hidden);
+	}
 }
 
 // Called when the game starts
@@ -128,6 +141,9 @@ void UUpgradeComponent::BeginPlay()
 		default: ;
 		}
 	}
+
+	UpgradeWidgetComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	UpgradeWidget->SetVisibility(ESlateVisibility::Hidden);
 }
 
 void UUpgradeComponent::InitializeComponent()

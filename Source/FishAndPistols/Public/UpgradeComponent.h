@@ -8,6 +8,7 @@
 
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FUpgradeBought, FName, UpgradeName);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FUpgradeStatusChanged, UUpgradeComponent*, UpgradeComponent);
 
 UENUM(BlueprintType)
 enum class EUpgradeType : uint8
@@ -56,6 +57,8 @@ public:
 	// Sets default values for this component's properties
 	UUpgradeComponent();
 
+	UPROPERTY(BlueprintAssignable)
+	FUpgradeStatusChanged OnUpgradeStatusChanged;
 
 	UPROPERTY(VisibleAnywhere)
 	class APlayerCharacter* Player;
@@ -95,6 +98,9 @@ public:
 
 	UFUNCTION()
 	void UpgradeBought(FName UpgradeName);
+
+	UFUNCTION()
+	void ToggleWidgetVisibility();
 
 protected:
 	// Called when the game starts
