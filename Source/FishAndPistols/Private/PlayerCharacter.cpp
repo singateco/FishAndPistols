@@ -14,7 +14,9 @@
 #include "Components/SplineMeshComponent.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "UpgradeComponent.h"
+#include "UpgradeOpenerWidget.h"
 #include "Components/WidgetComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -26,6 +28,7 @@ APlayerCharacter::APlayerCharacter()
 	RightHand(CreateDefaultSubobject<UMotionControllerComponent>(TEXT("Right Hand Motion Controller"))),
 	RightHandMesh(CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Right Hand Mesh"))),
 	StatusWidgetComp(CreateDefaultSubobject<UWidgetComponent>(TEXT("Status Widget"))),
+	OpenerWidgetComp(CreateDefaultSubobject<UWidgetComponent>(TEXT("Opener Widget"))),
 	FishingComponent(CreateDefaultSubobject<UFishingComponent>(TEXT("Fishing Component"))),
 	//슈팅컴포넌트
 	ShootingComponent(CreateDefaultSubobject<UShootingComponent>(TEXT("Shooting Component"))),
@@ -87,6 +90,7 @@ APlayerCharacter::APlayerCharacter()
 	StatusWidgetComp->SetRelativeRotation(FRotator(85, 0, 80));
 	StatusWidgetComp->SetRelativeScale3D(FVector(0.1));
 
+
 	const ConstructorHelpers::FClassFinder<UUserWidget> StatusWidgetFinder{
 		TEXT("Blueprint'/Game/FishAndPistols/KHO/UI/WBP_StatusIndicator.WBP_StatusIndicator_C'")
 	};
@@ -96,40 +100,63 @@ APlayerCharacter::APlayerCharacter()
 		StatusWidgetComp->SetWidgetClass(StatusWidgetFinder.Class);
 	}
 
+	OpenerWidgetComp->SetupAttachment(LeftHandMesh);
+
 	// Set up tracking motion sources.
 	LeftHand->SetTrackingMotionSource(FName("Left"));
 	RightHand->SetTrackingMotionSource(FName("Right"));
 
-	InputActions.SetNum(4);
+	if (InputActions.IsEmpty())
+	{
+		InputActions.SetNum(4);
+	}
 
 	const ConstructorHelpers::FObjectFinder<UInputAction> LeftTriggerTouchFinder{
 		TEXT(
 			"/Script/EnhancedInput.InputAction'/Game/FishAndPistols/FP_KDE/Inputs/IA_LeftTrigger_Touch.IA_LeftTrigger_Touch'")
 	};
 	check(LeftTriggerTouchFinder.Succeeded())
-	InputActions[0] = LeftTriggerTouchFinder.Object;
+
+	if (!InputActions[0])
+	{
+		InputActions[0] = LeftTriggerTouchFinder.Object;
+	}
+	
 
 	const ConstructorHelpers::FObjectFinder<UInputAction> LeftTriggerFloatFinder{
 		TEXT(
 			"/Script/EnhancedInput.InputAction'/Game/FishAndPistols/FP_KDE/Inputs/IA_LeftTrigger_Float.IA_LeftTrigger_Float'")
 	};
 	check(LeftTriggerFloatFinder.Succeeded())
-	InputActions[1] = LeftTriggerFloatFinder.Object;
+
+	if (!InputActions[1])
+	{
+		InputActions[1] = LeftTriggerFloatFinder.Object;
+	}
+	
 
 	const ConstructorHelpers::FObjectFinder<UInputAction> RightTriggerTouchFinder{
 		TEXT(
 			"/Script/EnhancedInput.InputAction'/Game/FishAndPistols/FP_KDE/Inputs/IA_RightTrgger_Touch.IA_RightTrgger_Touch'")
 	};
 	check(RightTriggerTouchFinder.Succeeded())
-	InputActions[2] = RightTriggerTouchFinder.Object;
+
+	if (!InputActions[2])
+	{
+		InputActions[2] = RightTriggerTouchFinder.Object;
+	}
+	
 
 	const ConstructorHelpers::FObjectFinder<UInputAction> RightTriggerFloatFinder{
 		TEXT(
 			"/Script/EnhancedInput.InputAction'/Game/FishAndPistols/FP_KDE/Inputs/IA_RightTrigger_Float.IA_RightTrigger_Float'")
 	};
 	check(RightTriggerFloatFinder.Succeeded())
-	InputActions[3] = RightTriggerFloatFinder.Object;
 
+	if (!InputActions[3])
+	{
+		InputActions[3] = RightTriggerFloatFinder.Object;
+	}
 
 	ConstructorHelpers::FClassFinder<UAnimInstance> AnimInstanceFinder{
 		TEXT("Blueprint'/Game/FishAndPistols/FP_KDE/Blueprints/ABP_HandAnim.ABP_HandAnim_C'")
@@ -165,6 +192,8 @@ void APlayerCharacter::BeginPlay()
 	}
 
 	StatusWidget = StatusWidgetComp->GetUserWidgetObject();
+	OpenerWidget = Cast<UUpgradeOpenerWidget>(OpenerWidgetComp->GetUserWidgetObject());
+	OpenerWidget->SetPercent(0.f);
 }
 
 // Called every frame
@@ -180,6 +209,25 @@ void APlayerCharacter::Tick(float DeltaTime)
 	FVector EndLoc = FishingRodMeshComponent->GetSocketLocation(FName("LineEnd"));
 	//DrawDebugPoint(GetWorld(), EndLoc, 25.f, FColor::Cyan);
 
+	OpenerWidgetComp->SetWorldRotation(UKismetMathLibrary::FindLookAtRotation(OpenerWidgetComp->GetComponentLocation(), CameraComponent->GetComponentLocation()));
+
+}
+
+void APlayerCharacter::HoldUpgradeWidget(const FInputActionInstance& InputActionInstance)
+{
+	UE_LOG(LogTemp, Warning, TEXT("%f"), InputActionInstance.GetElapsedTime())
+	OpenerWidget->SetPercent(InputActionInstance.GetElapsedTime());
+
+	if (InputActionInstance.GetTriggerEvent() == ETriggerEvent::Canceled)
+	{
+		OpenerWidget->SetPercent(0.f);
+	}
+}
+
+void APlayerCharacter::ToggleUpgradeWidget(const FInputActionInstance& InputActionInstance)
+{
+	OpenerWidget->SetPercent(0.f);
+	UpgradeComponent->ToggleWidgetVisibility();
 }
 
 // Called to bind functionality to input
@@ -193,6 +241,13 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
 		HandAnimComponent->SetupPlayerInputComponent(EnhancedInputComponent, InputActions);
+
+		EnhancedInputComponent->BindAction(InputAction_HoldY, ETriggerEvent::Started, this, &APlayerCharacter::HoldUpgradeWidget);
+		EnhancedInputComponent->BindAction(InputAction_HoldY, ETriggerEvent::Ongoing, this, &APlayerCharacter::HoldUpgradeWidget);
+		EnhancedInputComponent->BindAction(InputAction_HoldY, ETriggerEvent::Canceled, this, &APlayerCharacter::HoldUpgradeWidget);
+		EnhancedInputComponent->BindAction(InputAction_HoldY, ETriggerEvent::Triggered, this, &APlayerCharacter::ToggleUpgradeWidget);
+
 	}
+
 
 }

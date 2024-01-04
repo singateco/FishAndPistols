@@ -99,6 +99,9 @@ public:
 	UFUNCTION()
 	void UpgradeBought(FName UpgradeName);
 
+	UFUNCTION()
+	void ToggleWidgetVisibility();
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
