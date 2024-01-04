@@ -234,8 +234,6 @@ void APlayerCharacter::ToggleUpgradeWidget(const FInputActionInstance& InputActi
 void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-	FishingComponent->SetupPlayerInputComponent(PlayerInputComponent);
 	ShootingComponent->SetupPlayerInputComponent(PlayerInputComponent);
 
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
