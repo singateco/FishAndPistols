@@ -39,42 +39,49 @@ ASunShot::ASunShot()
 	MaxBullet = 4;
 }
 
-//void ASunShot::ActionFire()
-//{
-//	if (Bullet >= 1)
-//	{
-//		FHitResult HitResult;
-//		FVector StartLoc = BulletREF->GetComponentLocation();
-//		FVector EndLoc = StartLoc + BulletREF->GetForwardVector() * GunRange*10;
-//
-//		DrawDebugLine(GetWorld(), StartLoc, EndLoc, FColor::Red, false, 0.2f);
-//
-//		if (GetWorld()->LineTraceSingleByChannel(HitResult, StartLoc, EndLoc, ECollisionChannel::ECC_Visibility))
-//		{
-//			AFish* Fish = Cast<AFish>(HitResult.GetActor());
-//			if (Fish)
-//			{
-//				Fish->Die();
-//			}
-//			DrawDebugLine(GetWorld(), StartLoc, EndLoc, FColor::Green, false, 0.3f);
-//
-//			FRotator Rotator = HitResult.ImpactNormal.Rotation();
-//
-//			UGameplayStatics::SpawnDecalAtLocation(GetWorld(), BulletDecal, FVector(10, 5, 5), HitResult.ImpactPoint, Rotator, 10);
-//		}
-//
-//		Bullet--;
-//		BulletWidgetObject->UpdateBulletAmount(Bullet);
-//		GunFireEffect();
-//	}
-//	else
-//	{
-//		UGameplayStatics::PlaySound2D(GetWorld(), DryFireSound);
-//	}
-//}
-
-void ASunShot::Explosion()
+void ASunShot::ActionFire()
 {
-	//UKismetSystemLibrary::SphereOverlapActors()
+
+	TArray<AFish*> BombedFish;
+
+	if (Bullet >= 1)
+	{
+		FHitResult HitResult;
+		FVector StartLoc = BulletREF->GetComponentLocation();
+		FVector EndLoc = StartLoc + BulletREF->GetForwardVector() * GunRange;
+
+		//DrawDebugLine(GetWorld(), StartLoc, EndLoc, FColor::Red, false, 0.2f);
+
+		FCollisionQueryParams Params;
+		Params.AddIgnoredActor(this);
+
+		if (GetWorld()->LineTraceSingleByChannel(HitResult, StartLoc, EndLoc, ECollisionChannel::ECC_Visibility, Params))
+		{
+			AFish* Fish = Cast<AFish>(HitResult.GetActor());
+			if (Fish)
+			{
+				Fish->TakeDamage(1);
+				/*UKismetSystemLibrary::SphereOverlapActors(GetWorld(), HitResult.ImpactPoint, ExplosionRadius, ECC_WorldDynamic, nullptr, nullptr, BombedFish);*/
+
+				DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, ExplosionRadius, 12, FColor::Black, false, 5, 0, 1);
+
+			}
+			//DrawDebugLine(GetWorld(), StartLoc, EndLoc, FColor::Green, false, 0.3f);
+
+			FRotator Rotator = HitResult.ImpactNormal.Rotation();
+
+			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplosionEffect, HitResult.ImpactPoint, FRotator::ZeroRotator, FVector(8));
+
+			UGameplayStatics::SpawnDecalAtLocation(GetWorld(), BulletDecal, FVector(10, 5, 5), HitResult.ImpactPoint, Rotator, 10);
+		}
+
+		Bullet--;
+		BulletWidgetObject->UpdateBulletAmount(Bullet);
+		GunFireEffect();
+	}
+	else
+	{
+		UGameplayStatics::PlaySound2D(GetWorld(), DryFireSound);
+	}
 }
 

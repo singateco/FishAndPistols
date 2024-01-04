@@ -2,7 +2,7 @@
 
 
 #include "ShotGun.h"
-
+#include "TracerRound.h"
 #include "BulletAmount.h"
 #include "Fish.h"
 #include "Components/ArrowComponent.h"
@@ -35,7 +35,7 @@ AShotGun::AShotGun()
 		FireSound = fireSound.Object;
 	}
 
-	MaxBullet = 2;
+	MaxBullet = 4;
 }
 
 void AShotGun::ActionFire()
@@ -53,19 +53,20 @@ void AShotGun::ActionFire()
 			FVector StartLoc = BulletREF->GetComponentLocation();
 			FVector EndLoc = FVector(X, Y, Z) + StartLoc + BulletREF->GetForwardVector() * GunRange;
 
-			DrawDebugLine(GetWorld(), StartLoc, EndLoc, FColor::Red, false, 0.2f);
+			//DrawDebugLine(GetWorld(), StartLoc, EndLoc, FColor::Red, false, 0.2f);
 			if (GetWorld()->LineTraceSingleByChannel(HitResult, StartLoc, EndLoc, ECollisionChannel::ECC_Visibility))
 			{
 				AFish* Fish = Cast<AFish>(HitResult.GetActor());
 				if (Fish)
 				{
-					Fish->Die();
+					Fish->TakeDamage(1);
 				}
 				//DrawDebugLine(GetWorld(), StartLoc, EndLoc, FColor::Green, false, 0.3f);
 
 				FRotator Rotator = HitResult.ImpactNormal.Rotation();
 
 				UGameplayStatics::SpawnDecalAtLocation(GetWorld(), BulletDecal, FVector(10, 5, 5), HitResult.ImpactPoint, Rotator, 10);
+
 			}
 		}
 

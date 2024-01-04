@@ -61,7 +61,7 @@ public:
 	class UBulletAmount* BulletWidgetObject;
 
 	UPROPERTY(EditAnywhere)
-	float GunRange = 10000;
+	float GunRange = 20000;
 
 	UPROPERTY(EditAnywhere)
 	int Bullet;

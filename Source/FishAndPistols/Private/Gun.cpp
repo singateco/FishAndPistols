@@ -109,20 +109,20 @@ void AGun::ActionFire()
 		FVector StartLoc = BulletREF->GetComponentLocation();
 		FVector EndLoc = StartLoc + BulletREF->GetForwardVector() * GunRange;
 
-		DrawDebugLine(GetWorld(), StartLoc, EndLoc, FColor::Red, false, 0.2f);
+		//DrawDebugLine(GetWorld(), StartLoc, EndLoc, FColor::Red, false, 0.2f);
 
 		FCollisionQueryParams Params;
 		Params.AddIgnoredActor(this);
 
 		if (GetWorld()->LineTraceSingleByChannel(HitResult, StartLoc, EndLoc, ECollisionChannel::ECC_Visibility, Params))
 		{
-			UE_LOG(LogTemp, Warning, TEXT("%s"), *HitResult.GetActor()->GetActorNameOrLabel());
+			//UE_LOG(LogTemp, Warning, TEXT("%s"), *HitResult.GetActor()->GetActorNameOrLabel());
 			AFish* Fish = Cast<AFish>(HitResult.GetActor());
 			if (Fish)
 			{
 				Fish->TakeDamage(1);
 			}
-			DrawDebugLine(GetWorld(), StartLoc, EndLoc, FColor::Green, false, 0.3f);
+			//DrawDebugLine(GetWorld(), StartLoc, EndLoc, FColor::Green, false, 0.3f);
 
 			FRotator Rotator = HitResult.ImpactNormal.Rotation();
 
@@ -144,7 +144,7 @@ void AGun::GunFireEffect()
 {
 	GetWorld()->SpawnActor<ATracerRound>(ATracerRound::StaticClass(), EffectREF->GetComponentTransform());
 
-	UGameplayStatics::SpawnEmitterAttached(MuzzleFlash, EffectREF, NAME_None, FVector(ForceInit), FRotator(FRotator::ZeroRotator), FVector(0.5));
+	UGameplayStatics::SpawnEmitterAttached(MuzzleFlash, EffectREF, NAME_None, FVector(ForceInit), FRotator(FRotator::ZeroRotator), FVector(0.07));
 
 	UGameplayStatics::PlaySound2D(GetWorld(), FireSound);
 }

@@ -16,8 +16,12 @@ public:
 	// Sets default values for this actor's properties
 	ASunShot();
 
-	//virtual void ActionFire() override;
+	UPROPERTY(EditAnywhere, Category = Effect)
+	class UParticleSystem* ExplosionEffect;
 
-	void Explosion();
+	UPROPERTY(EditAnywhere)
+	float ExplosionRadius = 500;
+
+	virtual void ActionFire() override;
 
 };

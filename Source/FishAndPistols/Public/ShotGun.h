@@ -18,10 +18,9 @@ class FISHANDPISTOLS_API AShotGun : public AGun
 public:
 	AShotGun();
 
-
 private:
 	UPROPERTY(EditAnywhere)
-	float Spread = 500.0f;
+	float Spread = 1000.0f;
 
 	void ActionFire() override;
 };
