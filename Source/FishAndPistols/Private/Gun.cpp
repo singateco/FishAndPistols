@@ -77,7 +77,8 @@ void AGun::BeginPlay()
 	BulletWidgetObject = Cast<UBulletAmount>(BulletWidget->GetUserWidgetObject());
 	BulletWidgetObject->UpdateBulletAmount(Bullet);
 
-
+	// TODO: 디버그용 지우기
+	Laser->SetHiddenInGame(false);
 }
 
 // Called every frame
@@ -102,7 +103,7 @@ void AGun::ActionFire()
 			AFish* Fish = Cast<AFish>(HitResult.GetActor());
 			if (Fish)
 			{
-				Fish->Die();
+				Fish->TakeDamage(1);
 			}
 			//DrawDebugLine(GetWorld(), StartLoc, EndLoc, FColor::Green, false, 0.3f);
 

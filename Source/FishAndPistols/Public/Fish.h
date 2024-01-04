@@ -33,7 +33,16 @@ public:
 	class UProjectileMovementComponent* ProjectileMovementComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 MaxHP {1};
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 CurrentHP;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 GoldDropAmount {1};
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float UpwardImpulseForce{ 1000 };
 
 	UPROPERTY(EditAnywhere)
 	float DefaultSpeed {1500};
@@ -48,4 +57,6 @@ public:
 	void Die();
 	void FishDeadEffect();
 
+	UFUNCTION()
+	void TakeDamage(int32 Damage);
 };

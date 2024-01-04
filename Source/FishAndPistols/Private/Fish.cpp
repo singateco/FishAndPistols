@@ -43,6 +43,8 @@ AFish::AFish()
 void AFish::BeginPlay()
 {
 	Super::BeginPlay();
+
+	CurrentHP = MaxHP;
 }
 
 // Called every frame
@@ -50,6 +52,7 @@ void AFish::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
+
 
 void AFish::Die()
 {
@@ -64,5 +67,20 @@ void AFish::FishDeadEffect()
 	SetActorEnableCollision(false);
 	UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), ExplosionEffect, GetActorLocation());
 	UGameplayStatics::PlaySound2D(GetWorld(), CoinSound, 0.5f);
+}
+
+void AFish::TakeDamage(int32 Damage)
+{
+	CurrentHP -= Damage;
+
+	if (CurrentHP <= 0)
+	{
+		Die();
+	}
+	else
+	{
+		// 위로 뛰어오른다.
+		Box->AddImpulse(FVector::UpVector * UpwardImpulseForce, NAME_None, true);
+	}
 }
 

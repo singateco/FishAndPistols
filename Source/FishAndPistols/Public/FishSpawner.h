@@ -22,7 +22,7 @@ public:
 	void BindWithPlayer(class APlayerCharacter* Player);
 
 	UFUNCTION(BlueprintCallable)
-	void SpawnFish();
+	void SpawnFish(TSubclassOf<class AFish> InClass);
 
 	UFUNCTION()
 	void SlowdownTime();
@@ -34,7 +34,7 @@ public:
 	int32 AmountToSpawn {6};
 
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<class AFish> FishClass;
+	TSubclassOf<AFish> FishClass;
 
 	// 슬로우 모션 속도
 	UPROPERTY(EditAnywhere, meta = (ClampMin = 0.0f, UIMin = 0.0f, ClampMax = 1.0f, UIMax = 1.0f))
