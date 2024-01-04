@@ -21,7 +21,7 @@ public:
 
 private:
 	UPROPERTY(EditAnywhere)
-	float Spread = 100.0f;
+	float Spread = 500.0f;
 
 	void ActionFire() override;
 };

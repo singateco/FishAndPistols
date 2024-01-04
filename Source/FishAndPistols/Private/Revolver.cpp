@@ -38,9 +38,6 @@ void ARevolver::BeginPlay()
 {
 	Super::BeginPlay();
 
-	//UpgradeExtendedMag();
-	//UpgradeLaserSight();
-
 }
 
 // Called every frame
