@@ -16,3 +16,5 @@ Content/Resources/*
 *.suo
 *.xcodeproj
 *.xcworkspace
+
+**/*_BuiltData*
