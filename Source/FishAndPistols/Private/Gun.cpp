@@ -24,6 +24,17 @@ AGun::AGun()
 
 	GunMeshComponent->SetupAttachment(RootComp);
 	BulletREF = CreateDefaultSubobject<UArrowComponent>(TEXT("BulletREF"));
+	EffectREF = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("EffectREF"));
+	EffectREF->SetupAttachment(RootComp);
+	EffectREF->bHiddenInGame = true;
+	EffectREF->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	ConstructorHelpers::FObjectFinder<UStaticMesh>tempMesh(TEXT("/Script/Engine.StaticMesh'/Game/StarterContent/Shapes/Shape_Sphere.Shape_Sphere'"));
+
+	if (tempMesh.Succeeded())
+	{
+		EffectREF->SetRelativeScale3D(FVector(0.1));
+		EffectREF->SetStaticMesh(tempMesh.Object);
+	}
 
 	Laser = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Laser"));
 	Laser->SetRelativeScale3D(FVector(10, 0.005, 0.005));
@@ -85,7 +96,8 @@ void AGun::BeginPlay()
 void AGun::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	
+	BulletWidgetObject->UpdateBulletAmount(Bullet);
+
 }
 
 void AGun::ActionFire()
@@ -125,19 +137,13 @@ void AGun::ActionFire()
 
 void AGun::GunFireEffect()
 {
-	GetWorld()->SpawnActor<ATracerRound>(ATracerRound::StaticClass(), BulletREF->GetComponentTransform());
+	GetWorld()->SpawnActor<ATracerRound>(ATracerRound::StaticClass(), EffectREF->GetComponentTransform());
 
-	UGameplayStatics::SpawnEmitterAttached(MuzzleFlash, BulletREF, NAME_None, FVector(ForceInit), FRotator(FRotator::ZeroRotator), FVector(0.05));
+	UGameplayStatics::SpawnEmitterAttached(MuzzleFlash, EffectREF, NAME_None, FVector(ForceInit), FRotator(FRotator::ZeroRotator), FVector(0.5));
 
 	UGameplayStatics::PlaySound2D(GetWorld(), FireSound);
 }
 
-void AGun::Reload()
-{
-	this->Bullet = this->MaxBullet;
-	BulletWidgetObject->UpdateBulletAmount(Bullet);
-
-}
 
 void AGun::UpgradeExtendedMag(UUpgradeComponent* UpgradeComponent)
 {

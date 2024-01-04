@@ -108,8 +108,11 @@ void UShootingComponent::BeginPlay()
 		UpgradeComponent->OnUpgradeStatusChanged.AddDynamic(Gun, &AGun::UpgradeLaserSight);
 	}
 
-
 	UpgradeComponent->OnUpgradeStatusChanged.AddDynamic(this, &UShootingComponent::UpgradeAkimbo);
+	UpgradeComponent->OnUpgradeStatusChanged.AddDynamic(this, &UShootingComponent::BuySpadeAce);
+	UpgradeComponent->OnUpgradeStatusChanged.AddDynamic(this, &UShootingComponent::BuyShotGun);
+	UpgradeComponent->OnUpgradeStatusChanged.AddDynamic(this, &UShootingComponent::BuySunShot);
+
 	ChooseRevolver();
 }
 
@@ -165,21 +168,39 @@ void UShootingComponent::RightTriggerInput_Bool(const FInputActionValue& value)
 
 void UShootingComponent::AButton(const FInputActionValue& value)
 {
-	ChooseSpadeAce();
+	
 }
 
 void UShootingComponent::BButton(const FInputActionValue& value)
 {
-	ChooseShotGun();
+	ChangeGun();
+}
+
+void UShootingComponent::ChangeGun()
+{
+	if(CurrentRightGun == Revolver && CanChooseSpadeAce)
+	{
+		ChooseSpadeAce();
+	}
+
+	else if (CurrentRightGun == SpadeAce && CanChooseShotGun)
+	{
+		ChooseShotGun();
+	}
+
+	else if (CurrentRightGun == ShotGun && CanChooseSunShot)
+	{
+		ChooseSunShot();
+	}
+
+	else
+	{
+		ChooseRevolver();
+	}
 }
 
 void UShootingComponent::ChooseRevolver()
 {
-	bChooseRevolver = true;
-	bChooseSpadeAce = false;
-	bChooseShotGun = false;
-	bChooseSunShot = false;
-
 	Revolver->SetActorHiddenInGame(false);
 	SpadeAce->SetActorHiddenInGame(true);
 	ShotGun->SetActorHiddenInGame(true);
@@ -203,78 +224,75 @@ void UShootingComponent::ChooseRevolver()
 //바꿀때마다 총 액터를 생성하면 스위칭 할때마다 총알 충전됨
 void UShootingComponent::ChooseSpadeAce()
 {
-	bChooseRevolver = false;
-	bChooseSpadeAce = true;
-	bChooseShotGun = false;
-	bChooseSunShot = false;
-
-	Revolver->SetActorHiddenInGame(true);
-	SpadeAce->SetActorHiddenInGame(false);
-	ShotGun->SetActorHiddenInGame(true);
-	SunShot->SetActorHiddenInGame(true);
-
-	CurrentRightGun = SpadeAce;
-
-	if (IsAkimbo)
+	if(CanChooseSpadeAce)
 	{
-		LeftRevolver->SetActorHiddenInGame(true);
-		LeftSpadeAce->SetActorHiddenInGame(false);
-		LeftShotGun->SetActorHiddenInGame(true);
-		LeftSunShot->SetActorHiddenInGame(true);
+		Revolver->SetActorHiddenInGame(true);
+		SpadeAce->SetActorHiddenInGame(false);
+		ShotGun->SetActorHiddenInGame(true);
+		SunShot->SetActorHiddenInGame(true);
 
-		CurrentLeftGun = LeftSpadeAce;
+		CurrentRightGun = SpadeAce;
+
+		if (IsAkimbo)
+		{
+			LeftRevolver->SetActorHiddenInGame(true);
+			LeftSpadeAce->SetActorHiddenInGame(false);
+			LeftShotGun->SetActorHiddenInGame(true);
+			LeftSunShot->SetActorHiddenInGame(true);
+
+			CurrentLeftGun = LeftSpadeAce;
+		}
 	}
+
 }
 
 void UShootingComponent::ChooseShotGun()
 {
-	bChooseRevolver = false;
-	bChooseSpadeAce = false;
-	bChooseShotGun = true;
-	bChooseSunShot = false;
-
-	Revolver->SetActorHiddenInGame(true);
-	SpadeAce->SetActorHiddenInGame(true);
-	ShotGun->SetActorHiddenInGame(false);
-	SunShot->SetActorHiddenInGame(true);
-
-	CurrentRightGun = ShotGun;
-
-	if (IsAkimbo)
+	if(CanChooseShotGun)
 	{
-		LeftRevolver->SetActorHiddenInGame(true);
-		LeftSpadeAce->SetActorHiddenInGame(true);
-		LeftShotGun->SetActorHiddenInGame(false);
-		LeftSunShot->SetActorHiddenInGame(true);
+		Revolver->SetActorHiddenInGame(true);
+		SpadeAce->SetActorHiddenInGame(true);
+		ShotGun->SetActorHiddenInGame(false);
+		SunShot->SetActorHiddenInGame(true);
 
-		CurrentLeftGun = LeftShotGun;
+		CurrentRightGun = ShotGun;
+
+		if (IsAkimbo)
+		{
+			LeftRevolver->SetActorHiddenInGame(true);
+			LeftSpadeAce->SetActorHiddenInGame(true);
+			LeftShotGun->SetActorHiddenInGame(false);
+			LeftSunShot->SetActorHiddenInGame(true);
+
+			CurrentLeftGun = LeftShotGun;
+		}
 	}
 
 }
 
 void UShootingComponent::ChooseSunShot()
 {
-	bChooseRevolver = false;
-	bChooseSpadeAce = false;
-	bChooseShotGun = false;
-	bChooseSunShot = true;
 
-	Revolver->SetActorHiddenInGame(true);
-	SpadeAce->SetActorHiddenInGame(true);
-	ShotGun->SetActorHiddenInGame(true);
-	SunShot->SetActorHiddenInGame(false);
-
-	CurrentRightGun = SunShot;
-
-	if (IsAkimbo)
+	if(CanChooseSunShot)
 	{
-		LeftRevolver->SetActorHiddenInGame(true);
-		LeftSpadeAce->SetActorHiddenInGame(true);
-		LeftShotGun->SetActorHiddenInGame(true);
-		LeftSunShot->SetActorHiddenInGame(false);
+		Revolver->SetActorHiddenInGame(true);
+		SpadeAce->SetActorHiddenInGame(true);
+		ShotGun->SetActorHiddenInGame(true);
+		SunShot->SetActorHiddenInGame(false);
 
-		CurrentLeftGun = LeftSunShot;
+		CurrentRightGun = SunShot;
+
+		if (IsAkimbo)
+		{
+			LeftRevolver->SetActorHiddenInGame(true);
+			LeftSpadeAce->SetActorHiddenInGame(true);
+			LeftShotGun->SetActorHiddenInGame(true);
+			LeftSunShot->SetActorHiddenInGame(false);
+
+			CurrentLeftGun = LeftSunShot;
+		}
 	}
+
 }
 
 void UShootingComponent::UpgradeAkimbo(UUpgradeComponent* UpgradeComponent)
@@ -282,6 +300,30 @@ void UShootingComponent::UpgradeAkimbo(UUpgradeComponent* UpgradeComponent)
 	if (!IsAkimbo && UpgradeComponent->bDualWield)
 	{
 		IsAkimbo = true;
+	}
+}
+
+void UShootingComponent::BuySpadeAce(UUpgradeComponent* UpgradeComponent)
+{
+	if(!CanChooseSpadeAce && UpgradeComponent->bSpadeAce)
+	{
+		CanChooseSpadeAce = true;
+	}
+}
+
+void UShootingComponent::BuyShotGun(UUpgradeComponent* UpgradeComponent)
+{
+	if (!CanChooseShotGun && UpgradeComponent->bShotgun)
+	{
+		CanChooseShotGun = true;
+	}
+}
+
+void UShootingComponent::BuySunShot(UUpgradeComponent* UpgradeComponent)
+{
+	if (!CanChooseSunShot && UpgradeComponent->bSunShot)
+	{
+		CanChooseSunShot = true;
 	}
 }
 

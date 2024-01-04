@@ -36,6 +36,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UArrowComponent* BulletREF;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UStaticMeshComponent* EffectREF;
+
 	UPROPERTY(EditAnywhere, Category = Effect)
 	class USoundBase* FireSound;
 
@@ -76,8 +79,6 @@ public:
 	//----------------------------Function--------------------------------
 	virtual void ActionFire();
 	void GunFireEffect();
-
-	void Reload();
 
 	UFUNCTION()
 	void UpgradeExtendedMag(class UUpgradeComponent* UpgradeComponent);
