@@ -45,13 +45,13 @@ void AShotGun::ActionFire()
 		for(int32 i=0; i<12; i++)
 		{
 
-			float X = UKismetMathLibrary::RandomFloatInRange(Spread*0.1, Spread);
-			float Y = UKismetMathLibrary::RandomFloatInRange(Spread*0.1, Spread);
-			float Z = UKismetMathLibrary::RandomFloatInRange(Spread*0.1, Spread);
+			float X = UKismetMathLibrary::RandomFloatInRange(Spread*-1, Spread);
+			float Y = UKismetMathLibrary::RandomFloatInRange(Spread*-1, Spread);
+			float Z = UKismetMathLibrary::RandomFloatInRange(Spread*-1, Spread);
 
 			FHitResult HitResult;
 			FVector StartLoc = BulletREF->GetComponentLocation();
-			FVector EndLoc = FVector(X, Y, Z) + StartLoc + BulletREF->GetForwardVector() * 200;
+			FVector EndLoc = FVector(X, Y, Z) + StartLoc + BulletREF->GetForwardVector() * GunRange;
 
 			DrawDebugLine(GetWorld(), StartLoc, EndLoc, FColor::Red, false, 0.2f);
 			if (GetWorld()->LineTraceSingleByChannel(HitResult, StartLoc, EndLoc, ECollisionChannel::ECC_Visibility))

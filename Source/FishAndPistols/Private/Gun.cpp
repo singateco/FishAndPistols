@@ -21,6 +21,7 @@ AGun::AGun()
 
 	GunMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("GunMeshComponent"));
 	SetRootComponent(RootComp);
+	GunMeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	GunMeshComponent->SetupAttachment(RootComp);
 	BulletREF = CreateDefaultSubobject<UArrowComponent>(TEXT("BulletREF"));
