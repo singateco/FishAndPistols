@@ -9,6 +9,7 @@
 #include "Kismet/GameplayStatics.h"
 
 
+
 // Sets default values
 ASunShot::ASunShot()
 {
@@ -42,7 +43,9 @@ ASunShot::ASunShot()
 void ASunShot::ActionFire()
 {
 
-	TArray<AFish*> BombedFish;
+	TArray<AActor*> BombedFish;
+	TArray<TEnumAsByte<EObjectTypeQuery>> traceObjectTypes;
+	traceObjectTypes.Add(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_WorldDynamic));
 
 	if (Bullet >= 1)
 	{
@@ -61,9 +64,17 @@ void ASunShot::ActionFire()
 			if (Fish)
 			{
 				Fish->TakeDamage(1);
-				/*UKismetSystemLibrary::SphereOverlapActors(GetWorld(), HitResult.ImpactPoint, ExplosionRadius, ECC_WorldDynamic, nullptr, nullptr, BombedFish);*/
+				const TArray<AActor*> HitedFish{Fish};
+				UKismetSystemLibrary::SphereOverlapActors(GetWorld(), HitResult.ImpactPoint, ExplosionRadius, traceObjectTypes, AFish::StaticClass(), HitedFish, BombedFish);
 
-				DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, ExplosionRadius, 12, FColor::Black, false, 5, 0, 1);
+				for(auto ExplosionFish:BombedFish)
+				{
+					Cast<AFish>(ExplosionFish)->TakeDamage(1);
+				}
+
+
+
+				//DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, ExplosionRadius, 12, FColor::Black, false, 5, 0, 1);
 
 			}
 			//DrawDebugLine(GetWorld(), StartLoc, EndLoc, FColor::Green, false, 0.3f);
