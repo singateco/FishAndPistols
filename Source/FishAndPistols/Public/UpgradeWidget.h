@@ -17,5 +17,11 @@ class FISHANDPISTOLS_API UUpgradeWidget : public UUserWidget
 public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
-	class UListView* UpgradeList;
+	class UListView* GunUpgradeList;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+	UListView* GlobalUpgradeList;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+	UListView* LureUpgradeList;
 };

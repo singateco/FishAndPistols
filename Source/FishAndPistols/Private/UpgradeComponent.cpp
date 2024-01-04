@@ -44,6 +44,42 @@ UUpgradeComponent::UUpgradeComponent()
 }
 
 
+void UUpgradeComponent::UpgradeBought(FName UpgradeName)
+{
+	if (UpgradeName.IsEqual(FName("Shotgun")))
+	{
+		bShotgun = true;
+		return;
+	}
+	else if (UpgradeName.IsEqual(FName("SpadeAce")))
+	{
+		bSpadeAce = true;
+		return;
+	}
+	else if (UpgradeName.IsEqual(FName("SunShot")))
+	{
+		bSunShot = true;
+		return;
+	}
+	else if (UpgradeName.IsEqual(FName("LaserSight")))
+	{
+		bLaserSight = true;
+		return;
+	}
+	else if (UpgradeName.IsEqual(FName("DualWield")))
+	{
+		bDualWield = true;
+		return;
+	}
+	else if (UpgradeName.IsEqual(FName("ExtendedAmmo")))
+	{
+		bExtendedAmmo = true;
+		return;
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("Unidentified item bought: %s"), *UpgradeName.ToString())
+}
+
 // Called when the game starts
 void UUpgradeComponent::BeginPlay()
 {
@@ -67,8 +103,10 @@ void UUpgradeComponent::BeginPlay()
 		TArray<FUpgradeData*> UpgradeDataRows;
 	UpgradeDataTable->GetAllRows(TEXT("Context String"), UpgradeDataRows);
 
-	for (const FUpgradeData* Row : UpgradeDataRows)
+	for (FUpgradeData* Row : UpgradeDataRows)
 	{
+		Row->OnUpgradeBought.AddDynamic(this, &UUpgradeComponent::UpgradeBought);
+
 		UUpgradeDataObject* DataObject = NewObject<UUpgradeDataObject>(this, UUpgradeDataObject::StaticClass(), Row->Name);
 		DataObject->Data = Row;
 		UpgradeDataObjects.Add(DataObject);
@@ -76,7 +114,19 @@ void UUpgradeComponent::BeginPlay()
 
 	for (UUpgradeDataObject* Buyable : UpgradeDataObjects)
 	{
-		UpgradeWidgetObject->UpgradeList->AddItem(Buyable);
+		switch (Buyable->Data->Type)
+		{
+		case EUpgradeType::Guns:
+			UpgradeWidgetObject->GunUpgradeList->AddItem(Buyable);
+			break;
+		case EUpgradeType::Global:
+			UpgradeWidgetObject->GlobalUpgradeList->AddItem(Buyable);
+			break;
+		case EUpgradeType::Lures:
+			UpgradeWidgetObject->LureUpgradeList->AddItem(Buyable);
+			break;
+		default: ;
+		}
 	}
 }
 

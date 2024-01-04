@@ -7,6 +7,7 @@
 #include "UpgradeDataObject.h"
 #include "Components/Button.h"
 #include "Components/Image.h"
+#include "Components/ListView.h"
 #include "Components/TextBlock.h"
 
 void UUpgradeItemEntryWidget::NativeOnListItemObjectSet(UObject* ListItemObject)
@@ -28,6 +29,7 @@ void UUpgradeItemEntryWidget::NativeOnInitialized()
 
 	GameMode = GetWorld()->GetAuthGameMode<AFish_GameModeBase>();
 	BuyButton->OnClicked.AddDynamic(this, &UUpgradeItemEntryWidget::BuyButtonPressed);
+
 }
 
 void UUpgradeItemEntryWidget::BuyButtonPressed()
@@ -35,10 +37,15 @@ void UUpgradeItemEntryWidget::BuyButtonPressed()
 	UUpgradeDataObject* DataObject = GetListItem<UUpgradeDataObject>();
 	checkf(DataObject, TEXT("No Data Object"));
 
-	//if (GameMode->SpendGold(DataObject->Data->Price))
-	//{
+	if (GameMode->SpendGold(DataObject->Data->Price))
+	{
 		// TODO: Add ca-ching sound
 
-	GameMode->AddGold(DataObject->Data->Price);
-	//}
+		DataObject->Data->UpgradeBought();
+		Cast<UListView>(GetOwningListView())->RemoveItem(GetListItem<>());
+	}
+	else
+	{
+		// TODO : Add no money sound
+	}
 }

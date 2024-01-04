@@ -6,6 +6,9 @@
 #include "Components/ActorComponent.h"
 #include "UpgradeComponent.generated.h"
 
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FUpgradeBought, FName, UpgradeName);
+
 UENUM(BlueprintType)
 enum class EUpgradeType : uint8
 {
@@ -18,6 +21,9 @@ USTRUCT(BlueprintType)
 struct FUpgradeData: public FTableRowBase
 {
 	GENERATED_BODY()
+
+	UPROPERTY(BlueprintAssignable)
+	FUpgradeBought OnUpgradeBought;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FName Name;
@@ -33,6 +39,11 @@ struct FUpgradeData: public FTableRowBase
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 Price;
+
+	void UpgradeBought() const
+	{
+		OnUpgradeBought.Broadcast(Name);
+	}
 };
 
 
@@ -82,6 +93,8 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Buyables | Guns")
 	bool bSpadeAce {false};
 
+	UFUNCTION()
+	void UpgradeBought(FName UpgradeName);
 
 protected:
 	// Called when the game starts
