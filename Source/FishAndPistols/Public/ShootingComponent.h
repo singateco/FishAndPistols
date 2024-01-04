@@ -97,17 +97,15 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	TArray<AGun*> Guns;
 
-	UPROPERTY(EditAnywhere)
-	bool bChooseRevolver = true;
 
 	UPROPERTY(EditAnywhere)
-	bool bChooseSpadeAce = false;
+	bool CanChooseSpadeAce = false;
 
 	UPROPERTY(EditAnywhere)
-	bool bChooseShotGun = false;
+	bool CanChooseShotGun = false;
 
 	UPROPERTY(EditAnywhere)
-	bool bChooseSunShot = false;
+	bool CanChooseSunShot = false;
 
 	UPROPERTY(EditAnywhere)
 	bool IsAkimbo = false;
@@ -122,6 +120,9 @@ public:
 	void AButton(const FInputActionValue& value);
 	void BButton(const FInputActionValue& value);
 
+	UFUNCTION()
+	void ChangeGun();
+
 	void ChooseRevolver();
 	void ChooseSpadeAce();
 	void ChooseShotGun();
@@ -129,6 +130,16 @@ public:
 
 	UFUNCTION()
 	void UpgradeAkimbo(class UUpgradeComponent* UpgradeComponent);
+
+	UFUNCTION()
+	void BuySpadeAce(class UUpgradeComponent* UpgradeComponent);
+
+	UFUNCTION()
+	void BuyShotGun(class UUpgradeComponent* UpgradeComponent);
+
+	UFUNCTION()
+	void BuySunShot(class UUpgradeComponent* UpgradeComponent);
+
 
 	void ActionLeftFire();
 	void ActionRightFire();
