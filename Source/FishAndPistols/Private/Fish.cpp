@@ -80,7 +80,7 @@ void AFish::TakeDamage(int32 Damage)
 	else
 	{
 		// 위로 뛰어오른다.
-		Box->AddImpulse(FVector::UpVector * UpwardImpulseForce, NAME_None, true);
+		ProjectileMovementComponent->AddForce(FVector::UpVector * UpwardImpulseForce);
 	}
 }
 

@@ -16,6 +16,7 @@
 #include "UpgradeComponent.h"
 #include "UpgradeOpenerWidget.h"
 #include "Components/WidgetComponent.h"
+#include "Components/WidgetInteractionComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 
 // Sets default values
@@ -27,6 +28,7 @@ APlayerCharacter::APlayerCharacter()
 	LeftHandMesh(CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Left Hand Mesh"))),
 	RightHand(CreateDefaultSubobject<UMotionControllerComponent>(TEXT("Right Hand Motion Controller"))),
 	RightHandMesh(CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Right Hand Mesh"))),
+	WidgetInteractionComponent(CreateDefaultSubobject<UWidgetInteractionComponent>(TEXT("Widget Interaction Component"))),
 	StatusWidgetComp(CreateDefaultSubobject<UWidgetComponent>(TEXT("Status Widget"))),
 	OpenerWidgetComp(CreateDefaultSubobject<UWidgetComponent>(TEXT("Opener Widget"))),
 	FishingComponent(CreateDefaultSubobject<UFishingComponent>(TEXT("Fishing Component"))),
@@ -55,6 +57,8 @@ APlayerCharacter::APlayerCharacter()
 	RightHandMesh->SetRelativeRotation(FRotator(90, 0, 25));
 	RightHand->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
+	WidgetInteractionComponent->SetupAttachment(RightHandMesh);
+	WidgetInteractionComponent->TraceChannel = ECC_GameTraceChannel1;
 
 	FishingRodMeshComponent->SetupAttachment(RightHandMesh, FName("palm_rSocket"));
 	FishingRodMeshComponent->SetMobility(EComponentMobility::Movable);
@@ -121,7 +125,7 @@ APlayerCharacter::APlayerCharacter()
 	{
 		InputActions[0] = LeftTriggerTouchFinder.Object;
 	}
-	
+
 
 	const ConstructorHelpers::FObjectFinder<UInputAction> LeftTriggerFloatFinder{
 		TEXT(
@@ -133,7 +137,7 @@ APlayerCharacter::APlayerCharacter()
 	{
 		InputActions[1] = LeftTriggerFloatFinder.Object;
 	}
-	
+
 
 	const ConstructorHelpers::FObjectFinder<UInputAction> RightTriggerTouchFinder{
 		TEXT(
@@ -145,7 +149,7 @@ APlayerCharacter::APlayerCharacter()
 	{
 		InputActions[2] = RightTriggerTouchFinder.Object;
 	}
-	
+
 
 	const ConstructorHelpers::FObjectFinder<UInputAction> RightTriggerFloatFinder{
 		TEXT(
