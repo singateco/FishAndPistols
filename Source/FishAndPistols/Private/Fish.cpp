@@ -5,6 +5,7 @@
 
 #include "Fish_GameModeBase.h"
 #include "GoldDropWidgetActor.h"
+#include "NiagaraComponent.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -73,7 +74,10 @@ void AFish::Die()
 void AFish::FishDeadEffect()
 {
 	SetActorEnableCollision(false);
-	UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), ExplosionEffect, GetActorLocation());
+
+	UNiagaraComponent* NiagaraComp = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), ExplosionEffect, GetActorLocation());
+	NiagaraComp->SetVariableInt(TEXT("Amount"), GoldDropAmount * 7);
+	NiagaraComp->SetVariableObject(TEXT("Static Mesh"), this->StaticMeshComponent->GetStaticMesh());
 	UGameplayStatics::PlaySound2D(GetWorld(), CoinSound, 0.5f);
 }
 
