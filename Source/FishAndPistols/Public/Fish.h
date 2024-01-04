@@ -32,6 +32,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UProjectileMovementComponent* ProjectileMovementComponent;
 
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class AGoldDropWidgetActor> GoldDropWidgetActorClass;
+
+	UPROPERTY(EditAnywhere)
+	float ZUpwardLimit {2800};
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 MaxHP {1};
 

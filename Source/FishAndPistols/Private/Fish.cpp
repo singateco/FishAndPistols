@@ -4,6 +4,7 @@
 #include "Fish.h"
 
 #include "Fish_GameModeBase.h"
+#include "GoldDropWidgetActor.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -61,6 +62,11 @@ void AFish::Die()
 	AFish_GameModeBase* GameMode = GetWorld()->GetAuthGameMode<AFish_GameModeBase>();
 	GameMode->AddGold(GoldDropAmount);
 	FishDeadEffect();
+
+	AGoldDropWidgetActor* DropWidget = GetWorld()->SpawnActorDeferred<AGoldDropWidgetActor>(GoldDropWidgetActorClass, FTransform(FRotator::ZeroRotator, GetActorLocation() + FVector(-100, 0, 0)));
+	DropWidget->Amount = GoldDropAmount;
+	UGameplayStatics::FinishSpawningActor(DropWidget, FTransform(FRotator::ZeroRotator, GetActorLocation() + FVector(-100, 0, 0)));
+
 	Destroy();
 }
 
@@ -82,7 +88,7 @@ void AFish::TakeDamage(int32 Damage)
 	else
 	{
 		// 위로 뛰어오른다.
-		if (GetActorLocation().Z >= 3000)
+		if (GetActorLocation().Z <= ZUpwardLimit)
 		{
 			ProjectileMovementComponent->AddForce(FVector::UpVector * UpwardImpulseForce);	
 		}
