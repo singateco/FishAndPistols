@@ -42,7 +42,7 @@ public:
 	int32 GoldDropAmount {1};
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float UpwardImpulseForce{ 1000 };
+	float UpwardImpulseForce{ 200000 };
 
 	UPROPERTY(EditAnywhere)
 	float DefaultSpeed {1500};

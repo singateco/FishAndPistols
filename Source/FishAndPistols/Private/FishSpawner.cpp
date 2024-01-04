@@ -24,15 +24,15 @@ void AFishSpawner::BindWithPlayer(APlayerCharacter* Player)
 void AFishSpawner::SpawnFish(TSubclassOf<AFish> InClass)
 {
 	// Add variance to spawner angle
-	float AngleVariance = FMath::RandRange(-15, 15);
+	float AngleVariance = FMath::RandRange(-20, 20);
 	FRotator Variance = FRotator(0, 0, AngleVariance);
 
-	//this->SetActorRotation(GetActorRotation() + Variance);
+	this->SetActorRotation(GetActorRotation() + Variance);
 
 	// Add variance with the angles to fish themselves
 	FRotator Rotator = this->GetActorRotation();
-	//Rotator.Yaw += FMath::RandRange(-1.5, 1.5);
-	//Rotator.Roll += FMath::RandRange(-1.5, 1.5);
+	Rotator.Yaw += FMath::RandRange(-20, 20);
+	Rotator.Roll += FMath::RandRange(-20, 20);
 	//Rotator.Pitch += FMath::RandRange(-15, 15);
 
 
@@ -45,7 +45,7 @@ void AFishSpawner::SpawnFish(TSubclassOf<AFish> InClass)
 	UGameplayStatics::FinishSpawningActor(SpawnedFish, SpawnTransform);
 
 	// Reset the spawner angle
-	//this->SetActorRotation(GetActorRotation() - Variance);
+	this->SetActorRotation(GetActorRotation() - Variance);
 }
 
 void AFishSpawner::SlowdownTime()
