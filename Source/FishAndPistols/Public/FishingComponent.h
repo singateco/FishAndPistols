@@ -31,15 +31,12 @@ public:
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
-
+	
 public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	virtual void InitializeComponent() override;
-
-	UFUNCTION()
-	void SetupPlayerInputComponent(UInputComponent* InputComponent);
 
 	UFUNCTION()
 	void CheckMotionValue();
@@ -119,7 +116,6 @@ public:
 	float FishRunAwayTime { 4.5f };
 
 private:
-	void RightIndexTrigger(const FInputActionValue& Value);
 	void FishingStarted();
 	void FishBited();
 	void EarlyMotionBeforeFishBite();
