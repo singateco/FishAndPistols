@@ -8,6 +8,7 @@
 #include "Components/WidgetComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "BulletAmount.h"
+#include "UpgradeComponent.h"
 
 
 // Sets default values
@@ -137,16 +138,21 @@ void AGun::Reload()
 
 }
 
-void AGun::UpgradeExtendedMag()
+void AGun::UpgradeExtendedMag(UUpgradeComponent* UpgradeComponent)
 {
-	IsExtendedMag = true;
-	MaxBullet += 3;
-
+	if (!IsExtendedMag && UpgradeComponent->bExtendedAmmo)
+	{
+		IsExtendedMag = true;
+		MaxBullet += 3;
+	}
 }
 
-void AGun::UpgradeLaserSight()
+void AGun::UpgradeLaserSight(UUpgradeComponent* UpgradeComponent)
 {
-	IsRazor = true;
-	Laser->SetHiddenInGame(false);
+	if (!IsRazor && UpgradeComponent->bLaserSight)
+	{
+		IsRazor = true;
+		Laser->SetHiddenInGame(false);
+	}
 }
 

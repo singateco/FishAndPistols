@@ -94,8 +94,8 @@ public:
 	UPROPERTY()
 	ASunShot* LeftSunShot;
 
-	UPROPERTY()
-	AGun* Gun;
+	UPROPERTY(VisibleAnywhere)
+	TArray<AGun*> Guns;
 
 	UPROPERTY(EditAnywhere)
 	bool bChooseRevolver = true;
@@ -127,7 +127,8 @@ public:
 	void ChooseShotGun();
 	void ChooseSunShot();
 
-	void UpgradeAkimbo();
+	UFUNCTION()
+	void UpgradeAkimbo(class UUpgradeComponent* UpgradeComponent);
 
 	void ActionLeftFire();
 	void ActionRightFire();

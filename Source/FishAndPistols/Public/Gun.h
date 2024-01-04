@@ -78,7 +78,11 @@ public:
 	void GunFireEffect();
 
 	void Reload();
-	void UpgradeExtendedMag();
-	void UpgradeLaserSight();
+
+	UFUNCTION()
+	void UpgradeExtendedMag(class UUpgradeComponent* UpgradeComponent);
+
+	UFUNCTION()
+	void UpgradeLaserSight(UUpgradeComponent* UpgradeComponent);
 
 };

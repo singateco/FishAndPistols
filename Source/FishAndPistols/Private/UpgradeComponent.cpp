@@ -49,35 +49,34 @@ void UUpgradeComponent::UpgradeBought(FName UpgradeName)
 	if (UpgradeName.IsEqual(FName("Shotgun")))
 	{
 		bShotgun = true;
-		return;
 	}
 	else if (UpgradeName.IsEqual(FName("SpadeAce")))
 	{
 		bSpadeAce = true;
-		return;
 	}
 	else if (UpgradeName.IsEqual(FName("SunShot")))
 	{
 		bSunShot = true;
-		return;
 	}
 	else if (UpgradeName.IsEqual(FName("LaserSight")))
 	{
 		bLaserSight = true;
-		return;
 	}
 	else if (UpgradeName.IsEqual(FName("DualWield")))
 	{
 		bDualWield = true;
-		return;
 	}
 	else if (UpgradeName.IsEqual(FName("ExtendedAmmo")))
 	{
 		bExtendedAmmo = true;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Unidentified item bought: %s"), *UpgradeName.ToString())
 		return;
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("Unidentified item bought: %s"), *UpgradeName.ToString())
+	OnUpgradeStatusChanged.Broadcast(this);
 }
 
 // Called when the game starts

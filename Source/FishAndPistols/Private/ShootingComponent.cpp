@@ -13,6 +13,7 @@
 #include "SpadeAce.h"
 #include "SunShot.h"
 #include "Gun.h"
+#include "UpgradeComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 
@@ -89,10 +90,27 @@ void UShootingComponent::BeginPlay()
 	LeftSunShot->AttachToComponent(Player->LeftHandMesh, Rule, FName("SunShot_Left"));
 	LeftSunShot->SetActorHiddenInGame(true);
 
-	UpgradeAkimbo();
+	Guns.Add(Revolver);
+	Guns.Add(SpadeAce);
+	Guns.Add(ShotGun);
+	Guns.Add(SunShot);
+	Guns.Add(LeftRevolver);
+	Guns.Add(LeftSpadeAce);
+	Guns.Add(LeftShotGun);
+	Guns.Add(LeftSunShot);
 
+	UUpgradeComponent* UpgradeComponent = Player->UpgradeComponent;
+	check(UpgradeComponent)
+
+	for (AGun* Gun : Guns)
+	{
+		UpgradeComponent->OnUpgradeStatusChanged.AddDynamic(Gun, &AGun::UpgradeExtendedMag);
+		UpgradeComponent->OnUpgradeStatusChanged.AddDynamic(Gun, &AGun::UpgradeLaserSight);
+	}
+
+
+	UpgradeComponent->OnUpgradeStatusChanged.AddDynamic(this, &UShootingComponent::UpgradeAkimbo);
 	ChooseRevolver();
-
 }
 
 
@@ -259,9 +277,12 @@ void UShootingComponent::ChooseSunShot()
 	}
 }
 
-void UShootingComponent::UpgradeAkimbo()
+void UShootingComponent::UpgradeAkimbo(UUpgradeComponent* UpgradeComponent)
 {
-	IsAkimbo = true;
+	if (!IsAkimbo && UpgradeComponent->bDualWield)
+	{
+		IsAkimbo = true;
+	}
 }
 
 void UShootingComponent::ActionLeftFire()
