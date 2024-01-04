@@ -91,19 +91,6 @@ void UFishingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 	//DrawDebugPoint(GetWorld(), RightHandLocation, 45, FColor::Red, false, .4f);
 }
 
-void UFishingComponent::SetupPlayerInputComponent(UInputComponent* InputComponent)
-{
-	if (UEnhancedInputComponent* EnhancedInput = Cast<UEnhancedInputComponent>(InputComponent))
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Input Set."))
-
-		check(RightIndexTriggerInputAction)
-
-		EnhancedInput->BindAction(RightIndexTriggerInputAction, ETriggerEvent::Started, this, &UFishingComponent::RightIndexTrigger);
-		EnhancedInput->BindAction(RightIndexTriggerInputAction, ETriggerEvent::Completed, this, &UFishingComponent::RightIndexTrigger);
-	}
-}
-
 void UFishingComponent::CheckMotionValue()
 {
 	const FVector PlayerForward = OwningPlayer->GetArrowComponent()->GetForwardVector();
@@ -221,19 +208,6 @@ void UFishingComponent::MakeFishHook()
 
 	OwningPlayer->FishCable->SetVisibility(true);
 	OwningPlayer->FishCable->SetAttachEndToComponent(Hook->MeshComp, FName("HoleSocket"));
-}
-
-void UFishingComponent::RightIndexTrigger(const FInputActionValue& Value)
-{
-	if (Value.Get<bool>())
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Triggered"))
-		MakeFishHook();
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Trigger Completed"))
-	}
 }
 
 void UFishingComponent::FishingStarted()
