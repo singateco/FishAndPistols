@@ -36,6 +36,24 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<AFish> FishClass;
 
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<AFish> RareFishClass;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<AFish> ChestFishClass;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<AFish> SharkClass;
+
+	UPROPERTY(VisibleAnywhere)
+	bool bCanSpawnRareFish {false};
+
+	UPROPERTY(VisibleAnywhere)
+	bool bCanSpawnChestFish {false};
+
+	UPROPERTY(VisibleAnywhere)
+	bool bCanSpawnSharkFish {false};
+
 	// 슬로우 모션 속도
 	UPROPERTY(EditAnywhere, meta = (ClampMin = 0.0f, UIMin = 0.0f, ClampMax = 1.0f, UIMax = 1.0f))
 	float SlowMotionTimeScale {0.4f};

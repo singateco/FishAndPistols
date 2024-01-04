@@ -59,6 +59,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|Components")
 	USkeletalMeshComponent* RightHandMesh;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MySettings|Components")
+	class UWidgetInteractionComponent* WidgetInteractionComponent;
+
 	// 왼손 위 골드 표시 위젯
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|Widgets")
 	class UWidgetComponent* StatusWidgetComp;

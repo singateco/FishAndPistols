@@ -14,6 +14,8 @@
 #include "Misc/DateTime.h"
 #include "FishHook.h"
 #include "ShootingComponent.h"
+#include "UpgradeComponent.h"
+#include "Blueprint/UserWidget.h"
 #include "Components/BoxComponent.h"
 #include "Components/SplineMeshComponent.h"
 #include "Haptics/HapticFeedbackEffect_Curve.h"
@@ -337,6 +339,11 @@ void UFishingComponent::Deactivate()
 	{
 		GetWorld()->GetTimerManager().ClearTimer(MotionTimer);
 		MotionTimer.Invalidate();
+	}
+
+	if (OwningPlayer->UpgradeComponent->UpgradeWidget->GetVisibility() == ESlateVisibility::Visible)
+	{
+		OwningPlayer->UpgradeComponent->ToggleWidgetVisibility();
 	}
 
 	Super::Deactivate();

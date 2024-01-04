@@ -9,6 +9,7 @@
 #include "UpgradeDataObject.h"
 #include "UpgradeWidget.h"
 #include "Components/ListView.h"
+#include "Components/WidgetInteractionComponent.h"
 
 // Sets default values for this component's properties
 UUpgradeComponent::UUpgradeComponent()
@@ -83,11 +84,13 @@ void UUpgradeComponent::ToggleWidgetVisibility()
 {
 	if (UpgradeWidget->GetVisibility() == ESlateVisibility::Hidden)
 	{
+		Player->WidgetInteractionComponent->bShowDebug = true;
 		UpgradeWidgetComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 		UpgradeWidget->SetVisibility(ESlateVisibility::Visible);
 	}
 	else if (UpgradeWidget->GetVisibility() == ESlateVisibility::Visible)
 	{
+		Player->WidgetInteractionComponent->bShowDebug = false;
 		UpgradeWidgetComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		UpgradeWidget->SetVisibility(ESlateVisibility::Hidden);
 	}
