@@ -71,6 +71,18 @@ void UUpgradeComponent::UpgradeBought(FName UpgradeName)
 	{
 		bExtendedAmmo = true;
 	}
+	else if (UpgradeName.IsEqual(FName("RareFishLure")))
+	{
+		bCanSpawnRareFish = true;
+	}
+	else if (UpgradeName.IsEqual(FName("ChestFishLure")))
+	{
+		bCanSpawnChestFish = true;
+	}
+	else if (UpgradeName.IsEqual(FName("SharkFishLure")))
+	{
+		bCanSpawnSharkFish = true;
+	}
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Unidentified item bought: %s"), *UpgradeName.ToString())

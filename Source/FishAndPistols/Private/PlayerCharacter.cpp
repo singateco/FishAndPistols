@@ -219,7 +219,7 @@ void APlayerCharacter::Tick(float DeltaTime)
 
 void APlayerCharacter::HoldUpgradeWidget(const FInputActionInstance& InputActionInstance)
 {
-	UE_LOG(LogTemp, Warning, TEXT("%f"), InputActionInstance.GetElapsedTime())
+	//UE_LOG(LogTemp, Warning, TEXT("%f"), InputActionInstance.GetElapsedTime())
 	OpenerWidget->SetPercent(InputActionInstance.GetElapsedTime());
 
 	if (InputActionInstance.GetTriggerEvent() == ETriggerEvent::Canceled)

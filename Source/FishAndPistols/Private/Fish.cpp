@@ -51,6 +51,8 @@ void AFish::BeginPlay()
 void AFish::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	//UE_LOG(LogTemp, Warning, TEXT("%s: %.f"), *GetActorNameOrLabel(), GetActorLocation().Z)
 }
 
 
@@ -80,7 +82,14 @@ void AFish::TakeDamage(int32 Damage)
 	else
 	{
 		// 위로 뛰어오른다.
-		ProjectileMovementComponent->AddForce(FVector::UpVector * UpwardImpulseForce);
+		if (GetActorLocation().Z >= 3000)
+		{
+			ProjectileMovementComponent->AddForce(FVector::UpVector * UpwardImpulseForce);	
+		}
+		else
+		{
+			ProjectileMovementComponent->AddForce(FVector::UpVector * UpwardImpulseForce / 10);
+		}
 	}
 }
 

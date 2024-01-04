@@ -6,6 +6,7 @@
 #include "Fish.h"
 #include "FishingComponent.h"
 #include "PlayerCharacter.h"
+#include "UpgradeComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -19,6 +20,7 @@ AFishSpawner::AFishSpawner()
 void AFishSpawner::BindWithPlayer(APlayerCharacter* Player)
 {
 	Player->FishingComponent->OnFishCaught.AddDynamic(this, &AFishSpawner::SpawnMultipleFish);
+	Player->UpgradeComponent->OnUpgradeStatusChanged.AddDynamic(this, &AFishSpawner::UpgradeBought);
 }
 
 void AFishSpawner::SpawnFish(TSubclassOf<AFish> InClass)
@@ -85,9 +87,26 @@ void AFishSpawner::SlowdownTime()
 void AFishSpawner::SpawnMultipleFish()
 {
 	SlowdownTime();
-	for (int i = 0; i < AmountToSpawn; i++)
+	for (int i = 0; i < FMath::RandRange(AmountToSpawnMin, AmountToSpawnMax); i++)
 	{
-		SpawnFish(FishClass);
+		if (bCanSpawnSharkFish && !SpawnedSharkFish)
+		{
+			SpawnFish(SharkClass);
+			SpawnedSharkFish = true;
+		}
+		else if (bCanSpawnChestFish && !SpawnedChestFish)
+		{
+			SpawnFish(ChestFishClass);
+			SpawnedChestFish = true;
+		}
+		else if (bCanSpawnRareFish && FMath::FRand() <= 0.5)
+		{
+			SpawnFish(RareFishClass);
+		}
+		else
+		{
+			SpawnFish(FishClass);
+		}
 	}
 
 	// Start Wave over timer.
@@ -101,6 +120,16 @@ void AFishSpawner::SpawnMultipleFish()
 			WaveOverSecond,
 			false
 	);
+
+	SpawnedSharkFish = false;
+	SpawnedChestFish = false;
+}
+
+void AFishSpawner::UpgradeBought(UUpgradeComponent* UpgradeComponent)
+{
+	this->bCanSpawnRareFish = UpgradeComponent->bCanSpawnRareFish;
+	this->bCanSpawnChestFish = UpgradeComponent->bCanSpawnChestFish;
+	this->bCanSpawnSharkFish = UpgradeComponent->bCanSpawnSharkFish;
 }
 
 // Called when the game starts or when spawned

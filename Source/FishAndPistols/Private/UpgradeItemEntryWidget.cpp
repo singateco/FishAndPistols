@@ -9,6 +9,7 @@
 #include "Components/Image.h"
 #include "Components/ListView.h"
 #include "Components/TextBlock.h"
+#include "Kismet/GameplayStatics.h"
 
 void UUpgradeItemEntryWidget::NativeOnListItemObjectSet(UObject* ListItemObject)
 {
@@ -39,13 +40,13 @@ void UUpgradeItemEntryWidget::BuyButtonPressed()
 
 	if (GameMode->SpendGold(DataObject->Data->Price))
 	{
-		// TODO: Add ca-ching sound
+		UGameplayStatics::PlaySound2D(GetWorld(), BuySound);
 
 		DataObject->Data->UpgradeBought();
 		Cast<UListView>(GetOwningListView())->RemoveItem(GetListItem<>());
 	}
 	else
 	{
-		// TODO : Add no money sound
+		UGameplayStatics::PlaySound2D(GetWorld(), BlipSound);
 	}
 }

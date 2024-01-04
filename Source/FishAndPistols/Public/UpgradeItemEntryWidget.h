@@ -35,6 +35,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 	class UButton* BuyButton;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	USoundBase* BuySound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	USoundBase* BlipSound;
+
 	UPROPERTY()
 	class AFish_GameModeBase* GameMode;
 

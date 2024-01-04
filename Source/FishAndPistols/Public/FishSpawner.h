@@ -31,7 +31,10 @@ public:
 	void SpawnMultipleFish();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 AmountToSpawn {6};
+	int32 AmountToSpawnMin {5};
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 AmountToSpawnMax {8};
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<AFish> FishClass;
@@ -53,6 +56,12 @@ public:
 
 	UPROPERTY(VisibleAnywhere)
 	bool bCanSpawnSharkFish {false};
+
+	bool SpawnedChestFish {false};
+	bool SpawnedSharkFish {false};
+
+	UFUNCTION()
+	void UpgradeBought(class UUpgradeComponent* UpgradeComponent);
 
 	// 슬로우 모션 속도
 	UPROPERTY(EditAnywhere, meta = (ClampMin = 0.0f, UIMin = 0.0f, ClampMax = 1.0f, UIMax = 1.0f))

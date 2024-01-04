@@ -96,6 +96,15 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Buyables | Guns")
 	bool bSpadeAce {false};
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Buyables | Lure")
+	bool bCanSpawnRareFish {false};
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Buyables | Lure")
+	bool bCanSpawnChestFish {false};
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Buyables | Lure")
+	bool bCanSpawnSharkFish {false};
+
 	UFUNCTION()
 	void UpgradeBought(FName UpgradeName);
 
