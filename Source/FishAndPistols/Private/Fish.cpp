@@ -25,6 +25,7 @@ AFish::AFish()
 	StaticMeshComponent->SetupAttachment(Box);
 	ProjectileMovementComponent->bAutoActivate = true;
 
+	Box->SetCollisionObjectType(ECC_GameTraceChannel2);
 
 	// Set lifetime.
 	AActor::SetLifeSpan(15.f);
