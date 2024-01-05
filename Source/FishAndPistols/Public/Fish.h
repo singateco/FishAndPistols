@@ -36,7 +36,7 @@ public:
 	TSubclassOf<class AGoldDropWidgetActor> GoldDropWidgetActorClass;
 
 	UPROPERTY(EditAnywhere)
-	float ZUpwardLimit {2700};
+	float ZUpwardLimit {2500};
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 MaxHP {1};
