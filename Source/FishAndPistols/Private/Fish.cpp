@@ -67,7 +67,7 @@ void AFish::Die()
 
 	AGoldDropWidgetActor* DropWidget = GetWorld()->SpawnActorDeferred<AGoldDropWidgetActor>(GoldDropWidgetActorClass, FTransform(FRotator::ZeroRotator, GetActorLocation() + FVector(-100, 0, 0)));
 	DropWidget->Amount = GoldDropAmount;
-	UGameplayStatics::FinishSpawningActor(DropWidget, FTransform(FRotator::ZeroRotator, GetActorLocation() + FVector(-100, 0, 0)));
+	UGameplayStatics::FinishSpawningActor(DropWidget, FTransform(FRotator::ZeroRotator, GetActorLocation() + FVector(-100, 0, -45)));
 
 	Destroy();
 }
