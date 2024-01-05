@@ -40,9 +40,9 @@ ASunShot::ASunShot()
 	MaxBullet = 4;
 }
 
+//선샷은 폭발탄을 발사 범위에 모든 물고기에게 데미지
 void ASunShot::ActionFire()
 {
-
 	TArray<AActor*> BombedFish;
 	TArray<TEnumAsByte<EObjectTypeQuery>> traceObjectTypes;
 	traceObjectTypes.Add(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_WorldDynamic));

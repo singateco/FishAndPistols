@@ -38,6 +38,7 @@ AShotGun::AShotGun()
 	MaxBullet = 4;
 }
 
+//샷건은 12발의 산탄을 발사
 void AShotGun::ActionFire()
 {
 	if (Bullet >= 1)
