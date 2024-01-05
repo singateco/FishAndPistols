@@ -82,6 +82,12 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FWaveOver OnWaveOverDelegate;
 
+	UPROPERTY(VisibleAnywhere)
+	TArray<AFish*> SpawnedFishes;
+
+	UFUNCTION()
+	void FishDestroyed(AActor* Actor ,EEndPlayReason::Type EndPlayReason);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

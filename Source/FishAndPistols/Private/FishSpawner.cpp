@@ -46,6 +46,9 @@ void AFishSpawner::SpawnFish(TSubclassOf<AFish> InClass)
 	SpawnedFish->ProjectileMovementComponent->InitialSpeed = SpawnedFish->DefaultSpeed += FMath::RandRange(200, -200);
 	UGameplayStatics::FinishSpawningActor(SpawnedFish, SpawnTransform);
 
+	SpawnedFishes.AddUnique(SpawnedFish);
+	SpawnedFish->OnEndPlay.AddDynamic(this, &AFishSpawner::FishDestroyed);
+
 	// Reset the spawner angle
 	this->SetActorRotation(GetActorRotation() - Variance);
 }
@@ -110,7 +113,7 @@ void AFishSpawner::SpawnMultipleFish()
 	}
 
 	// Start Wave over timer.
-	GetWorld()->GetTimerManager().SetTimer(
+	/*GetWorld()->GetTimerManager().SetTimer(
 			WaveTimerHandle,
 			FTimerDelegate::CreateLambda(
 			[&]
@@ -119,7 +122,7 @@ void AFishSpawner::SpawnMultipleFish()
 			}),
 			WaveOverSecond,
 			false
-	);
+	);*/
 
 	SpawnedSharkFish = false;
 	SpawnedChestFish = false;
@@ -130,6 +133,16 @@ void AFishSpawner::UpgradeBought(UUpgradeComponent* UpgradeComponent)
 	this->bCanSpawnRareFish = UpgradeComponent->bCanSpawnRareFish;
 	this->bCanSpawnChestFish = UpgradeComponent->bCanSpawnChestFish;
 	this->bCanSpawnSharkFish = UpgradeComponent->bCanSpawnSharkFish;
+}
+
+void AFishSpawner::FishDestroyed(AActor* Actor, EEndPlayReason::Type EndPlayReason)
+{
+	SpawnedFishes.Remove(Cast<AFish>(Actor));
+
+	if (SpawnedFishes.IsEmpty())
+	{
+		OnWaveOverDelegate.Broadcast();
+	}
 }
 
 // Called when the game starts or when spawned
