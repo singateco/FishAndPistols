@@ -88,9 +88,6 @@ void AGun::BeginPlay()
 
 	BulletWidgetObject = Cast<UBulletAmount>(BulletWidget->GetUserWidgetObject());
 	BulletWidgetObject->UpdateBulletAmount(Bullet);
-
-	// TODO: 디버그용 지우기
-	Laser->SetHiddenInGame(false);
 }
 
 // Called every frame

@@ -61,7 +61,7 @@ public:
 	class UInputAction* RightIndexTriggerInputAction;
 
 	// Motion Buffer
-	TCircularBuffer<double> DotMotionBuffer {8};
+	TCircularBuffer<double> DotMotionBuffer {16};
 
 	// Sentinel value for the motion buffer.
 	const float BufferIgnoreValue {-9999};

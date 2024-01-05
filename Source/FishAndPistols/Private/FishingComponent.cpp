@@ -306,7 +306,7 @@ void UFishingComponent::CaughtFish()
 // Start checking for motion value for detecting fishing motion
 void UFishingComponent::StartCheckingMotionValue()
 {
-	GetWorld()->GetTimerManager().SetTimer(MotionTimer, this, &UFishingComponent::CheckMotionValue, 0.1f, true);
+	GetWorld()->GetTimerManager().SetTimer(MotionTimer, this, &UFishingComponent::CheckMotionValue, 0.05f, true);
 }
 
 void UFishingComponent::HideHookAndLine()
