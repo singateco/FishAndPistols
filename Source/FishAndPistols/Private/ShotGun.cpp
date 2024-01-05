@@ -63,8 +63,9 @@ void AShotGun::ActionFire()
 				}
 				//DrawDebugLine(GetWorld(), StartLoc, EndLoc, FColor::Green, false, 0.3f);
 
-				FRotator Rotator = HitResult.ImpactNormal.Rotation();
+				//GetWorld()->SpawnActor<ATracerRound>(ATracerRound::StaticClass(), StartLoc, FRotator::ZeroRotator);
 
+				FRotator Rotator = HitResult.ImpactNormal.Rotation();
 				UGameplayStatics::SpawnDecalAtLocation(GetWorld(), BulletDecal, FVector(10, 5, 5), HitResult.ImpactPoint, Rotator, 10);
 
 			}

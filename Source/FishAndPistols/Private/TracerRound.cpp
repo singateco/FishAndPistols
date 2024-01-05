@@ -19,7 +19,7 @@ ATracerRound::ATracerRound()
 
 	TracerRound = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("TracerRound"));
 	TracerRound->SetupAttachment(SphereCollision);
-	TracerRound->SetRelativeScale3D(FVector(3.0f, 0.1f, 0.1f));
+	TracerRound->SetRelativeScale3D(FVector(3.0f, 0.05f, 0.05f));
 
 	ConstructorHelpers::FObjectFinder<UStaticMesh>MeshTracer(TEXT("/Script/Engine.StaticMesh'/Game/FishAndPistols/FP_KDE/Effect/TracerRound.TracerRound'"));
 
@@ -30,8 +30,8 @@ ATracerRound::ATracerRound()
 
 	MovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("MovementComponent"));
 
-	MovementComponent->InitialSpeed = 25000;
-	MovementComponent->MaxSpeed = 25000;
+	MovementComponent->InitialSpeed = 30000;
+	MovementComponent->MaxSpeed = 30000;
 	MovementComponent->Bounciness = 0;
 	MovementComponent->bShouldBounce = false;
 	MovementComponent->Friction = 0;
