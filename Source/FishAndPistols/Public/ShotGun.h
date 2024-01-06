@@ -18,9 +18,18 @@ class FISHANDPISTOLS_API AShotGun : public AGun
 public:
 	AShotGun();
 
+	UPROPERTY(EditAnywhere)
+	class UArrowComponent* SpreadArrow1;
+
+	UPROPERTY(EditAnywhere)
+	class UArrowComponent* SpreadArrow2;
+
+
 private:
 	UPROPERTY(EditAnywhere)
 	float Spread = 1000.0f;
 
 	void ActionFire() override;
+
+	void SpawnTracerRound();
 };

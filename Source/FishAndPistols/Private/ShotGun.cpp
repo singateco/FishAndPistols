@@ -17,8 +17,15 @@ AShotGun::AShotGun()
 	BulletREF->SetRelativeLocation(FVector(10, 0, 2.8));
 	BulletREF->ArrowSize = 0.3f;
 
-	Laser->SetRelativeLocation(FVector(524, 0, 7));
+	SpreadArrow1 = CreateDefaultSubobject<UArrowComponent>(TEXT("SpreadArrow1"));
+	SpreadArrow1->SetupAttachment(GunMeshComponent);
+	SpreadArrow1->ArrowSize = 0.3f;
 
+	SpreadArrow2 = CreateDefaultSubobject<UArrowComponent>(TEXT("SpreadArrow2"));
+	SpreadArrow2->SetupAttachment(GunMeshComponent);
+	SpreadArrow2->ArrowSize = 0.3f;
+
+	Laser->SetRelativeLocation(FVector(524, 0, 7));
 
 	ConstructorHelpers::FObjectFinder<UStaticMesh>MeshShotGun(TEXT("/Script/Engine.StaticMesh'/Game/Resources/KDE/shotgun/source/shotgunFinal.shotgunFinal'"));
 
@@ -38,14 +45,13 @@ AShotGun::AShotGun()
 	MaxBullet = 4;
 }
 
-//샷건은 12발의 산탄을 발사
+//샷건은 6발의 산탄을 발사
 void AShotGun::ActionFire()
 {
 	if (Bullet >= 1)
 	{
-		for(int32 i=0; i<12; i++)
+		for(int32 i=0; i<6; i++)
 		{
-
 			float X = UKismetMathLibrary::RandomFloatInRange(Spread*-1, Spread);
 			float Y = UKismetMathLibrary::RandomFloatInRange(Spread*-1, Spread);
 			float Z = UKismetMathLibrary::RandomFloatInRange(Spread*-1, Spread);
@@ -54,8 +60,10 @@ void AShotGun::ActionFire()
 			FVector StartLoc = BulletREF->GetComponentLocation();
 			FVector EndLoc = FVector(X, Y, Z) + StartLoc + BulletREF->GetForwardVector() * GunRange;
 
-			//DrawDebugLine(GetWorld(), StartLoc, EndLoc, FColor::Red, false, 0.2f);
-			if (GetWorld()->LineTraceSingleByChannel(HitResult, StartLoc, EndLoc, ECollisionChannel::ECC_Visibility))
+			FCollisionQueryParams Params;
+			Params.AddIgnoredActor(this);
+			DrawDebugLine(GetWorld(), StartLoc, EndLoc, FColor::Red, false, 1.5f);
+			if (GetWorld()->LineTraceSingleByChannel(HitResult, StartLoc, EndLoc, ECollisionChannel::ECC_Visibility, Params))
 			{
 				AFish* Fish = Cast<AFish>(HitResult.GetActor());
 				if (Fish)
@@ -63,8 +71,6 @@ void AShotGun::ActionFire()
 					Fish->TakeDamage(1);
 				}
 				//DrawDebugLine(GetWorld(), StartLoc, EndLoc, FColor::Green, false, 0.3f);
-
-				//GetWorld()->SpawnActor<ATracerRound>(ATracerRound::StaticClass(), StartLoc, FRotator::ZeroRotator);
 
 				FRotator Rotator = HitResult.ImpactNormal.Rotation();
 				UGameplayStatics::SpawnDecalAtLocation(GetWorld(), BulletDecal, FVector(10, 5, 5), HitResult.ImpactPoint, Rotator, 10);
@@ -75,10 +81,17 @@ void AShotGun::ActionFire()
 		Bullet--;
 		BulletWidgetObject->UpdateBulletAmount(Bullet);
 		GunFireEffect();
+		SpawnTracerRound();
 	}
 	else
 	{
 		UGameplayStatics::PlaySound2D(GetWorld(), DryFireSound);
 	}
 
+}
+
+void AShotGun::SpawnTracerRound()
+{
+	GetWorld()->SpawnActor<ATracerRound>(ATracerRound::StaticClass(), SpreadArrow1->GetComponentTransform());
+	GetWorld()->SpawnActor<ATracerRound>(ATracerRound::StaticClass(), SpreadArrow2->GetComponentTransform());
 }
